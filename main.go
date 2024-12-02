@@ -46,15 +46,17 @@ func error_handler() gin.HandlerFunc {
 func main() {
     log.SetFlags(log.LstdFlags | log.Lshortfile)
         
+    var r *gin.Engine
     if len(os.Args) > 1 && os.Args[1] == "dev" {
+        r = gin.Default()
     } else {
         gin.SetMode(gin.ReleaseMode)
+        r = gin.New()
     }
 
-    tool.DB_init()
-
-    r := gin.Default()
     r.Use(error_handler())
+
+    tool.DB_init()
 
     r.POST("/", func(c *gin.Context) {
         route_data := ""
