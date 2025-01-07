@@ -81,7 +81,7 @@ func main() {
             case "test":
                 route_data = "ok"
             case "main_func_easter_egg":
-                route_data = route.Main_func_easter_egg()
+                route_data = route.View_main_func_easter_egg()
             case "api_w_raw":
                 route_data = route.Api_w_raw(db, call_arg[1:])
             case "api_func_sha224":

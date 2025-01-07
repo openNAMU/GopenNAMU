@@ -1,10 +1,10 @@
 package route
 
 import (
-    "math/rand"
+	"math/rand"
 )
 
-func Main_func_easter_egg() string {
+func View_main_func_easter_egg() string {
     select_list := []string{
         "PWD0ZbR7AOY", // Shanghai Teahouse ~ Chinese Tea
         "HoU29ljOmTE", // Flawless Clothing of Celestials
@@ -27,7 +27,7 @@ func Main_func_easter_egg() string {
         "blE4lnfEWbU", // 일렉트릭 헤리티지
         // Remix by KR. Palto47
     }
-    select_str := select_list[rand.Intn(len(select_list)-1)]
+    select_str := select_list[rand.Intn(len(select_list) - 1)]
 
     return "<iframe width=\"640\" height=\"360\" src=\"https://www.youtube.com/embed/" + select_str + "\" frameborder=\"0\" allowfullscreen></iframe>"
 }
