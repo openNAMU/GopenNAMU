@@ -63,20 +63,11 @@ func Api_bbs_w_tabom_post(db *sql.DB, call_arg []string) string {
             err = stmt2.QueryRow(bbs_num, post_num).Scan(&tabom_count)
             if err != nil {
                 if err == sql.ErrNoRows {
-                    var stmt4 *sql.Stmt
-
-                    stmt4, err = db.Prepare(tool.DB_change("insert into bbs_data (set_name, set_data, set_id, set_code) values ('tabom_count', ?, ?, ?)"))
-                    if err != nil {
-                        panic(err)
-                    }
-                    defer stmt4.Close()
-
-                    tabom_count = "0"
-
-                    _, err = stmt4.Exec(tabom_count, bbs_num, post_num)
-                    if err != nil {
-                        panic(err)
-                    }
+                    tool.Exec_DB(
+                        db,
+                        "insert into bbs_data (set_name, set_data, set_id, set_code) values ('tabom_count', ?, ?, ?)",
+                        tabom_count, bbs_num, post_num,
+                    )
                 } else {
                     panic(err)
                 }
@@ -87,29 +78,16 @@ func Api_bbs_w_tabom_post(db *sql.DB, call_arg []string) string {
 
             tabom_count_str := strconv.Itoa(tabom_count_int)
 
-            stmt3, err := db.Prepare(tool.DB_change("update bbs_data set set_data = ? where set_name = 'tabom_count' and set_id = ? and set_code = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt3.Close()
-
-            _, err = stmt3.Exec(tabom_count_str, bbs_num, post_num)
-            if err != nil {
-                panic(err)
-            }
-
-            var stmt5 *sql.Stmt
-
-            stmt5, err = db.Prepare(tool.DB_change("insert into bbs_data (set_name, set_data, set_id, set_code) values ('tabom_list', ?, ?, ?)"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt5.Close()
-
-            _, err = stmt5.Exec(other_set["ip"], bbs_num, post_num)
-            if err != nil {
-                panic(err)
-            }
+            tool.Exec_DB(
+                db,
+                "update bbs_data set set_data = ? where set_name = 'tabom_count' and set_id = ? and set_code = ?",
+                tabom_count_str, bbs_num, post_num,
+            )
+            tool.Exec_DB(
+                db,
+                "insert into bbs_data (set_name, set_data, set_id, set_code) values ('tabom_list', ?, ?, ?)",
+                other_set["ip"], bbs_num, post_num,
+            )
         } else {
             return_data["response"] = "same user exist"
         }

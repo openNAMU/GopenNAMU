@@ -1,10 +1,10 @@
 package tool
 
 import (
-    "database/sql"
-    "strconv"
-    "strings"
-    "time"
+	"database/sql"
+	"strconv"
+	"strings"
+	"time"
 )
 
 func List_acl(func_type string) []string {
@@ -78,18 +78,13 @@ func Do_insert_auth_history(db *sql.DB, ip string, what string) {
     }
 
     if log_off == "" {
-        stmt, err := db.Prepare(DB_change("insert into re_admin (who, what, time) values (?, ?, ?)"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
         time := Get_time()
-
-        _, err = stmt.Exec(ip, what, time)
-        if err != nil {
-            panic(err)
-        }
+        
+        Exec_DB(
+            db,
+            "insert into re_admin (who, what, time) values (?, ?, ?)",
+            ip, what, time,
+        )
     }
 }
 

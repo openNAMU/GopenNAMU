@@ -1,9 +1,9 @@
 package tool
 
 import (
-    "database/sql"
-    "strconv"
-    "time"
+	"database/sql"
+	"strconv"
+	"time"
 )
 
 func List_markup() []string {
@@ -64,12 +64,14 @@ func Get_render_direct(db *sql.DB, doc_name string, data string, markup string, 
     from := ""
     include := ""
     backlink := ""
-    if render_type == "api_include" {
-        include = "1"
-    } else if render_type == "api_from" {
-        from = "1"
-    } else if render_type == "backlink" {
-        backlink = "1"
+    
+    switch render_type {
+        case "api_include":
+            include = "1"
+        case "api_from":
+            from = "1"
+        case "backlink":
+            backlink = "1"
     }
 
     if render_type == "api_view" || render_type == "api_from" || render_type == "api_include" || render_type == "backlink" {
@@ -77,12 +79,12 @@ func Get_render_direct(db *sql.DB, doc_name string, data string, markup string, 
     }
 
     doc_data_set := map[string]string{
-        "doc_name":    doc_name,
-        "data":        data,
-        "render_name": render_name,
-        "render_type": render_type,
-        "from":        from,
-        "include":     include,
+        "doc_name" : doc_name,
+        "data" : data,
+        "render_name" : render_name,
+        "render_type" : render_type,
+        "from" : from,
+        "include" : include,
     }
 
     render_data := make(map[string]interface{})
@@ -101,89 +103,54 @@ func Get_render_direct(db *sql.DB, doc_name string, data string, markup string, 
     }
 
     if backlink == "1" {
-        stmt, err := db.Prepare(DB_change("delete from back where link = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
+        Exec_DB(
+            db,
+            "delete from back where link = ?",
+            doc_name,
+        )
 
-        _, err = stmt.Exec(doc_name)
-        if err != nil {
-            panic(err)
-        }
+        Exec_DB(
+            db,
+            "delete from back where title = ? and type = 'no'",
+            doc_name,
+        )
+        
+        Exec_DB(
+            db,
+            "delete from data_set where doc_name = ? and set_name = 'link_count'",
+            doc_name,
+        )
 
-        stmt, err = db.Prepare(DB_change("delete from back where title = ? and type = 'no'"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        _, err = stmt.Exec(doc_name)
-        if err != nil {
-            panic(err)
-        }
-
-        stmt, err = db.Prepare(DB_change("delete from data_set where doc_name = ? and set_name = 'link_count'"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        _, err = stmt.Exec(doc_name)
-        if err != nil {
-            panic(err)
-        }
-
-        stmt, err = db.Prepare(DB_change("delete from data_set where doc_name = ? and set_name = 'doc_type'"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        _, err = stmt.Exec(doc_name)
-        if err != nil {
-            panic(err)
-        }
+        Exec_DB(
+            db,
+            "delete from data_set where doc_name = ? and set_name = 'doc_type'",
+            doc_name,
+        )
 
         end_backlink := render_data["backlink"].([][]string)
         for for_a := 0; for_a < len(end_backlink); for_a++ {
-            stmt, err := db.Prepare(DB_change("insert into back (link, title, type, data) values (?, ?, ?, ?)"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            _, err = stmt.Exec(end_backlink[0], end_backlink[1], end_backlink[2])
-            if err != nil {
-                panic(err)
-            }
+            Exec_DB(
+                db,
+                "insert into back (link, title, type, data) values (?, ?, ?, ?)",
+                end_backlink[0], end_backlink[1], end_backlink[2],
+            )
         }
 
-        stmt, err = db.Prepare(DB_change("insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'link_count', ?)"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
+        Exec_DB(
+            db,
+            "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'link_count', ?)",
+            doc_name, render_data["link_count"].(int),
+        )
 
-        _, err = stmt.Exec(doc_name, render_data["link_count"].(int))
-        if err != nil {
-            panic(err)
-        }
-
-        stmt, err = db.Prepare(DB_change("insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'doc_type', ?)"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        _, err = stmt.Exec(doc_name, "")
-        if err != nil {
-            panic(err)
-        }
+        Exec_DB(
+            db,
+            "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'doc_type', ?)",
+            doc_name, "",
+        )
     }
 
     return map[string]string{
-        "data":    "<div id=\"opennamu_render_complete\">" + render_data["data"].(string) + "</div>",
-        "js_data": render_data["js_data"].(string),
+        "data" : "<div id=\"opennamu_render_complete\">" + render_data["data"].(string) + "</div>",
+        "js_data" : render_data["js_data"].(string),
     }
 }

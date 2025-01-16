@@ -1,10 +1,10 @@
 package route
 
 import (
-       "database/sql"
-    "opennamu/route/tool"
+	"database/sql"
+	"opennamu/route/tool"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_w_set_reset(db *sql.DB, call_arg []string) string {
@@ -17,27 +17,17 @@ func Api_w_set_reset(db *sql.DB, call_arg []string) string {
     ip := other_set["ip"]
 
     if tool.Check_acl(db, "", "", "owner_auth", ip) {
-        stmt, err := db.Prepare(tool.DB_change("delete from acl where title = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
+        tool.Exec_DB(
+            db,
+            "delete from acl where title = ?",
+            doc_name,
+        )
 
-        _, err = stmt.Exec(doc_name)
-        if err != nil {
-            panic(err)
-        }
-
-        stmt, err = db.Prepare(tool.DB_change("delete from data_set where doc_name = ? and set_name = 'acl_date'"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        _, err = stmt.Exec(doc_name)
-        if err != nil {
-            panic(err)
-        }
+        tool.Exec_DB(
+            db,
+            "delete from data_set where doc_name = ? and set_name = 'acl_date'",
+            doc_name,
+        )
 
         set_list := []string{
             "document_markup",
@@ -46,16 +36,11 @@ func Api_w_set_reset(db *sql.DB, call_arg []string) string {
         }
 
         for for_a := 0; for_a < len(set_list); for_a++ {
-            stmt, err = db.Prepare(tool.DB_change("delete from data_set where doc_name = ? and set_name = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            _, err = stmt.Exec(doc_name, set_list[for_a])
-            if err != nil {
-                panic(err)
-            }
+            tool.Exec_DB(
+                db,
+                "delete from data_set where doc_name = ? and set_name = ?",
+                doc_name, set_list[for_a],
+            )
         }
 
         return_data := make(map[string]interface{})

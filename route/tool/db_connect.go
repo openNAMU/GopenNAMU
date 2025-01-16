@@ -3,12 +3,37 @@ package tool
 import (
 	"database/sql"
 	"strings"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "modernc.org/sqlite"
 )
 
 var db_set = map[string]string{}
+
+func Exec_DB(db *sql.DB, query string, values ...interface{}) {
+    const retryDelay = 10 * time.Millisecond
+
+    stmt, err := db.Prepare(DB_change(query))
+    if err != nil {
+        panic(err)
+    }
+    defer stmt.Close()
+
+    for {
+        _, err = stmt.Exec(values...)
+        if err == nil {
+            return
+        }
+
+        if strings.Contains(err.Error(), "database is locked") {
+            time.Sleep(retryDelay)
+            continue
+        }
+
+        panic(err)
+    }
+}
 
 func Temp_DB_connect() *sql.DB {
     db, err := sql.Open("sqlite", "./data/temp.db")

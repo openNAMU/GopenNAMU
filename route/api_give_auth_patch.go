@@ -1,10 +1,10 @@
 package route
 
 import (
-       "database/sql"
-    "opennamu/route/tool"
+	"database/sql"
+	"opennamu/route/tool"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_give_auth_patch(db *sql.DB, call_arg []string) string {
@@ -52,28 +52,18 @@ func Api_give_auth_patch(db *sql.DB, call_arg []string) string {
             if !auth_check {
                 new_data["response"] = "require auth"
             } else {
-                stmt, err := db.Prepare(tool.DB_change("delete from user_set where id = ? and name = 'acl'"))
-                if err != nil {
-                    panic(err)
-                }
-                defer stmt.Close()
+                tool.Exec_DB(
+                    db,
+                    "delete from user_set where id = ? and name = 'acl'",
+                    user_name,
+                )
 
-                _, err = stmt.Exec(user_name)
-                if err != nil {
-                    panic(err)
-                }
-
-                stmt, err = db.Prepare(tool.DB_change("insert into user_set (id, name, data) values (?, 'acl', ?)"))
-                if err != nil {
-                    panic(err)
-                }
-                defer stmt.Close()
-
-                _, err = stmt.Exec(user_name, other_set["change_auth"])
-                if err != nil {
-                    panic(err)
-                }
-
+                tool.Exec_DB(
+                    db,
+                    "insert into user_set (id, name, data) values (?, 'acl', ?)",
+                    user_name, other_set["change_auth"],
+                )
+                
                 new_data["response"] = "ok"
             }
         }
@@ -110,16 +100,11 @@ func Api_give_auth_patch(db *sql.DB, call_arg []string) string {
             if !auth_check {
                 new_data["response"] = "require auth"
             } else {
-                stmt, err := db.Prepare(tool.DB_change("update user_set set data = ? where name = 'acl' and data = ?"))
-                if err != nil {
-                    panic(err)
-                }
-                defer stmt.Close()
-
-                _, err = stmt.Exec(other_set["change_auth"], other_set["auth"])
-                if err != nil {
-                    panic(err)
-                }
+                tool.Exec_DB(
+                    db,
+                    "update user_set set data = ? where name = 'acl' and data = ?",
+                    other_set["change_auth"], other_set["auth"],
+                )
 
                 new_data["response"] = "ok"
             }

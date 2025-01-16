@@ -35,29 +35,19 @@ func Api_w_page_view(db *sql.DB, call_arg []string) string {
         }
 
         if view_count == "0" {
-            stmt, err := db.Prepare(tool.DB_change("insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'view_count', '1')"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            _, err = stmt.Exec(other_set["doc_name"])
-            if err != nil {
-                panic(err)
-            }
+            tool.Exec_DB(
+                db,
+                "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'view_count', '1')",
+                other_set["doc_name"],
+            )
         } else {
             view_count_int, _ := strconv.Atoi(view_count)
 
-            stmt, err := db.Prepare(tool.DB_change("update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ''"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            _, err = stmt.Exec(view_count_int+1, other_set["doc_name"])
-            if err != nil {
-                panic(err)
-            }
+            tool.Exec_DB(
+                db,
+                "update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ''",
+                view_count_int + 1, other_set["doc_name"],
+            )
         }
 
         // 월간 조회수
@@ -79,29 +69,19 @@ func Api_w_page_view(db *sql.DB, call_arg []string) string {
         }
 
         if view_count == "0" {
-            stmt, err := db.Prepare(tool.DB_change("insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, ?, 'view_count', '1')"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            _, err = stmt.Exec(other_set["doc_name"], now_date)
-            if err != nil {
-                panic(err)
-            }
+            tool.Exec_DB(
+                db,
+                "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, ?, 'view_count', '1')",
+                other_set["doc_name"], now_date,
+            )
         } else {
             view_count_int, _ := strconv.Atoi(view_count)
 
-            stmt, err := db.Prepare(tool.DB_change("update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            _, err = stmt.Exec(view_count_int+1, other_set["doc_name"], now_date)
-            if err != nil {
-                panic(err)
-            }
+            tool.Exec_DB(
+                db,
+                "update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ?",
+                view_count_int + 1, other_set["doc_name"], now_date,
+            )
         }
 
         // 하루 조회수
@@ -123,29 +103,19 @@ func Api_w_page_view(db *sql.DB, call_arg []string) string {
         }
 
         if view_count == "0" {
-            stmt, err := db.Prepare(tool.DB_change("insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, ?, 'view_count', '1')"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            _, err = stmt.Exec(other_set["doc_name"], now_date)
-            if err != nil {
-                panic(err)
-            }
+            tool.Exec_DB(
+                db,
+                "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, ?, 'view_count', '1')",
+                other_set["doc_name"], now_date,
+            )
         } else {
             view_count_int, _ := strconv.Atoi(view_count)
 
-            stmt, err := db.Prepare(tool.DB_change("update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            _, err = stmt.Exec(view_count_int+1, other_set["doc_name"], now_date)
-            if err != nil {
-                panic(err)
-            }
+            tool.Exec_DB(
+                db,
+                "update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ?",
+                view_count_int + 1, other_set["doc_name"], now_date,
+            )
         }
     }
 

@@ -49,16 +49,11 @@ func Api_bbs_w_post(db *sql.DB, call_arg []string) string {
         { "user_id", other_set["ip"] },
     }
     for _, v := range insert_db {
-        stmt, err := db.Prepare(tool.DB_change("insert into bbs_data (set_name, set_code, set_id, set_data) values (?, ?, ?, ?)"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        _, err = stmt.Exec(v[0], set_code_str, other_set["set_id"], v[1])
-        if err != nil {
-            panic(err)
-        }
+        tool.Exec_DB(
+            db,
+            "insert into bbs_data (set_name, set_code, set_id, set_data) values (?, ?, ?, ?)",
+            v[0], set_code_str, other_set["set_id"], v[1],
+        )
     }
 
     return_data := make(map[string]interface{})

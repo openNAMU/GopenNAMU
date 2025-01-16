@@ -1,8 +1,8 @@
 package tool
 
 import (
-    "database/sql"
-    "strconv"
+	"database/sql"
+	"strconv"
 )
 
 func Send_alarm(db *sql.DB, from string, target string, data string) {
@@ -31,15 +31,10 @@ func Send_alarm(db *sql.DB, from string, target string, data string) {
         count_int, _ := strconv.Atoi(count)
         count_int += 1
 
-        stmt, err = db.Prepare(DB_change("insert into user_notice (id, name, data, date, readme) values (?, ?, ?, ?, '')"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        _, err = stmt.Exec(count_int, target, data, now_time)
-        if err != nil {
-            panic(err)
-        }
+        Exec_DB(
+            db,
+            "insert into user_notice (id, name, data, date, readme) values (?, ?, ?, ?, '')",
+            count_int, target, data, now_time,
+        )
     }
 }

@@ -25,15 +25,11 @@ func error_handler() gin.HandlerFunc {
                     err = fmt.Errorf("%v", r)
                 }
 
-                if strings.Contains(err.Error(), "database is locked") {
-                    c.String(http.StatusTooManyRequests, "database is locked")
-                } else {
-                    log.Printf("Recovered from panic: %v\n", err)
-                    c.String(http.StatusInternalServerError, "error")
+                log.Printf("Recovered from panic: %v\n", err)
+                c.String(http.StatusInternalServerError, "error")
 
-                    stackTrace := debug.Stack()
-                    log.Printf("Recovered from panic: %v\nStack Trace:\n%s", err, stackTrace)
-                }
+                stackTrace := debug.Stack()
+                log.Printf("Recovered from panic: %v\nStack Trace:\n%s", err, stackTrace)
 
                 c.Abort()
             }
