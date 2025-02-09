@@ -1,11 +1,11 @@
 package tool
 
 import (
-    "database/sql"
-    "log"
-    "os"
+	"database/sql"
+	"log"
+	"os"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func Get_language(db *sql.DB, data string, safe bool) string {

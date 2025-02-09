@@ -153,33 +153,33 @@ func Get_setting(db *sql.DB, set_name string, data_coverage string) [][]string {
 
 func Get_skin_list(data string, default_flag bool) []string {
     entries, err := os.ReadDir("views")
-	if err != nil {
-		return nil
-	}
+    if err != nil {
+        return nil
+    }
 
-	var skin_list []string
+    var skin_list []string
 
-	if default_flag {
-		skin_list = append(skin_list, "default")
-	}
+    if default_flag {
+        skin_list = append(skin_list, "default")
+    }
 
-	for _, entry := range entries {
-		skin_list = append(skin_list, entry.Name())
-	}
+    for _, entry := range entries {
+        skin_list = append(skin_list, entry.Name())
+    }
 
-	var skin_return_data []string
+    var skin_return_data []string
 
-	for _, skin_data := range skin_list {
-		if skin_data != "main_css" {
-			if skin_data == data {
-				skin_return_data = append([]string{skin_data}, skin_return_data...)
-			} else {
-				skin_return_data = append(skin_return_data, skin_data)
-			}
-		}
-	}
+    for _, skin_data := range skin_list {
+        if skin_data != "main_css" {
+            if skin_data == data {
+                skin_return_data = append([]string{skin_data}, skin_return_data...)
+            } else {
+                skin_return_data = append(skin_return_data, skin_data)
+            }
+        }
+    }
 
-	return skin_return_data
+    return skin_return_data
 }
 
 func Get_use_skin_name(db *sql.DB, ip string) string {
@@ -232,26 +232,75 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
 
 func Get_template(db *sql.DB, ip string, data jet.VarMap) string {
     views := jet.NewSet(
-		jet.NewOSFileSystemLoader("./views/" + Get_use_skin_name(db, ip)),
-		jet.InDevelopmentMode(),
-	)
+        jet.NewOSFileSystemLoader("./views/" + Get_use_skin_name(db, ip)),
+        jet.InDevelopmentMode(),
+    )
 
     tmpl, err := views.GetTemplate("example.jet")
-	if err != nil {
-		panic(err)
-	}
+    if err != nil {
+        panic(err)
+    }
 
     var buf bytes.Buffer
 
     err = tmpl.Execute(&buf, data, nil)
-	if err != nil {
+    if err != nil {
         panic(err)
     }
 
     return buf.String()
 }
 
-func Get_wiki_set(db *sql.DB, ip string) {
+func Get_domain(db *sql.DB, full_string bool) string {
+    var domain string
+
+    sys_host := ""
+
+    if full_string {
+        var http_select string
+
+        err := db.QueryRow("select data from other where name = 'http_select'").Scan(&http_select)
+        if err != nil && err != sql.ErrNoRows {
+            return ""
+        }
+        
+        if http_select == "" {
+            http_select = "http"
+        }
+
+        domain = http_select + "://"
+
+        var db_domain string
+
+        err = db.QueryRow("select data from other where name = 'domain'").Scan(&db_domain)
+        if err != nil && err != sql.ErrNoRows {
+            return ""
+        }
+
+        if db_domain != "" {
+            domain += db_domain
+        } else {
+            domain += sys_host
+        }
+    } else {
+        var db_domain string
+
+        err := db.QueryRow("select data from other where name = 'domain'").Scan(&db_domain)
+        if err != nil && err != sql.ErrNoRows {
+            return ""
+        }
+
+        if db_domain != "" {
+            domain = db_domain
+        } else {
+            domain = sys_host
+        }
+    }
+
+    return domain
+}
+
+func Get_wiki_set(db *sql.DB, ip string) []string {
     skin_name := Get_use_skin_name(db, ip)
     data_list := []string{}
     
@@ -321,4 +370,6 @@ func Get_wiki_set(db *sql.DB, ip string) {
     data_list = append(data_list, set_wiki_name)
     data_list = append(data_list, set_license)
     data_list = append(data_list, set_logo)
+
+    return data_list
 }
