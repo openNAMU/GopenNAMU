@@ -9,6 +9,8 @@ import (
 	"html/template"
 	"net/url"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/CloudyKit/jet/v6"
@@ -300,13 +302,17 @@ func Get_domain(db *sql.DB, full_string bool) string {
     return domain
 }
 
-func Get_wiki_set(db *sql.DB, ip string) []string {
+func Get_wiki_set(db *sql.DB, ip string) []any {
     skin_name := Get_use_skin_name(db, ip)
-    data_list := []string{}
+    data_list := []any{}
     
     set_wiki_name := ""
     set_license := ""
     set_logo := ""
+    set_head := ""
+    set_head_skin := ""
+    set_top_menu := ""
+    set_top_menu_user := ""
 
     stmt, err := db.Prepare(DB_change("select data from other where name = 'name'"))
     if err != nil {
@@ -366,10 +372,111 @@ func Get_wiki_set(db *sql.DB, ip string) []string {
             }
         }
     }
+
+    stmt5, err := db.Prepare(DB_change("select data from other where name = 'head' and coverage = ''"))
+    if err != nil {
+        panic(err)
+    }
+    defer stmt5.Close()
+
+    err = stmt5.QueryRow().Scan(&set_head)
+    if err != nil {
+        if err == sql.ErrNoRows {
+        } else {
+            panic(err)
+        }
+    }
+
+    stmt6, err := db.Prepare(DB_change("select data from other where name = 'head' and coverage = ?"))
+    if err != nil {
+        panic(err)
+    }
+    defer stmt6.Close()
+
+    err = stmt6.QueryRow(skin_name).Scan(&set_head_skin)
+    if err != nil {
+        if err == sql.ErrNoRows {
+        } else {
+            panic(err)
+        }
+    }
+    
+    stmt7, err := db.Prepare(DB_change("select data from other where name = 'top_menu'"))
+    if err != nil {
+        panic(err)
+    }
+    defer stmt7.Close()
+
+    err = stmt7.QueryRow(skin_name).Scan(&set_top_menu)
+    if err != nil {
+        if err == sql.ErrNoRows {
+        } else {
+            panic(err)
+        }
+    }
+
+    stmt8, err := db.Prepare(DB_change("select data from user_set where name = 'top_menu' and id = ?"))
+    if err != nil {
+        panic(err)
+    }
+    defer stmt8.Close()
+
+    err = stmt8.QueryRow(skin_name).Scan(&set_top_menu_user)
+    if err != nil {
+        if err == sql.ErrNoRows {
+        } else {
+            panic(err)
+        }
+    }
+
+    set_top_menu = strings.ReplaceAll(set_top_menu, "\r", "")
+    set_top_menu_user = strings.ReplaceAll(set_top_menu_user, "\r", "")
+
+    set_top_menu_mix := ""
+    if set_top_menu != "" && set_top_menu_user != "" {
+        set_top_menu_mix = set_top_menu + "\n" + set_top_menu_mix
+    } else {
+        set_top_menu_mix = set_top_menu + set_top_menu_user
+    }
+
+    set_top_menu_lst := strings.Split(set_top_menu_mix, "\n")
+    if len(set_top_menu_lst) % 2 != 0 {
+        set_top_menu_lst = append(set_top_menu_lst, "")
+    }
+
+    set_top_menu_result := [][]string{}
+    for i := 0; i < len(set_top_menu_lst) - 1; i += 2 {
+        pair := []string{ set_top_menu_lst[i], set_top_menu_lst[i + 1] }
+        set_top_menu_result = append(set_top_menu_result, pair)
+    }
+
+    template_var := []any{}
+    for for_a := 1; for_a < 4; for_a++ {
+        template_var_tmp := ""
+
+        stmt9, err := db.Prepare(DB_change("select data from other where name = ?"))
+        if err != nil {
+            panic(err)
+        }
+        defer stmt9.Close()
+    
+        err = stmt9.QueryRow("template_var_" + strconv.Itoa(for_a)).Scan(&template_var_tmp)
+        if err != nil {
+            if err == sql.ErrNoRows {
+            } else {
+                panic(err)
+            }
+        }
+
+        template_var = append(template_var, template_var_tmp)
+    }
     
     data_list = append(data_list, set_wiki_name)
     data_list = append(data_list, set_license)
     data_list = append(data_list, set_logo)
+    data_list = append(data_list, set_head + set_head_skin)
+    data_list = append(data_list, set_top_menu_result)
+    data_list = append(data_list, template_var...)
 
     return data_list
 }
