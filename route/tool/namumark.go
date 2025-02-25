@@ -1,13 +1,13 @@
 package tool
 
 import (
-    "database/sql"
-    "regexp"
-    "log"
-    "strconv"
-    "strings"
+	"database/sql"
+	"log"
+	"regexp"
+	"strconv"
+	"strings"
 
-    "github.com/dlclark/regexp2"
+	"github.com/dlclark/regexp2"
 )
 
 type namumark struct {
@@ -20,7 +20,7 @@ type namumark struct {
 func Namumark_new(db *sql.DB, data map[string]string) *namumark {
     data_string := data["data"]
     data_string = "\n" + data_string + "\n"
-    data_string = strings.Replace(data_string, "\r", "", -1)
+    data_string = strings.ReplaceAll(data_string, "\r", "")
 
     return &namumark{
         db,

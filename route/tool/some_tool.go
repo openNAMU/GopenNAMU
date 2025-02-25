@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/CloudyKit/jet/v6"
+	"github.com/gin-gonic/gin"
 )
 
 func Sha224(data string) string {
@@ -57,6 +58,14 @@ func Get_date() string {
 
 func Get_month() string {
     return time.Now().Format("2006-01")
+}
+
+func Get_IP(c *gin.Context) string {
+    return c.Request.Header.Get("X-Forwarded-For")
+}
+
+func Get_Cookies(c *gin.Context) string {
+    return c.Request.Header.Get("Cookie")
 }
 
 func Get_document_setting(db *sql.DB, doc_name string, set_name string, doc_rev string) [][]string {
@@ -302,9 +311,10 @@ func Get_domain(db *sql.DB, full_string bool) string {
     return domain
 }
 
-func Get_wiki_set(db *sql.DB, ip string) []any {
+func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     skin_name := Get_use_skin_name(db, ip)
     data_list := []any{}
+    cookies_list := Get_cookie_header(cookies)
     
     set_wiki_name := ""
     set_license := ""
@@ -479,4 +489,26 @@ func Get_wiki_set(db *sql.DB, ip string) []any {
     data_list = append(data_list, template_var...)
 
     return data_list
+}
+
+func Get_cookie_header(cookie_header string) map[string]string {
+    cookies := make(map[string]string)
+    
+    parts := strings.Split(cookie_header, ";")
+    for _, part := range parts {
+        part = strings.TrimSpace(part)
+        if len(part) == 0 {
+            continue
+        }
+
+        kv := strings.SplitN(part, "=", 2)
+        if len(kv) == 2 {
+            key := strings.TrimSpace(kv[0])
+            value := strings.TrimSpace(kv[1])
+            
+            cookies[key] = value
+        }
+    }
+
+    return cookies
 }

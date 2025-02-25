@@ -1,11 +1,11 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
-    "strings"
+	"database/sql"
+	"opennamu/route/tool"
+	"strings"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_bbs_w_comment_one(db *sql.DB, call_arg []string, already_auth_check bool) string {
