@@ -179,6 +179,8 @@ func main() {
                 route_data = route.Api_bbs_w_tabom(db, call_arg[1:])
             case "api_bbs_w_tabom_post":
                 route_data = route.Api_bbs_w_tabom_post(db, call_arg[1:])
+            case "api_func_email_post":
+                route_data = route.Api_func_email_post(db, call_arg[1:])
             default:
                 route_data = "{ \"response\" : \"404\" }"
         }
