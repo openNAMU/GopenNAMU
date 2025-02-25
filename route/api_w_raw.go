@@ -1,11 +1,11 @@
 package route
 
 import (
-    "database/sql"
-   
-    "opennamu/route/tool"
+	"database/sql"
 
-    jsoniter "github.com/json-iterator/go"
+	"opennamu/route/tool"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_w_raw(db *sql.DB, call_arg []string) string {
@@ -14,7 +14,7 @@ func Api_w_raw(db *sql.DB, call_arg []string) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(call_arg[0]), &other_set)
 
-    new_data := make(map[string]interface{})
+    new_data := make(map[string]any)
 
     if !tool.Check_acl(db, other_set["name"], "", "render", other_set["ip"]) {
         new_data["response"] = "require auth"
