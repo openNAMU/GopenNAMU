@@ -1,18 +1,18 @@
 package route
 
 import (
-    "database/sql"
-   
-    "opennamu/route/tool"
+	"database/sql"
 
-    jsoniter "github.com/json-iterator/go"
+	"opennamu/route/tool"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_topic(db *sql.DB, call_arg []string) string {
+func Api_topic(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     if other_set["tool"] == "length" {
         stmt, err := db.Prepare(tool.DB_change("select id from topic where code = ? order by id + 0 desc limit 1"))
@@ -95,7 +95,7 @@ func Api_topic(db *sql.DB, call_arg []string) string {
         new_data["data"] = []map[string]string{}
         data_slice := []map[string]string{}
 
-        admin_auth := tool.Check_acl(db, "", "", "toron_auth", other_set["ip"])
+        admin_auth := tool.Check_acl(db, "", "", "toron_auth", config.IP)
 
         var ip_pre string
         var ip_render string
@@ -110,8 +110,8 @@ func Api_topic(db *sql.DB, call_arg []string) string {
                 ip_pre = ip_parser_temp[data_list[for_a][3]][0]
                 ip_render = ip_parser_temp[data_list[for_a][3]][1]
             } else {
-                ip_pre = tool.IP_preprocess(db, data_list[for_a][3], other_set["ip"])[0]
-                ip_render = tool.IP_parser(db, data_list[for_a][3], other_set["ip"])
+                ip_pre = tool.IP_preprocess(db, data_list[for_a][3], config.IP)[0]
+                ip_render = tool.IP_parser(db, data_list[for_a][3], config.IP)
 
                 ip_parser_temp[data_list[for_a][3]] = []string{ip_pre, ip_render}
             }

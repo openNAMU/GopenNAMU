@@ -1,10 +1,10 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
+	"database/sql"
+	"opennamu/route/tool"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func bbs_list(db *sql.DB) map[string]string {
@@ -31,7 +31,7 @@ func bbs_list(db *sql.DB) map[string]string {
     return data_list
 }
 
-func Api_bbs_list(db *sql.DB, call_arg []string) string {
+func Api_bbs_list(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     data_list := bbs_list(db)

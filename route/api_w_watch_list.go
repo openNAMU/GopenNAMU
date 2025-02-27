@@ -1,18 +1,18 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
-    "strconv"
+	"database/sql"
+	"opennamu/route/tool"
+	"strconv"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_w_watch_list(db *sql.DB, call_arg []string) string {
+func Api_w_watch_list(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     page, _ := strconv.Atoi(other_set["num"])
     num := 0
@@ -26,7 +26,7 @@ func Api_w_watch_list(db *sql.DB, call_arg []string) string {
         "star_doc":  tool.Get_language(db, "star_doc", false),
     }
 
-    if !tool.Check_acl(db, "", "", "doc_watch_list_view", other_set["ip"]) {
+    if !tool.Check_acl(db, "", "", "doc_watch_list_view", config.IP) {
         return_data["response"] = "require auth"
         return_data["data"] = []string{}
     } else {
@@ -66,8 +66,8 @@ func Api_w_watch_list(db *sql.DB, call_arg []string) string {
                 ip_pre = ip_parser_temp[user_name][0]
                 ip_render = ip_parser_temp[user_name][1]
             } else {
-                ip_pre = tool.IP_preprocess(db, user_name, other_set["ip"])[0]
-                ip_render = tool.IP_parser(db, user_name, other_set["ip"])
+                ip_pre = tool.IP_preprocess(db, user_name, config.IP)[0]
+                ip_render = tool.IP_parser(db, user_name, config.IP)
 
                 ip_parser_temp[user_name] = []string{ip_pre, ip_render}
             }

@@ -1,19 +1,19 @@
 package route
 
 import (
-    "database/sql"
-    "strconv"
+	"database/sql"
+	"strconv"
 
-    "opennamu/route/tool"
+	"opennamu/route/tool"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_func_search(db *sql.DB, call_arg []string) string {
+func Api_func_search(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     page, _ := strconv.Atoi(other_set["num"])
     num := 0

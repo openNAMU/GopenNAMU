@@ -1,20 +1,20 @@
 package route
 
 import (
-    "context"
-    "database/sql"
-    "opennamu/route/tool"
+	"context"
+	"database/sql"
+	"opennamu/route/tool"
 
-    "github.com/google/generative-ai-go/genai"
-    jsoniter "github.com/json-iterator/go"
-    "google.golang.org/api/option"
+	"github.com/google/generative-ai-go/genai"
+	jsoniter "github.com/json-iterator/go"
+	"google.golang.org/api/option"
 )
 
-func Api_func_llm(db *sql.DB, call_arg []string) string {
+func Api_func_llm(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     var api_key string
 
@@ -24,7 +24,7 @@ func Api_func_llm(db *sql.DB, call_arg []string) string {
     }
     defer stmt.Close()
 
-    err = stmt.QueryRow(other_set["ip"]).Scan(api_key)
+    err = stmt.QueryRow(config.IP).Scan(api_key)
     if err != nil {
         if err == sql.ErrNoRows {
             api_key = ""

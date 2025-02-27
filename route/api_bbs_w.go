@@ -8,11 +8,11 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs_w(db *sql.DB, call_arg []string) string {
+func Api_bbs_w(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     stmt, err := db.Prepare(tool.DB_change("select set_name, set_data from bbs_data where set_id = ? and set_code = ?"))
     if err != nil {
@@ -51,8 +51,8 @@ func Api_bbs_w(db *sql.DB, call_arg []string) string {
             var ip_pre string
             var ip_render string
 
-            ip_pre = tool.IP_preprocess(db, set_data, other_set["ip"])[0]
-            ip_render = tool.IP_parser(db, set_data, other_set["ip"])
+            ip_pre = tool.IP_preprocess(db, set_data, config.IP)[0]
+            ip_render = tool.IP_parser(db, set_data, config.IP)
 
             data_list["user_id"] = ip_pre
             data_list["user_id_render"] = ip_render
@@ -63,7 +63,7 @@ func Api_bbs_w(db *sql.DB, call_arg []string) string {
 
     return_data := make(map[string]interface{})
 
-    if !tool.Check_acl(db, "", "", "bbs_view", other_set["ip"]) {
+    if !tool.Check_acl(db, "", "", "bbs_view", config.IP) {
         data_list = map[string]string{}
         return_data["response"] = "require auth"
     }

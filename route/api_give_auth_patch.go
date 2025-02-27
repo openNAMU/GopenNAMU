@@ -7,15 +7,15 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_give_auth_patch(db *sql.DB, call_arg []string) string {
+func Api_give_auth_patch(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     new_data := make(map[string]interface{})
 
-    ip := other_set["ip"]
+    ip := config.IP
     user_name := other_set["user_name"]
 
     if user_name != "" {
@@ -72,11 +72,11 @@ func Api_give_auth_patch(db *sql.DB, call_arg []string) string {
         auth_data := tool.Get_auth_group_info(db, other_set["auth"])
 
         if tool.Auth_include_upper_auth(auth_data) {
-            if tool.Check_acl(db, "", "", "owner_auth", other_set["ip"]) {
+            if tool.Check_acl(db, "", "", "owner_auth", config.IP) {
                 auth_check = true
             }
         } else {
-            if tool.Check_acl(db, "", "", "give_auth", other_set["ip"]) {
+            if tool.Check_acl(db, "", "", "give_auth", config.IP) {
                 auth_check = true
             }
         }
@@ -88,11 +88,11 @@ func Api_give_auth_patch(db *sql.DB, call_arg []string) string {
             auth_data = tool.Get_auth_group_info(db, other_set["change_auth"])
 
             if tool.Auth_include_upper_auth(auth_data) {
-                if tool.Check_acl(db, "", "", "owner_auth", other_set["ip"]) {
+                if tool.Check_acl(db, "", "", "owner_auth", config.IP) {
                     auth_check = true
                 }
             } else {
-                if tool.Check_acl(db, "", "", "give_auth", other_set["ip"]) {
+                if tool.Check_acl(db, "", "", "give_auth", config.IP) {
                     auth_check = true
                 }
             }

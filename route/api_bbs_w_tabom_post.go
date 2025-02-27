@@ -9,11 +9,11 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs_w_tabom_post(db *sql.DB, call_arg []string) string {
+func Api_bbs_w_tabom_post(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     sub_code := other_set["sub_code"]
     sub_code_parts := strings.Split(sub_code, "-")
@@ -28,7 +28,7 @@ func Api_bbs_w_tabom_post(db *sql.DB, call_arg []string) string {
 
     return_data := make(map[string]interface{})
 
-    if !tool.Check_acl(db, "", "", "bbs_comment", other_set["ip"]) {
+    if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
         return_data["response"] = "require auth"
     } else {
         stmt1, err := db.Prepare(tool.DB_change("select set_data from bbs_data where set_name = 'tabom_list' and set_data = ? and set_id = ? and set_code = ?"))
@@ -40,7 +40,7 @@ func Api_bbs_w_tabom_post(db *sql.DB, call_arg []string) string {
         not_exist := false
         var no_data string
 
-        err = stmt1.QueryRow(other_set["ip"], bbs_num, post_num).Scan(&no_data)
+        err = stmt1.QueryRow(config.IP, bbs_num, post_num).Scan(&no_data)
         if err != nil {
             if err == sql.ErrNoRows {
                 not_exist = true
@@ -86,7 +86,7 @@ func Api_bbs_w_tabom_post(db *sql.DB, call_arg []string) string {
             tool.Exec_DB(
                 db,
                 "insert into bbs_data (set_name, set_data, set_id, set_code) values ('tabom_list', ?, ?, ?)",
-                other_set["ip"], bbs_num, post_num,
+                config.IP, bbs_num, post_num,
             )
         } else {
             return_data["response"] = "same user exist"

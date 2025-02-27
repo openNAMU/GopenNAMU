@@ -1,18 +1,18 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
-    "strconv"
+	"database/sql"
+	"opennamu/route/tool"
+	"strconv"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_topic_list(db *sql.DB, call_arg []string) string {
+func Api_topic_list(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     page_int, err := strconv.Atoi(other_set["num"])
     if err != nil {
@@ -77,8 +77,8 @@ func Api_topic_list(db *sql.DB, call_arg []string) string {
             ip_pre = ip_parser_temp[ip][0]
             ip_render = ip_parser_temp[ip][1]
         } else {
-            ip_pre = tool.IP_preprocess(db, ip, other_set["ip"])[0]
-            ip_render = tool.IP_parser(db, ip, other_set["ip"])
+            ip_pre = tool.IP_preprocess(db, ip, config.IP)[0]
+            ip_render = tool.IP_parser(db, ip, config.IP)
 
             ip_parser_temp[ip] = []string{ip_pre, ip_render}
         }

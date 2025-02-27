@@ -18,7 +18,14 @@ func Api_bbs_w_comment_all(db *sql.DB, sub_code string, already_auth_check bool)
     inter_other_set["legacy"] = "on"
 
     json_data, _ := json.Marshal(inter_other_set)
-    return_data := Api_bbs_w_comment_one(db, []string{string(json_data)}, already_auth_check)
+
+    send_request := tool.Config{
+        Other_set: []string{string(json_data)},
+        IP: "",
+        Cookies: "",
+    }
+    
+    return_data := Api_bbs_w_comment_one(db, send_request, already_auth_check)
 
     return_data_api := []map[string]string{}
     json.Unmarshal([]byte(return_data), &return_data_api)
@@ -37,11 +44,11 @@ func Api_bbs_w_comment_all(db *sql.DB, sub_code string, already_auth_check bool)
     return end_data
 }
 
-func Api_bbs_w_comment(db *sql.DB, call_arg []string) string {
+func Api_bbs_w_comment(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     if other_set["tool"] == "length" {
         stmt, err := db.Prepare(tool.DB_change("select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc"))
@@ -97,7 +104,7 @@ func Api_bbs_w_comment(db *sql.DB, call_arg []string) string {
         return_data := make(map[string]interface{})
         
         temp := []map[string]string{}
-        if !tool.Check_acl(db, "", "", "bbs_comment", other_set["ip"]) {
+        if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
             return_data["response"] = "require auth"
         } else {
             temp = Api_bbs_w_comment_all(db, other_set["sub_code"], true)

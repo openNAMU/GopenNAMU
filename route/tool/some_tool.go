@@ -512,3 +512,9 @@ func Get_cookie_header(cookie_header string) map[string]string {
 
     return cookies
 }
+
+type Config struct {
+    Other_set []string
+    IP string
+    Cookies string
+}

@@ -1,10 +1,10 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
+	"database/sql"
+	"opennamu/route/tool"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func BBS_w_set_list() map[string]string {
@@ -21,17 +21,17 @@ func BBS_w_set_list() map[string]string {
     return setting_acl
 }
 
-func Api_bbs_w_set(db *sql.DB, call_arg []string) string {
+func Api_bbs_w_set(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     setting_acl := BBS_w_set_list()
 
     if val, ok := setting_acl[other_set["set_name"]]; ok {
         if val != "" {
-            if !tool.Check_acl(db, "", "", "owner_auth", other_set["ip"]) {
+            if !tool.Check_acl(db, "", "", "owner_auth", config.IP) {
                 return_data := make(map[string]interface{})
                 return_data["response"] = "require auth"
 

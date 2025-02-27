@@ -1,12 +1,12 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
-    "strconv"
-    "strings"
+	"database/sql"
+	"opennamu/route/tool"
+	"strconv"
+	"strings"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func User_rankup_condition(data string) string {
@@ -22,13 +22,13 @@ func User_rankup_condition(data string) string {
     }
 }
 
-func Api_user_rankup(db *sql.DB, call_arg []string) string {
+func Api_user_rankup(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
-    ip := other_set["ip"]
+    ip := config.IP
     if !tool.IP_or_user(ip) {
         coverage := ""
         if val, ok := other_set["rankup_name"]; ok {

@@ -1,18 +1,18 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
-    "strconv"
+	"database/sql"
+	"opennamu/route/tool"
+	"strconv"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_user_watch_list(db *sql.DB, call_arg []string) string {
+func Api_user_watch_list(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     page, _ := strconv.Atoi(other_set["num"])
     num := 0
@@ -20,7 +20,7 @@ func Api_user_watch_list(db *sql.DB, call_arg []string) string {
         num = page*50 - 50
     }
 
-    ip := other_set["ip"]
+    ip := config.IP
     name := other_set["name"]
 
     return_data := make(map[string]interface{})

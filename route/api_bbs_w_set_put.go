@@ -7,13 +7,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs_w_set_put(db *sql.DB, call_arg []string) string {
+func Api_bbs_w_set_put(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
-    auth_info := tool.Check_acl(db, "", "", "owner_auth", other_set["ip"])
+    auth_info := tool.Check_acl(db, "", "", "owner_auth", config.IP)
 
     setting_acl := BBS_w_set_list()
     return_data := make(map[string]interface{})

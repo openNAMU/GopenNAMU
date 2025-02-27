@@ -7,14 +7,14 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_w_set_reset(db *sql.DB, call_arg []string) string {
+func Api_w_set_reset(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     doc_name := other_set["name"]
-    ip := other_set["ip"]
+    ip := config.IP
 
     if tool.Check_acl(db, "", "", "owner_auth", ip) {
         tool.Exec_DB(

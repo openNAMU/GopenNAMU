@@ -8,13 +8,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs_w_post(db *sql.DB, call_arg []string) string {
+func Api_bbs_w_post(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
-    if !tool.Check_acl(db, "", "", "bbs_comment", other_set["ip"]) {
+    if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
         return_data := make(map[string]interface{})
         return_data["response"] = "require auth"
 
@@ -46,7 +46,7 @@ func Api_bbs_w_post(db *sql.DB, call_arg []string) string {
         { "title", other_set["title"] },
         { "data", other_set["data"] },
         { "date", date_now },
-        { "user_id", other_set["ip"] },
+        { "user_id", config.IP },
     }
     for _, v := range insert_db {
         tool.Exec_DB(

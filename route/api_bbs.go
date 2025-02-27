@@ -1,18 +1,18 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
-    "strconv"
+	"database/sql"
+	"opennamu/route/tool"
+	"strconv"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs(db *sql.DB, call_arg []string) string {
+func Api_bbs(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     rows := []*sql.Rows{}
     if other_set["bbs_num"] == "" {
@@ -109,8 +109,8 @@ func Api_bbs(db *sql.DB, call_arg []string) string {
                         ip_pre = ip_parser_temp[set_data][0]
                         ip_render = ip_parser_temp[set_data][1]
                     } else {
-                        ip_pre = tool.IP_preprocess(db, set_data, other_set["ip"])[0]
-                        ip_render = tool.IP_parser(db, set_data, other_set["ip"])
+                        ip_pre = tool.IP_preprocess(db, set_data, config.IP)[0]
+                        ip_render = tool.IP_parser(db, set_data, config.IP)
 
                         ip_parser_temp[set_data] = []string{ip_pre, ip_render}
                     }

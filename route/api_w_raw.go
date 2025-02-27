@@ -8,15 +8,15 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_w_raw(db *sql.DB, call_arg []string) string {
+func Api_w_raw(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     new_data := make(map[string]any)
 
-    if !tool.Check_acl(db, other_set["name"], "", "render", other_set["ip"]) {
+    if !tool.Check_acl(db, other_set["name"], "", "render", config.IP) {
         new_data["response"] = "require auth"
     } else if other_set["exist_check"] != "" {
         stmt, err := db.Prepare(tool.DB_change("select title from data where title = ?"))
@@ -73,7 +73,7 @@ func Api_w_raw(db *sql.DB, call_arg []string) string {
         } else {
             check_pass := false
             if hide != "" {
-                if tool.Check_acl(db, "", "", "hidel_auth", other_set["ip"]) {
+                if tool.Check_acl(db, "", "", "hidel_auth", config.IP) {
                     check_pass = true
                 } else {
                     new_data["response"] = "require auth"

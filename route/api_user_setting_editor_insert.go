@@ -7,13 +7,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_user_setting_editor_post(db *sql.DB, call_arg []string) string {
+func Api_user_setting_editor_post(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
-    ip := other_set["ip"]
+    ip := config.IP
 
     if !tool.IP_or_user(ip) {
         tool.Exec_DB(

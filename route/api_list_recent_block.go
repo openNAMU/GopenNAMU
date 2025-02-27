@@ -1,18 +1,18 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
-    "strconv"
+	"database/sql"
+	"opennamu/route/tool"
+	"strconv"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_list_recent_block(db *sql.DB, call_arg []string) string {
+func Api_list_recent_block(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     page_int, err := strconv.Atoi(other_set["num"])
     if err != nil {
@@ -137,8 +137,8 @@ func Api_list_recent_block(db *sql.DB, call_arg []string) string {
             ip_pre_blocker = ip_parser_temp[blocker][0]
             ip_render_blocker = ip_parser_temp[blocker][1]
         } else {
-            ip_pre_blocker = tool.IP_preprocess(db, blocker, other_set["ip"])[0]
-            ip_render_blocker = tool.IP_parser(db, blocker, other_set["ip"])
+            ip_pre_blocker = tool.IP_preprocess(db, blocker, config.IP)[0]
+            ip_render_blocker = tool.IP_parser(db, blocker, config.IP)
 
             ip_parser_temp[blocker] = []string{ip_pre_blocker, ip_render_blocker}
         }
@@ -151,8 +151,8 @@ func Api_list_recent_block(db *sql.DB, call_arg []string) string {
                 ip_pre_block = ip_parser_temp[block][0]
                 ip_render_block = ip_parser_temp[block][1]
             } else {
-                ip_pre_block = tool.IP_preprocess(db, block, other_set["ip"])[0]
-                ip_render_block = tool.IP_parser(db, block, other_set["ip"])
+                ip_pre_block = tool.IP_preprocess(db, block, config.IP)[0]
+                ip_render_block = tool.IP_parser(db, block, config.IP)
 
                 ip_parser_temp[block] = []string{ip_pre_block, ip_render_block}
             }
@@ -175,7 +175,7 @@ func Api_list_recent_block(db *sql.DB, call_arg []string) string {
     }
 
     if other_set["set_type"] == "private" {
-        if !tool.Check_acl(db, "", "", "owner_auth", other_set["ip"]) {
+        if !tool.Check_acl(db, "", "", "owner_auth", config.IP) {
             data_list = [][]string{}
         }
     }
@@ -198,7 +198,7 @@ func Api_list_recent_block(db *sql.DB, call_arg []string) string {
     }
     return_data["data"] = data_list
 
-    auth_name := tool.Get_user_auth(db, other_set["ip"])
+    auth_name := tool.Get_user_auth(db, config.IP)
     auth_info := tool.Get_auth_group_info(db, auth_name)
 
     return_data["auth"] = auth_info

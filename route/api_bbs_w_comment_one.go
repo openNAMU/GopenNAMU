@@ -8,11 +8,11 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs_w_comment_one(db *sql.DB, call_arg []string, already_auth_check bool) string {
+func Api_bbs_w_comment_one(db *sql.DB, config tool.Config, already_auth_check bool) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     sub_code := other_set["sub_code"]
     sub_code_parts := strings.Split(sub_code, "-")
@@ -92,8 +92,8 @@ func Api_bbs_w_comment_one(db *sql.DB, call_arg []string, already_auth_check boo
                 ip_pre = ip_parser_temp[set_data][0]
                 ip_render = ip_parser_temp[set_data][1]
             } else {
-                ip_pre = tool.IP_preprocess(db, set_data, other_set["ip"])[0]
-                ip_render = tool.IP_parser(db, set_data, other_set["ip"])
+                ip_pre = tool.IP_preprocess(db, set_data, config.IP)[0]
+                ip_render = tool.IP_parser(db, set_data, config.IP)
 
                 ip_parser_temp[set_data] = []string{ip_pre, ip_render}
             }
@@ -111,7 +111,7 @@ func Api_bbs_w_comment_one(db *sql.DB, call_arg []string, already_auth_check boo
 
     return_data := make(map[string]interface{})
     if !already_auth_check {
-        if !tool.Check_acl(db, "", "", "bbs_comment", other_set["ip"]) {
+        if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
             data_list = []map[string]string{}
             return_data["response"] = "require auth"
         }

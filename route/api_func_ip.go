@@ -1,19 +1,19 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
+	"database/sql"
+	"opennamu/route/tool"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_func_ip(db *sql.DB, call_arg []string) string {
+func Api_func_ip(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
-    ip_data := tool.IP_parser(db, other_set["data"], other_set["ip"])
+    ip_data := tool.IP_parser(db, other_set["data"], config.IP)
 
     new_data := make(map[string]interface{})
     new_data["response"] = "ok"

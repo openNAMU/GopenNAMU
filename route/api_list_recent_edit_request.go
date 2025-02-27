@@ -1,18 +1,18 @@
 package route
 
 import (
-    "database/sql"
-    "opennamu/route/tool"
-    "strconv"
+	"database/sql"
+	"opennamu/route/tool"
+	"strconv"
 
-    jsoniter "github.com/json-iterator/go"
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_list_recent_edit_request(db *sql.DB, call_arg []string) string {
+func Api_list_recent_edit_request(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     limit_int, err := strconv.Atoi(other_set["limit"])
     if err != nil {
@@ -100,10 +100,10 @@ func Api_list_recent_edit_request(db *sql.DB, call_arg []string) string {
             doc_name,
             doc_rev,
             date,
-            tool.IP_preprocess(db, ip, other_set["ip"])[0],
+            tool.IP_preprocess(db, ip, config.IP)[0],
             send,
             leng,
-            tool.IP_parser(db, ip, other_set["ip"]),
+            tool.IP_parser(db, ip, config.IP),
         })
     }
 

@@ -8,11 +8,11 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs_w_tabom(db *sql.DB, call_arg []string) string {
+func Api_bbs_w_tabom(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
     sub_code := other_set["sub_code"]
     sub_code_parts := strings.Split(sub_code, "-")
@@ -27,7 +27,7 @@ func Api_bbs_w_tabom(db *sql.DB, call_arg []string) string {
     
     return_data := make(map[string]interface{})
 
-    if !tool.Check_acl(db, "", "", "bbs_comment", other_set["ip"]) {
+    if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
         return_data["response"] = "require auth"
         return_data["data"] = "0"
     } else {

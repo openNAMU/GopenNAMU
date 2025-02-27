@@ -1,14 +1,14 @@
 package route
 
 import (
-    "database/sql"
-   
-    "opennamu/route/tool"
+	"database/sql"
 
-    jsoniter "github.com/json-iterator/go"
+	"opennamu/route/tool"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_w_random(db *sql.DB, call_arg []string) string {
+func Api_w_random(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
     
     var title string

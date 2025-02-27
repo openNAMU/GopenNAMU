@@ -7,13 +7,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_func_email_post(db *sql.DB, call_arg []string) string {
+func Api_func_email_post(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(call_arg[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
 
-    err := tool.Send_email(db, other_set["ip"], other_set["who"], other_set["title"], other_set["data"])
+    err := tool.Send_email(db, config.IP, other_set["who"], other_set["title"], other_set["data"])
     if err == nil {
         new_data := make(map[string]any)
         new_data["response"] = "ok"
