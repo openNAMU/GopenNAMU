@@ -20,7 +20,6 @@ func Api_bbs_w_comment_make(db *sql.DB, doc_name string) string {
     send_request := tool.Config{
         Other_set: string(json_data),
         IP: "tool:system",
-        Cookies: "",
     }
 
     return_data := Api_bbs_w_comment_one(db, send_request, false)

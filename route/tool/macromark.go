@@ -1,14 +1,14 @@
 package tool
 
 import (
-    "database/sql"
-    "html"
-    "log"
-    "regexp"
-    "strconv"
-    "strings"
+	"database/sql"
+	"html"
+	"log"
+	"regexp"
+	"strconv"
+	"strings"
 
-    "github.com/dlclark/regexp2"
+	"github.com/dlclark/regexp2"
 )
 
 type macromark struct {
@@ -91,71 +91,71 @@ func (class *macromark) render_text() {
             }
 
             switch macro_name {
-                case "nowiki":
-                    temp_name := class.func_temp_save(class.func_temp_restore(macro_data, true), m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "h1":
-                    temp_name := class.func_temp_save("<h1>" + macro_data + "</h1><back_br>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "h2":
-                    temp_name := class.func_temp_save("<h2>" + macro_data + "</h2><back_br>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "h3":
-                    temp_name := class.func_temp_save("<h3>" + macro_data + "</h3><back_br>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "h4":
-                    temp_name := class.func_temp_save("<h4>" + macro_data + "</h4><back_br>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "h5":
-                    temp_name := class.func_temp_save("<h5>" + macro_data + "</h5><back_br>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "h6":
-                    temp_name := class.func_temp_save("<h6>" + macro_data + "</h6><back_br>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "ul":
-                    temp_name := class.func_temp_save("<ul><back_br>" + macro_data + "</ul><back_br>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "li":
-                    temp_name := class.func_temp_save("<li>" + macro_data + "</li><back_br>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "a":
-                    a_data := class.func_temp_restore(macro_data, true)
-                    a_data = strings.ReplaceAll(a_data, ",,", "<temp>")
+            case "nowiki":
+                temp_name := class.func_temp_save(class.func_temp_restore(macro_data, true), m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "h1":
+                temp_name := class.func_temp_save("<h1>" + macro_data + "</h1><back_br>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "h2":
+                temp_name := class.func_temp_save("<h2>" + macro_data + "</h2><back_br>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "h3":
+                temp_name := class.func_temp_save("<h3>" + macro_data + "</h3><back_br>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "h4":
+                temp_name := class.func_temp_save("<h4>" + macro_data + "</h4><back_br>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "h5":
+                temp_name := class.func_temp_save("<h5>" + macro_data + "</h5><back_br>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "h6":
+                temp_name := class.func_temp_save("<h6>" + macro_data + "</h6><back_br>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "ul":
+                temp_name := class.func_temp_save("<ul><back_br>" + macro_data + "</ul><back_br>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "li":
+                temp_name := class.func_temp_save("<li>" + macro_data + "</li><back_br>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "a":
+                a_data := class.func_temp_restore(macro_data, true)
+                a_data = strings.ReplaceAll(a_data, ",,", "<temp>")
 
-                    part := strings.SplitN(a_data, ",", 2)
+                part := strings.SplitN(a_data, ",", 2)
 
-                    a_data_link := HTML_unescape(part[0])
-                    a_data_view := a_data_link
-                    if len(part) > 1 {
-                        a_data_view = part[1]
-                    }
-                    
-                    a_data_link = strings.ReplaceAll(a_data_link, "<temp>", ",")
-                    a_data_view = strings.ReplaceAll(a_data_view, "<temp>", ",")
+                a_data_link := HTML_unescape(part[0])
+                a_data_view := a_data_link
+                if len(part) > 1 {
+                    a_data_view = part[1]
+                }
+                
+                a_data_link = strings.ReplaceAll(a_data_link, "<temp>", ",")
+                a_data_view = strings.ReplaceAll(a_data_view, "<temp>", ",")
 
-                    temp_name := class.func_temp_save("<a href=\"/w/" + Url_parser(a_data_link) + "\">" + a_data_view + "</a>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "b":
-                    temp_name := class.func_temp_save("<b>" + macro_data + "</b>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "i":
-                    temp_name := class.func_temp_save("<i>" + macro_data + "</i>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "u":
-                    temp_name := class.func_temp_save("<u>" + macro_data + "</u>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "s":
-                    temp_name := class.func_temp_save("<s>" + macro_data + "</s>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "sup":
-                    temp_name := class.func_temp_save("<sup>" + macro_data + "</sup>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                case "sub":
-                    temp_name := class.func_temp_save("<sub>" + macro_data + "</sub>", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
-                default:
-                    temp_name := class.func_temp_save("", m_string)
-                    string_data = strings.Replace(string_data, m_string, temp_name, 1)
+                temp_name := class.func_temp_save("<a href=\"/w/" + Url_parser(a_data_link) + "\">" + a_data_view + "</a>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "b":
+                temp_name := class.func_temp_save("<b>" + macro_data + "</b>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "i":
+                temp_name := class.func_temp_save("<i>" + macro_data + "</i>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "u":
+                temp_name := class.func_temp_save("<u>" + macro_data + "</u>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "s":
+                temp_name := class.func_temp_save("<s>" + macro_data + "</s>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "sup":
+                temp_name := class.func_temp_save("<sup>" + macro_data + "</sup>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            case "sub":
+                temp_name := class.func_temp_save("<sub>" + macro_data + "</sub>", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
+            default:
+                temp_name := class.func_temp_save("", m_string)
+                string_data = strings.Replace(string_data, m_string, temp_name, 1)
             }
         } else {
             break

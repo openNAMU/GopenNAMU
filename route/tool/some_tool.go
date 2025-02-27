@@ -318,7 +318,6 @@ func Get_domain(db *sql.DB, full_string bool) string {
 func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     skin_name := Get_use_skin_name(db, ip)
     data_list := []any{}
-    cookies_list := Get_cookie_header(cookies)
     
     set_wiki_name := ""
     set_license := ""
@@ -521,4 +520,5 @@ type Config struct {
     Other_set string
     IP string
     Cookies string
+    Session string
 }

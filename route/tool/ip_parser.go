@@ -1,13 +1,13 @@
 package tool
 
 import (
-    "database/sql"
-    "regexp"
-    "strconv"
-    "strings"
+	"database/sql"
+	"regexp"
+	"strconv"
+	"strings"
 
-    "github.com/3th1nk/cidr"
-    "github.com/dlclark/regexp2"
+	"github.com/3th1nk/cidr"
+	"github.com/dlclark/regexp2"
 )
 
 func IP_or_user(ip string) bool {
@@ -219,17 +219,18 @@ func IP_menu(db *sql.DB, ip string, my_ip string, option string) map[string][][]
 }
 
 func Get_user_ban_type(ban_type string) string {
-    if ban_type == "O" {
+    switch ban_type {
+    case "O":
         return "1"
-    } else if ban_type == "E" {
+    case "E":
         return "2"
-    } else if ban_type == "A" {
+    case "A":
         return "3"
-    } else if ban_type == "D" {
+    case "D":
         return "4"
-    } else if ban_type == "L" {
+    case "L":
         return "5"
-    } else {
+    default:
         return ""
     }
 }
@@ -254,19 +255,20 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
 
         r := regexp2.MustCompile(block, 0)
         if m, _ := r.FindStringMatch(ip); m != nil {
-            if tool == "login" {
+            switch tool {
+            case "login":
                 if ban_type != "1" && ban_type != "5" {
                     return []string{"true", "a" + ban_type}
                 }
-            } else if tool == "register" {
+            case "register":
                 if ban_type != "5" {
                     return []string{"true", "a" + ban_type}
                 }
-            } else if tool == "edit_request" {
+            case "edit_request":
                 if ban_type != "2" {
                     return []string{"true", "a" + ban_type}
                 }
-            } else {
+            default:
                 return []string{"true", "a" + ban_type}
             }
         }
@@ -294,19 +296,20 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
             if err != nil {
                 continue
             } else if c.Contains(ip) {
-                if tool == "login" {
+                switch tool {
+                case "login":
                     if ban_type != "1" && ban_type != "5" {
                         return []string{"true", "b" + ban_type}
                     }
-                } else if tool == "register" {
+                case "register":
                     if ban_type != "5" {
                         return []string{"true", "b" + ban_type}
                     }
-                } else if tool == "edit_request" {
+                case "edit_request":
                     if ban_type != "2" {
                         return []string{"true", "b" + ban_type}
                     }
-                } else {
+                default:
                     return []string{"true", "b" + ban_type}
                 }
             }
@@ -331,19 +334,20 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
     } else {
         ban_type := Get_user_ban_type(login)
 
-        if tool == "login" {
+        switch tool {
+        case "login":
             if ban_type != "1" && ban_type != "5" {
                 return []string{"true", ban_type}
             }
-        } else if tool == "register" {
+        case "register":
             if ban_type != "5" {
                 return []string{"true", ban_type}
             }
-        } else if tool == "edit_request" {
+        case "edit_request":
             if ban_type != "2" {
                 return []string{"true", ban_type}
             }
-        } else {
+        default:
             return []string{"true", ban_type}
         }
     }

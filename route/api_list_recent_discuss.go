@@ -37,11 +37,12 @@ func Api_list_recent_discuss(db *sql.DB, config tool.Config) string {
     var stmt *sql.Stmt
 
     set_type := other_set["set_type"]
-    if set_type == "normal" {
+    switch set_type {
+    case "normal":
         stmt, err = db.Prepare(tool.DB_change("select title, sub, date, code, stop, agree from rd order by date desc limit ?, ?"))
-    } else if set_type == "close" {
+    case "close":
         stmt, err = db.Prepare(tool.DB_change("select title, sub, date, code, stop, agree from rd where stop = 'O' order by date desc limit ?, ?"))
-    } else {
+    default:
         stmt, err = db.Prepare(tool.DB_change("select title, sub, date, code, stop, agree from rd where stop != 'O' order by date desc limit ?, ?"))
     }
 

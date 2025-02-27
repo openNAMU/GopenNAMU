@@ -66,12 +66,12 @@ func Get_render_direct(db *sql.DB, doc_name string, data string, markup string, 
     backlink := ""
     
     switch render_type {
-        case "api_include":
-            include = "1"
-        case "api_from":
-            from = "1"
-        case "backlink":
-            backlink = "1"
+    case "api_include":
+        include = "1"
+    case "api_from":
+        from = "1"
+    case "backlink":
+        backlink = "1"
     }
 
     if render_type == "api_view" || render_type == "api_from" || render_type == "api_include" || render_type == "backlink" {
@@ -89,18 +89,18 @@ func Get_render_direct(db *sql.DB, doc_name string, data string, markup string, 
 
     render_data := make(map[string]any)
     switch markup {
-        case "namumark":
-            render_data_class := Namumark_new(db, doc_data_set)
-            render_data = render_data_class.main()
-        case "markdown":
-            render_data = Markdown(db, doc_data_set)
-        case "macromark":
-            render_data_class := Macromark_new(db, doc_data_set)
-            render_data = render_data_class.main()
-        default:
-            render_data["data"] = data
-            render_data["js_data"] = ""
-            render_data["backlink"] = [][]string{}
+    case "namumark":
+        render_data_class := Namumark_new(db, doc_data_set)
+        render_data = render_data_class.main()
+    case "markdown":
+        render_data = Markdown(db, doc_data_set)
+    case "macromark":
+        render_data_class := Macromark_new(db, doc_data_set)
+        render_data = render_data_class.main()
+    default:
+        render_data["data"] = data
+        render_data["js_data"] = ""
+        render_data["backlink"] = [][]string{}
     }
 
     if backlink == "1" {

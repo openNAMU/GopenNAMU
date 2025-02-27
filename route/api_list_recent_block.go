@@ -28,7 +28,8 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
     // private 공개 안되도록 조심할 것
     var stmt *sql.Stmt
     var rows *sql.Rows
-    if other_set["set_type"] == "all" {
+    switch other_set["set_type"] {
+    case "all":
         if other_set["why"] != "" {
             stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band != 'private' and why like ? order by today desc limit ?, 50"))
         } else {
@@ -48,7 +49,7 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
         if err != nil {
             panic(err)
         }
-    } else if other_set["set_type"] == "ongoing" {
+    case "ongoing":
         stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where ongoing = '1' and band != 'private' order by end desc limit ?, 50"))
         if err != nil {
             panic(err)
@@ -58,7 +59,7 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
         if err != nil {
             panic(err)
         }
-    } else if other_set["set_type"] == "regex" {
+    case "regex":
         stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'regex' order by today desc limit ?, 50"))
         if err != nil {
             panic(err)
@@ -68,7 +69,7 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
         if err != nil {
             panic(err)
         }
-    } else if other_set["set_type"] == "private" {
+    case "private":
         stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'private' order by today desc limit ?, 50"))
         if err != nil {
             panic(err)
@@ -78,7 +79,7 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
         if err != nil {
             panic(err)
         }
-    } else if other_set["set_type"] == "user" {
+    case "user":
         stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where block = ? and band != 'private' order by today desc limit ?, 50"))
         if err != nil {
             panic(err)
@@ -88,7 +89,7 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
         if err != nil {
             panic(err)
         }
-    } else if other_set["set_type"] == "cidr" {
+    case "cidr":
         stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'cidr' order by today desc limit ?, 50"))
         if err != nil {
             panic(err)
@@ -98,7 +99,7 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
         if err != nil {
             panic(err)
         }
-    } else {
+    default:
         stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where blocker = ? and band != 'private' order by today desc limit ?, 50"))
         if err != nil {
             panic(err)

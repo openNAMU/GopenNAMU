@@ -21,8 +21,6 @@ func Api_bbs_w_comment_all(db *sql.DB, sub_code string, already_auth_check bool)
 
     send_request := tool.Config{
         Other_set: string(json_data),
-        IP: "",
-        Cookies: "",
     }
     
     return_data := Api_bbs_w_comment_one(db, send_request, already_auth_check)

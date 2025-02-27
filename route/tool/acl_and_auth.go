@@ -282,9 +282,10 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
 
     if ban_type != "" {
         ban_type_len := len(ban_type)
-        if ban_type_len == 1 {
+        switch ban_type_len {
+        case 1:
             ban_type = string(ban_type[0])
-        } else if ban_type_len == 2 {
+        case 2:
             ban_type = string(ban_type[1])
         }
     }
@@ -518,7 +519,8 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
         } else if tool == "topic" {
             acl_pass_auth = "topic"
 
-            if for_a == 0 {
+            switch for_a {
+            case 0:
                 end_number += 1
 
                 stmt, err := db.Prepare(DB_change("select acl from rd where code = ?"))
@@ -535,7 +537,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         panic(err)
                     }
                 }
-            } else if for_a == 1 {
+            case 1:
                 end_number += 1
 
                 stmt, err := db.Prepare(DB_change("select data from acl where title = ? and type = 'dis'"))
@@ -552,7 +554,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         panic(err)
                     }
                 }
-            } else {
+            default:
                 if auth_info["discuss"] {
                     acl_data = ""
                 } else {
@@ -633,7 +635,8 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
         } else if tool == "bbs_edit" {
             acl_pass_auth = "bbs"
 
-            if for_a == 0 {
+            switch for_a {
+            case 0:
                 end_number += 1
 
                 stmt, err := db.Prepare(DB_change("select set_data from bbs_set where set_name = 'bbs_edit_acl' and set_id = ?"))
@@ -650,7 +653,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         panic(err)
                     }
                 }
-            } else if for_a == 1 {
+            case 1:
                 end_number += 1
 
                 stmt, err := db.Prepare(DB_change("select set_data from bbs_set where set_name = 'bbs_acl' and set_id = ?"))
@@ -667,7 +670,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         panic(err)
                     }
                 }
-            } else if for_a == 2 {
+            case 2:
                 end_number += 1
 
                 err := db.QueryRow(DB_change("select set_data from bbs_set where set_name = 'bbs_edit_acl_all'")).Scan(&acl_data)
@@ -678,7 +681,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         panic(err)
                     }
                 }
-            } else {
+            default:
                 if auth_info["bbs_edit"] {
                     acl_data = ""
                 } else {
@@ -688,7 +691,8 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
         } else if tool == "bbs_comment" {
             acl_pass_auth = "bbs"
 
-            if for_a == 0 {
+            switch for_a {
+            case 0:
                 end_number += 1
 
                 stmt, err := db.Prepare(DB_change("select set_data from bbs_set where set_name = 'bbs_comment_acl' and set_id = ?"))
@@ -705,7 +709,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         panic(err)
                     }
                 }
-            } else if for_a == 1 {
+            case 1:
                 end_number += 1
 
                 stmt, err := db.Prepare(DB_change("select set_data from bbs_set where set_name = 'bbs_acl' and set_id = ?"))
@@ -722,7 +726,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         panic(err)
                     }
                 }
-            } else if for_a == 2 {
+            case 2:
                 end_number += 1
 
                 err := db.QueryRow(DB_change("select set_data from bbs_set where set_name = 'bbs_comment_acl_all'")).Scan(&acl_data)
@@ -733,7 +737,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         panic(err)
                     }
                 }
-            } else {
+            default:
                 if auth_info["bbs_comment"] {
                     acl_data = ""
                 } else {
@@ -908,7 +912,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
 
         except_ban_tool_list := []string{"render", "topic_view", "bbs_view"}
         if acl_data != "normal" {
-            if !(acl_data == "ban" || acl_data == "ban_admin") || ban_type == "3" {
+            if (acl_data != "ban" && acl_data != "ban_admin") || ban_type == "3" {
                 if !Arr_in_str(except_ban_tool_list, tool) {
                     if get_ban == "true" {
                         return false
@@ -916,17 +920,18 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 }
             }
 
-            if acl_data == "all" || acl_data == "ban" {
+            switch acl_data {
+            case "all", "ban":
                 return true
-            } else if acl_data == "user" {
+            case "user":
                 if !ip_or_user {
                     return true
                 }
-            } else if acl_data == "admin" {
+            case "admin":
                 if auth_info["treat_as_admin"] {
                     return true
                 }
-            } else if acl_data == "50_edit" {
+            case "50_edit":
                 if !ip_or_user {
                     stmt, err := db.Prepare(DB_change("select count(*) from history where ip = ?"))
                     if err != nil {
@@ -949,7 +954,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         return true
                     }
                 }
-            } else if acl_data == "before" {
+            case "before":
                 stmt, err := db.Prepare(DB_change("select ip from history where title = ? and ip = ? and type != 'edit_request'"))
                 if err != nil {
                     panic(err)
@@ -970,7 +975,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 if exist != "" {
                     return true
                 }
-            } else if acl_data == "30_day" || acl_data == "90_day" {
+            case "30_day", "90_day":
                 if !ip_or_user {
                     stmt, err := db.Prepare(DB_change("select data from user_set where id = ? and name = 'date'"))
                     if err != nil {
@@ -1001,7 +1006,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         return true
                     }
                 }
-            } else if acl_data == "email" {
+            case "email":
                 if !ip_or_user {
                     stmt, err := db.Prepare(DB_change("select data from user_set where id = ? and name = 'email'"))
                     if err != nil {
@@ -1024,27 +1029,28 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         return true
                     }
                 }
-            } else if acl_data == "owner" {
+            case "owner":
                 if auth_info["owner"] {
                     return true
                 }
-            } else if acl_data == "ban_admin" {
+            case "ban_admin":
                 if auth_info["treat_as_admin"] || get_ban == "true" {
                     return true
                 }
-            } else if acl_data == "not_all" {
+            case "not_all":
                 return false
-            } else if acl_data == "up_to_level_3" || acl_data == "up_to_level_10" {
-                if acl_data == "up_to_level_3" {
+            case "up_to_level_3", "up_to_level_10":
+                switch acl_data {
+                case "up_to_level_3":
                     if level_int >= 3 {
                         return true
                     }
-                } else if acl_data == "up_to_level_10" {
+                case "up_to_level_10":
                     if level_int >= 10 {
                         return true
                     }
                 }
-            } else if acl_data == "30_day_50_edit" {
+            case "30_day_50_edit":
                 if !ip_or_user {
                     stmt, err := db.Prepare(DB_change("select data from user_set where id = ? and name = 'date'"))
                     if err != nil {
