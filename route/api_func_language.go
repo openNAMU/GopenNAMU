@@ -11,7 +11,7 @@ func Api_func_language(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := make(map[string]interface{})
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     temp_list := other_set["data"].([]interface{})
 

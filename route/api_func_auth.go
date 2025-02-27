@@ -11,7 +11,7 @@ func Api_func_auth(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     auth_name := tool.Get_user_auth(db, config.IP)
     auth_info := tool.Get_auth_group_info(db, auth_name)

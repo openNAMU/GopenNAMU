@@ -11,7 +11,7 @@ func Api_func_ip(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     ip_data := tool.IP_parser(db, other_set["data"], config.IP)
 

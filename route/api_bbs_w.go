@@ -12,7 +12,7 @@ func Api_bbs_w(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     stmt, err := db.Prepare(tool.DB_change("select set_name, set_data from bbs_data where set_id = ? and set_code = ?"))
     if err != nil {

@@ -18,7 +18,7 @@ func Api_bbs_w_comment_make(db *sql.DB, doc_name string) string {
     json_data, _ := json.Marshal(inter_other_set)
 
     send_request := tool.Config{
-        Other_set: []string{string(json_data)},
+        Other_set: string(json_data),
         IP: "tool:system",
         Cookies: "",
     }
@@ -35,7 +35,7 @@ func Api_w_comment(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     db_code := tool.Get_document_setting(db, other_set["doc_name"], "document_comment_code", "")
     db_code_str := ""

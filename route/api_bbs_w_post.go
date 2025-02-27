@@ -12,7 +12,7 @@ func Api_bbs_w_post(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
         return_data := make(map[string]interface{})

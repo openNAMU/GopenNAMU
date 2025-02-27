@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"runtime/debug"
-	"strings"
 
 	"opennamu/route"
 	"opennamu/route/tool"
@@ -14,6 +13,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func error_handler() gin.HandlerFunc {
@@ -39,6 +39,8 @@ func error_handler() gin.HandlerFunc {
 }
 
 func main() {
+    var json = jsoniter.ConfigCompatibleWithStandardLibrary
+
     log.SetFlags(log.LstdFlags | log.Lshortfile)
         
     var r *gin.Engine
@@ -55,30 +57,31 @@ func main() {
 
     r.POST("/", func(c *gin.Context) {
         route_data := ""
+        
         body, err := io.ReadAll(c.Request.Body)
         if err != nil {
             panic(err)
         }
         
         body_string := string(body)
-        word := strings.Fields(body_string)
-        
-        call_arg := []string{ word[0], strings.Join(word[1:], " ") }
+
+        main_set := map[string]string{}
+        json.Unmarshal([]byte(body_string), &main_set)
 
         db := tool.DB_connect()
         defer tool.DB_close(db)
 
         if len(os.Args) > 1 && os.Args[1] == "dev" {
-            log.Default().Println(call_arg[0])
+            log.Default().Println(main_set["url"])
         }
 
         config := tool.Config{
-            Other_set: call_arg[1:],
-            IP: tool.Get_IP(c),
-            Cookies: tool.Get_Cookies(c),
+            Other_set: main_set["data"],
+            IP: main_set["ip"],
+            Cookies: main_set["cookies"],
         }
         
-        switch config.Other_set[0] {
+        switch main_set["url"] {
             case "test":
                 route_data = "ok"
             case "main_func_easter_egg":

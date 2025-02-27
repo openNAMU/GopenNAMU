@@ -12,7 +12,7 @@ func Api_topic(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     if other_set["tool"] == "length" {
         stmt, err := db.Prepare(tool.DB_change("select id from topic where code = ? order by id + 0 desc limit 1"))

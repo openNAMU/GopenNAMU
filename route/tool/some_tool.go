@@ -68,6 +68,10 @@ func Get_Cookies(c *gin.Context) string {
     return c.Request.Header.Get("Cookie")
 }
 
+func Get_session(c *gin.Context) string {
+    return ""
+}
+
 func Get_document_setting(db *sql.DB, doc_name string, set_name string, doc_rev string) [][]string {
     var rows *sql.Rows
 
@@ -514,7 +518,7 @@ func Get_cookie_header(cookie_header string) map[string]string {
 }
 
 type Config struct {
-    Other_set []string
+    Other_set string
     IP string
     Cookies string
 }

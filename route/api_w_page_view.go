@@ -12,7 +12,7 @@ func Api_w_page_view(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     pv_continue := tool.Get_setting(db, "not_use_view_count", "")
     if len(pv_continue) == 0 || pv_continue[0][0] == "" {

@@ -11,7 +11,7 @@ func Api_func_email_post(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     err := tool.Send_email(db, config.IP, other_set["who"], other_set["title"], other_set["data"])
     if err == nil {

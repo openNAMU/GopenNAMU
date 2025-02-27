@@ -11,7 +11,7 @@ func Api_user_setting_editor(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     ip := config.IP
     if !tool.IP_or_user(ip) {

@@ -20,7 +20,7 @@ func Api_bbs_w_comment_all(db *sql.DB, sub_code string, already_auth_check bool)
     json_data, _ := json.Marshal(inter_other_set)
 
     send_request := tool.Config{
-        Other_set: []string{string(json_data)},
+        Other_set: string(json_data),
         IP: "",
         Cookies: "",
     }
@@ -48,7 +48,7 @@ func Api_bbs_w_comment(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set[0]), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     if other_set["tool"] == "length" {
         stmt, err := db.Prepare(tool.DB_change("select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc"))
