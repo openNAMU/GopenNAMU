@@ -71,11 +71,12 @@ func DB_connect() *sql.DB {
     // log.Default().Println("DB open")
 
     if db_set["db_type"] == "sqlite" {
-        db, err := sql.Open("sqlite", db_set["db_name"] + ".db")
+        db, err := sql.Open("sqlite", db_set["db_name"] + ".db?_journal_mode=WAL&_busy_timeout=5000")
         if err != nil {
             panic(err)
         }
 
+        /*
         var journal_mode string
 
         err = db.QueryRow("PRAGMA journal_mode").Scan(&journal_mode)
@@ -83,7 +84,8 @@ func DB_connect() *sql.DB {
             panic(err)
         }
 
-        // log.Default().Println(journal_mode)
+        log.Default().Println(journal_mode)
+        */
 
         return db
     } else {
