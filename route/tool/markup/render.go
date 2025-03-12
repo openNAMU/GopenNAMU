@@ -1,6 +1,8 @@
-package tool
+package markup
 
 import (
+	"opennamu/route/tool"
+
 	"database/sql"
 	"strconv"
 	"time"
@@ -21,7 +23,7 @@ func Get_render(db *sql.DB, doc_name string, data string, render_type string) ma
     var markup string
 
     if render_type == "api_view" || render_type == "api_from" || render_type == "api_include" || render_type == "backlink" {
-        stmt, err := db.Prepare(DB_change("select set_data from data_set where doc_name = ? and set_name = 'document_markup'"))
+        stmt, err := db.Prepare(tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'document_markup'"))
         if err != nil {
             panic(err)
         }
@@ -38,7 +40,7 @@ func Get_render(db *sql.DB, doc_name string, data string, render_type string) ma
     }
 
     if markup == "" {
-        err := db.QueryRow(DB_change("select data from other where name = 'markup'")).Scan(&markup)
+        err := db.QueryRow(tool.DB_change("select data from other where name = 'markup'")).Scan(&markup)
         if err != nil {
             if err == sql.ErrNoRows {
                 markup = ""
@@ -104,25 +106,25 @@ func Get_render_direct(db *sql.DB, doc_name string, data string, markup string, 
     }
 
     if backlink == "1" {
-        Exec_DB(
+        tool.Exec_DB(
             db,
             "delete from back where link = ?",
             doc_name,
         )
 
-        Exec_DB(
+        tool.Exec_DB(
             db,
             "delete from back where title = ? and type = 'no'",
             doc_name,
         )
         
-        Exec_DB(
+        tool.Exec_DB(
             db,
             "delete from data_set where doc_name = ? and set_name = 'link_count'",
             doc_name,
         )
 
-        Exec_DB(
+        tool.Exec_DB(
             db,
             "delete from data_set where doc_name = ? and set_name = 'doc_type'",
             doc_name,
@@ -130,20 +132,20 @@ func Get_render_direct(db *sql.DB, doc_name string, data string, markup string, 
 
         end_backlink := render_data["backlink"].([][]string)
         for for_a := 0; for_a < len(end_backlink); for_a++ {
-            Exec_DB(
+            tool.Exec_DB(
                 db,
                 "insert into back (link, title, type, data) values (?, ?, ?, ?)",
                 end_backlink[0], end_backlink[1], end_backlink[2],
             )
         }
 
-        Exec_DB(
+        tool.Exec_DB(
             db,
             "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'link_count', ?)",
             doc_name, render_data["link_count"].(int),
         )
 
-        Exec_DB(
+        tool.Exec_DB(
             db,
             "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'doc_type', ?)",
             doc_name, "",

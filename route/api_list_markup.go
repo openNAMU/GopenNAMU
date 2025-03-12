@@ -3,6 +3,7 @@ package route
 import (
 	"database/sql"
 	"opennamu/route/tool"
+	"opennamu/route/tool/markup"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -13,7 +14,7 @@ func Api_list_markup(db *sql.DB, config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    data := tool.List_markup()
+    data := markup.List_markup()
 
     return_data := make(map[string]interface{})
     return_data["response"] = "ok"

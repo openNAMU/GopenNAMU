@@ -1,9 +1,9 @@
-package tool
+package markup
 
 import (
-    "strings"
+	"strings"
 
-    "github.com/dlclark/regexp2"
+	"github.com/dlclark/regexp2"
 )
 
 // 모니마크 렌더러는 전체가 아니라 나무마크로 변환

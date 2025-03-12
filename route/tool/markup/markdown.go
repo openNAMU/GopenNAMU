@@ -1,16 +1,18 @@
-package tool
+package markup
 
 import (
-    "bytes"
-    "database/sql"
-    "net/url"
-    "regexp"
-    "strconv"
-    "strings"
+	"bytes"
+	"database/sql"
+	"net/url"
+	"regexp"
+	"strconv"
+	"strings"
 
-    "github.com/yuin/goldmark"
-    "github.com/yuin/goldmark/extension"
-    "github.com/yuin/goldmark/renderer/html"
+	"opennamu/route/tool"
+
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 func Markdown(db *sql.DB, data map[string]string) map[string]interface{} {
@@ -111,7 +113,7 @@ func Markdown(db *sql.DB, data map[string]string) map[string]interface{} {
 
             var exist string
 
-            stmt, err := db.Prepare(DB_change("select title from data where title = ?"))
+            stmt, err := db.Prepare(tool.DB_change("select title from data where title = ?"))
             if err != nil {
                 panic(err)
             }

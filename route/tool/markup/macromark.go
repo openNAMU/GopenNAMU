@@ -1,4 +1,4 @@
-package tool
+package markup
 
 import (
 	"database/sql"
@@ -7,6 +7,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"opennamu/route/tool"
 
 	"github.com/dlclark/regexp2"
 )
@@ -124,7 +126,7 @@ func (class *macromark) render_text() {
 
                 part := strings.SplitN(a_data, ",", 2)
 
-                a_data_link := HTML_unescape(part[0])
+                a_data_link := tool.HTML_unescape(part[0])
                 a_data_view := a_data_link
                 if len(part) > 1 {
                     a_data_view = part[1]
@@ -133,7 +135,7 @@ func (class *macromark) render_text() {
                 a_data_link = strings.ReplaceAll(a_data_link, "<temp>", ",")
                 a_data_view = strings.ReplaceAll(a_data_view, "<temp>", ",")
 
-                temp_name := class.func_temp_save("<a href=\"/w/" + Url_parser(a_data_link) + "\">" + a_data_view + "</a>", m_string)
+                temp_name := class.func_temp_save("<a href=\"/w/" + tool.Url_parser(a_data_link) + "\">" + a_data_view + "</a>", m_string)
                 string_data = strings.Replace(string_data, m_string, temp_name, 1)
             case "b":
                 temp_name := class.func_temp_save("<b>" + macro_data + "</b>", m_string)
