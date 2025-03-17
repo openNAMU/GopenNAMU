@@ -188,7 +188,7 @@ func main() {
                 route_data = "{ \"response\" : \"404\" }"
         }
     
-        c.String(http.StatusOK, route_data)  
+        c.Data(http.StatusOK, "application/json", []byte(route_data))
     })
     
     r.Run(":" + tool.Get_port())
