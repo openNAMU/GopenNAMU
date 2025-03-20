@@ -25,12 +25,12 @@ func error_handler() gin.HandlerFunc {
                     err = fmt.Errorf("%v", r)
                 }
 
-                c.String(http.StatusInternalServerError, "error")
-
                 stackTrace := debug.Stack()
                 log.Default().Printf("Recovered from panic: %v\nStack Trace:\n%s", err, stackTrace)
 
-                c.Abort()
+                c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+                    "response" : "error",
+                })
             }
         }()
 
