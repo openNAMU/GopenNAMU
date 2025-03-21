@@ -8,45 +8,26 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+var global_lang_data = map[string]string{}
+
 func Get_language(db *sql.DB, data string, safe bool) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-    m_db := Temp_DB_connect()
-    defer m_db.Close()
-
-    var language string
+    language := "ko-KR"
 
     err := db.QueryRow(DB_change("select data from other where name = 'language'")).Scan(&language)
     if err != nil {
         if err == sql.ErrNoRows {
-            language = "ko-KR"
         } else {
             panic(err)
         }
     }
 
-    var language_data string
-
-    stmt, err := m_db.Prepare("select data from temp where name = ?")
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    err = stmt.QueryRow("lang_" + language + "_" + data).Scan(&language_data)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            language_data = ""
-        } else {
-            panic(err)
-        }
-    }
-
-    if language_data != "" {
+    if _, ok := global_lang_data[language + "_" + data]; ok {
         if safe {
-            return language_data
+            return global_lang_data[language + "_" + data]
         } else {
-            return HTML_escape(language_data)
+            return HTML_escape(global_lang_data[language + "_" + data])
         }
     } else {
         file, err := os.Open("./lang/" + language + ".json")
@@ -62,6 +43,10 @@ func Get_language(db *sql.DB, data string, safe bool) string {
             panic(err)
         }
 
+        for k, v := range lang_data {
+            global_lang_data[language + "_" + k] = v
+        }
+
         if _, ok := lang_data[data]; ok {
             if safe {
                 return lang_data[data]
@@ -70,7 +55,6 @@ func Get_language(db *sql.DB, data string, safe bool) string {
             }
         } else {
             log.Default().Println(data + " (" + language + ")")
-
             return data + " (" + language + ")"
         }
     }
