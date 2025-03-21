@@ -6,6 +6,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	jsoniter "github.com/json-iterator/go"
 	_ "modernc.org/sqlite"
 )
 
@@ -44,26 +45,14 @@ func Temp_DB_connect() *sql.DB {
     return db
 }
 
-func DB_init() {
-    m_db := Temp_DB_connect()
-    defer m_db.Close()
+func DB_init(get_db_set string) {
+    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-    rows, err := m_db.Query("select name, data from temp")
-    if err != nil {
-        panic(err)
-    }
-    defer rows.Close()
+    other_set := map[string]string{}
+    json.Unmarshal([]byte(get_db_set), &other_set)
 
-    for rows.Next() {
-        var name string
-        var data string
-
-        err := rows.Scan(&name, &data)
-        if err != nil {
-            panic(err)
-        }
-
-        db_set[name] = data
+    for k, v := range other_set {
+        db_set[k] = v
     }
 }
 

@@ -53,8 +53,6 @@ func main() {
 
     r.Use(error_handler())
 
-    tool.DB_init()
-
     r.POST("/", func(c *gin.Context) {
         route_data := ""
         
@@ -67,6 +65,10 @@ func main() {
 
         main_set := map[string]string{}
         json.Unmarshal([]byte(body_string), &main_set)
+
+        if main_set["url"] == "test" {
+            tool.DB_init(main_set["data"])
+        }
 
         db := tool.DB_connect()
         defer tool.DB_close(db)
