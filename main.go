@@ -44,7 +44,7 @@ func main() {
     log.SetFlags(log.LstdFlags | log.Lshortfile)
         
     var r *gin.Engine
-    if len(os.Args) > 1 && os.Args[1] == "dev" {
+    if len(os.Args) > 2 && os.Args[2] == "dev" {
         r = gin.Default()
     } else {
         gin.SetMode(gin.ReleaseMode)
@@ -73,7 +73,7 @@ func main() {
         db := tool.DB_connect()
         defer tool.DB_close(db)
 
-        if len(os.Args) > 1 && os.Args[1] == "dev" {
+        if len(os.Args) > 2 && os.Args[2] == "dev" {
             log.Default().Println(main_set["url"])
         }
 
@@ -200,5 +200,5 @@ func main() {
         c.Data(http.StatusOK, "application/json", []byte(route_data))
     })
     
-    r.Run(":" + tool.Get_port())
+    r.Run(":" + os.Args[1])
 }
