@@ -36,15 +36,6 @@ func Exec_DB(db *sql.DB, query string, values ...interface{}) {
     }
 }
 
-func Temp_DB_connect() *sql.DB {
-    db, err := sql.Open("sqlite", "./data/temp.db")
-    if err != nil {
-        panic(err)
-    }
-
-    return db
-}
-
 func DB_init(get_db_set string) {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
