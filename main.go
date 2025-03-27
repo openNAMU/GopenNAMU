@@ -26,7 +26,6 @@ func error_handler() gin.HandlerFunc {
                 }
 
                 stackTrace := debug.Stack()
-                log.Default().Printf("Recovered from panic: %v\nStack Trace:\n%s", err, stackTrace)
 
                 c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
                     "response" : "error",
