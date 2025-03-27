@@ -30,6 +30,8 @@ func error_handler() gin.HandlerFunc {
 
                 c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
                     "response" : "error",
+                    "error" : err.Error(),
+                    "stack" : string(stackTrace),
                 })
             }
         }()
