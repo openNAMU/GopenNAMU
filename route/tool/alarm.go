@@ -11,22 +11,13 @@ func Send_alarm(db *sql.DB, from string, target string, data string) {
 
         now_time := Get_time()
 
-        var count string
-
-        stmt, err := db.Prepare(DB_change("select id from user_notice where name = ? order by id + 0 desc limit 1"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        err = stmt.QueryRow(target).Scan(&count)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                count = "1"
-            } else {
-                panic(err)
-            }
-        }
+        count := "1"
+        QueryRow_DB(
+            db,
+            DB_change("select id from user_notice where name = ? order by id + 0 desc limit 1"),
+            []any{ &count },
+            target,
+        )
 
         count_int, _ := strconv.Atoi(count)
         count_int += 1

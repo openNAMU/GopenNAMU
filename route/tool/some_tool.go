@@ -177,19 +177,12 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
 
     user_skin_name := ""
     if IP_or_user(ip) {
-        stmt, err := db.Prepare(DB_change("select data from user_set where name = 'skin' and id = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        err = stmt.QueryRow(ip).Scan(&user_skin_name)
-        if err != nil {
-            if err == sql.ErrNoRows {
-            } else {
-                panic(err)
-            }
-        }
+        QueryRow_DB(
+            db,
+            DB_change("select data from user_set where name = 'skin' and id = ?"),
+            []any{ &user_skin_name },
+            ip,
+        )
     }
 
     if user_skin_name == "default" {
@@ -197,19 +190,11 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
     }
 
     if user_skin_name == "" {
-        stmt, err := db.Prepare(DB_change("select data from other where name = 'skin'"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        err = stmt.QueryRow().Scan(&user_skin_name)
-        if err != nil {
-            if err == sql.ErrNoRows {
-            } else {
-                panic(err)
-            }
-        }
+        QueryRow_DB(
+            db,
+            DB_change("select data from other where name = 'skin'"),
+            []any{ &user_skin_name },
+        )
     }
 
     if user_skin_name != "" && Arr_in_str(skin_list, user_skin_name) {
@@ -241,17 +226,16 @@ func Get_template(db *sql.DB, ip string, data jet.VarMap) string {
 }
 
 func Get_domain(db *sql.DB, full_string bool) string {
-    var domain string
-
+    domain := ""
     sys_host := ""
 
     if full_string {
-        var http_select string
-
-        err := db.QueryRow("select data from other where name = 'http_select'").Scan(&http_select)
-        if err != nil && err != sql.ErrNoRows {
-            return ""
-        }
+        http_select := ""
+        QueryRow_DB(
+            db,
+            DB_change("select data from other where name = 'http_select'"),
+            []any{ &http_select },
+        )
         
         if http_select == "" {
             http_select = "http"
@@ -259,12 +243,12 @@ func Get_domain(db *sql.DB, full_string bool) string {
 
         domain = http_select + "://"
 
-        var db_domain string
-
-        err = db.QueryRow("select data from other where name = 'domain'").Scan(&db_domain)
-        if err != nil && err != sql.ErrNoRows {
-            return ""
-        }
+        db_domain := ""
+        QueryRow_DB(
+            db,
+            DB_change("select data from other where name = 'domain'"),
+            []any{ &db_domain },
+        )
 
         if db_domain != "" {
             domain += db_domain
@@ -272,12 +256,12 @@ func Get_domain(db *sql.DB, full_string bool) string {
             domain += sys_host
         }
     } else {
-        var db_domain string
-
-        err := db.QueryRow("select data from other where name = 'domain'").Scan(&db_domain)
-        if err != nil && err != sql.ErrNoRows {
-            return ""
-        }
+        db_domain := ""
+        QueryRow_DB(
+            db,
+            DB_change("select data from other where name = 'domain'"),
+            []any{ &db_domain },
+        )
 
         if db_domain != "" {
             domain = db_domain
@@ -292,129 +276,66 @@ func Get_domain(db *sql.DB, full_string bool) string {
 func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     skin_name := Get_use_skin_name(db, ip)
     data_list := []any{}
-    
-    set_wiki_name := ""
+
+    set_wiki_name := "Wiki"
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'name'"),
+        []any{ &set_wiki_name },
+    )
+
     set_license := ""
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'license'"),
+        []any{ &set_license },
+    )
+
     set_logo := ""
-    set_head := ""
-    set_head_skin := ""
-    set_top_menu := ""
-    set_top_menu_user := ""
-
-    stmt, err := db.Prepare(DB_change("select data from other where name = 'name'"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    err = stmt.QueryRow().Scan(&set_wiki_name)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            set_wiki_name = "Wiki"
-        } else {
-            panic(err)
-        }
-    }
-
-    stmt2, err := db.Prepare(DB_change("select data from other where name = 'license'"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt2.Close()
-
-    err = stmt2.QueryRow().Scan(&set_license)
-    if err != nil {
-        if err == sql.ErrNoRows {
-        } else {
-            panic(err)
-        }
-    }
-
-    stmt3, err := db.Prepare(DB_change("select data from other where name = 'logo' and coverage = ?"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt3.Close()
-
-    err = stmt3.QueryRow(skin_name).Scan(&set_logo)
-    if err != nil {
-        if err == sql.ErrNoRows {
-        } else {
-            panic(err)
-        }
-    }
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'logo' and coverage = ?"),
+        []any{ &set_logo },
+        skin_name,
+    )
 
     if set_logo == "" {
-        stmt4, err := db.Prepare(DB_change("select data from other where name = 'logo' and coverage = ''"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt4.Close()
-
-        err = stmt4.QueryRow().Scan(&set_logo)
-        if err != nil {
-            if err == sql.ErrNoRows {
-            } else {
-                panic(err)
-            }
-        }
-    }
-
-    stmt5, err := db.Prepare(DB_change("select data from other where name = 'head' and coverage = ''"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt5.Close()
-
-    err = stmt5.QueryRow().Scan(&set_head)
-    if err != nil {
-        if err == sql.ErrNoRows {
-        } else {
-            panic(err)
-        }
-    }
-
-    stmt6, err := db.Prepare(DB_change("select data from other where name = 'head' and coverage = ?"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt6.Close()
-
-    err = stmt6.QueryRow(skin_name).Scan(&set_head_skin)
-    if err != nil {
-        if err == sql.ErrNoRows {
-        } else {
-            panic(err)
-        }
+        QueryRow_DB(
+            db,
+            DB_change("select data from other where name = 'logo' and coverage = ''"),
+            []any{ &set_logo },
+        )
     }
     
-    stmt7, err := db.Prepare(DB_change("select data from other where name = 'top_menu'"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt7.Close()
+    set_head := ""
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'head' and coverage = ''"),
+        []any{ &set_head },
+    )
 
-    err = stmt7.QueryRow(skin_name).Scan(&set_top_menu)
-    if err != nil {
-        if err == sql.ErrNoRows {
-        } else {
-            panic(err)
-        }
-    }
+    set_head_skin := ""
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'head' and coverage = ?"),
+        []any{ &set_head_skin },
+        skin_name,
+    )
+    
+    set_top_menu := ""
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'top_menu'"),
+        []any{ &set_top_menu },
+    )
 
-    stmt8, err := db.Prepare(DB_change("select data from user_set where name = 'top_menu' and id = ?"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt8.Close()
-
-    err = stmt8.QueryRow(skin_name).Scan(&set_top_menu_user)
-    if err != nil {
-        if err == sql.ErrNoRows {
-        } else {
-            panic(err)
-        }
-    }
+    set_top_menu_user := ""
+    QueryRow_DB(
+        db,
+        DB_change("select data from user_set where name = 'top_menu' and id = ?"),
+        []any{ &set_top_menu },
+        skin_name,
+    )
 
     set_top_menu = strings.ReplaceAll(set_top_menu, "\r", "")
     set_top_menu_user = strings.ReplaceAll(set_top_menu_user, "\r", "")
@@ -440,20 +361,12 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     template_var := []any{}
     for for_a := 1; for_a < 4; for_a++ {
         template_var_tmp := ""
-
-        stmt9, err := db.Prepare(DB_change("select data from other where name = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt9.Close()
-    
-        err = stmt9.QueryRow("template_var_" + strconv.Itoa(for_a)).Scan(&template_var_tmp)
-        if err != nil {
-            if err == sql.ErrNoRows {
-            } else {
-                panic(err)
-            }
-        }
+        QueryRow_DB(
+            db,
+            DB_change("select data from other where name = ?"),
+            []any{ &template_var_tmp },
+            "template_var_" + strconv.Itoa(for_a),
+        )
 
         template_var = append(template_var, template_var_tmp)
     }

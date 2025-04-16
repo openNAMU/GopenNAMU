@@ -20,72 +20,47 @@ func IP_or_user(ip string) bool {
 }
 
 func Get_level(db *sql.DB, ip string) []string {
-    var level string
-    var exp string
-    var max_exp string
+    level := "0"
+    QueryRow_DB(
+        db,
+        DB_change("select data from user_set where id = ? and name = 'level'"),
+        []any{ &level },
+        ip,
+    )
 
-    stmt, err := db.Prepare(DB_change("select data from user_set where id = ? and name = 'level'"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    err = stmt.QueryRow(ip).Scan(&level)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            level = "0"
-        } else {
-            panic(err)
-        }
-    }
-
-    stmt, err = db.Prepare(DB_change("select data from user_set where id = ? and name = 'experience'"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    err = stmt.QueryRow(ip).Scan(&exp)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            exp = "0"
-        } else {
-            panic(err)
-        }
-    }
+    exp := "0"
+    QueryRow_DB(
+        db,
+        DB_change("select data from user_set where id = ? and name = 'experience'"),
+        []any{ &exp },
+        ip,
+    )
 
     level_int, _ := strconv.Atoi(level)
-    max_exp = strconv.Itoa(level_int*50 + 500)
+    max_exp := strconv.Itoa(level_int * 50 + 500)
 
     return []string{level, exp, max_exp}
 }
 
 func IP_preprocess(db *sql.DB, ip string, my_ip string) []string {
-    var ip_view string
-    var user_name_view string
-
     ip_split := strings.Split(ip, ":")
     if len(ip_split) != 1 && ip_split[0] == "tool" {
         return []string{ip, ""}
     }
 
-    err := db.QueryRow(DB_change("select data from other where name = 'ip_view'")).Scan(&ip_view)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            ip_view = ""
-        } else {
-            panic(err)
-        }
-    }
+    ip_view := ""
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'ip_view'"),
+        []any{ &ip_view },
+    )
 
-    err = db.QueryRow(DB_change("select data from other where name = 'user_name_view'")).Scan(&user_name_view)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            user_name_view = ""
-        } else {
-            panic(err)
-        }
-    }
+    user_name_view := ""
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'user_name_view'"),
+        []any{ &user_name_view },
+    )
 
     if Check_acl(db, "", "", "view_hide_user_name", my_ip) {
         ip_view = ""
@@ -101,22 +76,13 @@ func IP_preprocess(db *sql.DB, ip string, my_ip string) []string {
         }
     } else {
         if user_name_view != "" {
-            var sub_user_name string
-
-            stmt, err := db.Prepare(DB_change("select data from user_set where id = ? and name = 'sub_user_name'"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            err = stmt.QueryRow(ip).Scan(&sub_user_name)
-            if err != nil {
-                if err == sql.ErrNoRows {
-                    sub_user_name = Get_language(db, "member", false)
-                } else {
-                    panic(err)
-                }
-            }
+            sub_user_name := ""
+            QueryRow_DB(
+                db,
+                DB_change("select data from user_set where id = ? and name = 'sub_user_name'"),
+                []any{ &sub_user_name },
+                ip,
+            )
 
             if sub_user_name == "" {
                 sub_user_name = Get_language(db, "member", false)
@@ -125,22 +91,13 @@ func IP_preprocess(db *sql.DB, ip string, my_ip string) []string {
             ip = sub_user_name
             ip_change = "true"
         } else {
-            var user_name string
-
-            stmt, err := db.Prepare(DB_change("select data from user_set where name = 'user_name' and id = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            err = stmt.QueryRow(ip).Scan(&user_name)
-            if err != nil {
-                if err == sql.ErrNoRows {
-                    user_name = ip
-                } else {
-                    panic(err)
-                }
-            }
+            user_name := ""
+            QueryRow_DB(
+                db,
+                DB_change("select data from user_set where name = 'user_name' and id = ?"),
+                []any{ &user_name },
+                ip,
+            )
 
             if user_name == "" {
                 user_name = ip
@@ -157,22 +114,13 @@ func IP_menu(db *sql.DB, ip string, my_ip string, option string) map[string][][]
     menu := map[string][][]string{}
 
     if ip == my_ip && option == "" {
-        stmt, err := db.Prepare(DB_change("select count(*) from user_notice where name = ? and readme = ''"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        var alarm_count string
-
-        err = stmt.QueryRow(my_ip).Scan(&alarm_count)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                alarm_count = "0"
-            } else {
-                panic(err)
-            }
-        }
+        alarm_count := "0"
+        QueryRow_DB(
+            db,
+            DB_change("select count(*) from user_notice where name = ? and readme = ''"),
+            []any{ &alarm_count },
+            my_ip,
+        )
 
         if IP_or_user(my_ip) {
             menu[Get_language(db, "login", false)] = [][]string{
@@ -316,22 +264,15 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
         }
     }
 
-    stmt, err := db.Prepare(DB_change("select login from rb where block = ? and (band = '' or band = 'private') and ongoing = '1'"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
+    login := ""
+    exist := QueryRow_DB(
+        db,
+        DB_change("select login from rb where block = ? and (band = '' or band = 'private') and ongoing = '1'"),
+        []any{ &login },
+        ip,
+    )
 
-    var login string
-
-    err = stmt.QueryRow(ip).Scan(&login)
-    if err != nil {
-        if err == sql.ErrNoRows {
-
-        } else {
-            panic(err)
-        }
-    } else {
+    if exist {
         ban_type := Get_user_ban_type(login)
 
         switch tool {
@@ -352,22 +293,15 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
         }
     }
 
-    stmt, err = db.Prepare(DB_change("select data from user_set where id = ? and name = 'acl'"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
+    data := ""
+    exist = QueryRow_DB(
+        db,
+        DB_change("select data from user_set where id = ? and name = 'acl'"),
+        []any{ &data },
+        ip,
+    )
 
-    var data string
-
-    err = stmt.QueryRow(ip).Scan(&data)
-    if err != nil {
-        if err == sql.ErrNoRows {
-
-        } else {
-            panic(err)
-        }
-    } else {
+    if exist {
         if data == "ban" {
             return []string{"true", "c"}
         }
@@ -388,18 +322,13 @@ func IP_parser(db *sql.DB, ip string, my_ip string) string {
         raw_ip := ip
         ip = HTML_escape(ip_pre_data[0])
 
-        if !IP_or_user(raw_ip) {
-            var user_name_level string
-            var user_title string
-
-            err := db.QueryRow(DB_change("select data from other where name = 'user_name_level'")).Scan(&user_name_level)
-            if err != nil {
-                if err == sql.ErrNoRows {
-                    user_name_level = ""
-                } else {
-                    panic(err)
-                }
-            }
+        if !IP_or_user(raw_ip) {            
+            user_name_level := ""
+            QueryRow_DB(
+                db,
+                DB_change("select data from other where name = 'user_name_level'"),
+                []any{ &user_name_level },
+            )
 
             if user_name_level != "" {
                 level_data := Get_level(db, raw_ip)
@@ -408,20 +337,13 @@ func IP_parser(db *sql.DB, ip string, my_ip string) string {
 
             ip = "<a href=\"/w/" + Url_parser("user:"+raw_ip) + "\">" + ip + "</a>"
 
-            stmt, err := db.Prepare(DB_change("select data from user_set where name = 'user_title' and id = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            err = stmt.QueryRow(raw_ip).Scan(&user_title)
-            if err != nil {
-                if err == sql.ErrNoRows {
-                    user_title = ""
-                } else {
-                    panic(err)
-                }
-            }
+            user_title := ""
+            QueryRow_DB(
+                db,
+                DB_change("select data from user_set where name = 'user_title' and id = ?"),
+                []any{ &user_title },
+                raw_ip,
+            )
 
             if Check_acl(db, "", "", "user_name_bold", raw_ip) {
                 ip = "<b>" + ip + "</b>"

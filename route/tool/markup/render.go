@@ -20,34 +20,22 @@ func List_markup() []string {
 }
 
 func Get_render(db *sql.DB, doc_name string, data string, render_type string) map[string]string {
-    var markup string
-
+    markup := ""
     if render_type == "api_view" || render_type == "api_from" || render_type == "api_include" || render_type == "backlink" {
-        stmt, err := db.Prepare(tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'document_markup'"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        err = stmt.QueryRow(doc_name).Scan(&markup)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                markup = ""
-            } else {
-                panic(err)
-            }
-        }
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'document_markup'"),
+            []any{ &markup },
+            doc_name,
+        )
     }
 
     if markup == "" {
-        err := db.QueryRow(tool.DB_change("select data from other where name = 'markup'")).Scan(&markup)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                markup = ""
-            } else {
-                panic(err)
-            }
-        }
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select data from other where name = 'markup'"),
+            []any{ &markup },
+        )
     }
 
     if markup == "" || markup == "namumark_beta" {

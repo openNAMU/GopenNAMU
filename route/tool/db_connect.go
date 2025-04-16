@@ -61,7 +61,7 @@ func Query_DB(db *sql.DB, query string, values ...any) *sql.Rows {
 }
 
 // 이래서 포인터를 배우는구나...
-func QueryRow_DB(db *sql.DB, query string, var_list []any, values ...any) {
+func QueryRow_DB(db *sql.DB, query string, var_list []any, values ...any) bool {
     const retryDelay = 10 * time.Millisecond
 
     stmt, err := db.Prepare(DB_change(query))
@@ -74,8 +74,10 @@ func QueryRow_DB(db *sql.DB, query string, var_list []any, values ...any) {
         row := stmt.QueryRow(values...)
 
         err := row.Scan(var_list...)
-        if err == nil || err == sql.ErrNoRows {
-            return
+        if err == nil {
+            return true
+        } else if err == sql.ErrNoRows {
+            return false
         }
 
         if strings.Contains(err.Error(), "database is locked") {
@@ -106,17 +108,6 @@ func DB_connect() *sql.DB {
         if err != nil {
             panic(err)
         }
-
-        /*
-        var journal_mode string
-
-        err = db.QueryRow("PRAGMA journal_mode").Scan(&journal_mode)
-        if err != nil {
-            panic(err)
-        }
-
-        log.Default().Println(journal_mode)
-        */
 
         return db
     } else {

@@ -17,22 +17,13 @@ func Api_w_page_view(db *sql.DB, config tool.Config) string {
     pv_continue := tool.Get_setting(db, "not_use_view_count", "")
     if len(pv_continue) == 0 || pv_continue[0][0] == "" {
         // 전체 조회수
-        stmt, err := db.Prepare(tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ''"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        var view_count string
-
-        err = stmt.QueryRow(other_set["doc_name"]).Scan(&view_count)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                view_count = "0"
-            } else {
-                panic(err)
-            }
-        }
+        view_count := "0"
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ''"),
+            []any{ &view_count },
+            other_set["doc_name"],
+        )
 
         if view_count == "0" {
             tool.Exec_DB(
@@ -51,22 +42,14 @@ func Api_w_page_view(db *sql.DB, config tool.Config) string {
         }
 
         // 월간 조회수
-        stmt, err = db.Prepare(tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
         now_date := tool.Get_month()
-
-        err = stmt.QueryRow(other_set["doc_name"], now_date).Scan(&view_count)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                view_count = "0"
-            } else {
-                panic(err)
-            }
-        }
+        view_count = "0"
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?"),
+            []any{ &view_count },
+            other_set["doc_name"], now_date,
+        )
 
         if view_count == "0" {
             tool.Exec_DB(
@@ -85,22 +68,14 @@ func Api_w_page_view(db *sql.DB, config tool.Config) string {
         }
 
         // 하루 조회수
-        stmt, err = db.Prepare(tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
         now_date = tool.Get_date()
-
-        err = stmt.QueryRow(other_set["doc_name"], now_date).Scan(&view_count)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                view_count = "0"
-            } else {
-                panic(err)
-            }
-        }
+        view_count = "0"
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?"),
+            []any{ &view_count },
+            other_set["doc_name"], now_date,
+        )
 
         if view_count == "0" {
             tool.Exec_DB(

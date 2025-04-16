@@ -20,16 +20,13 @@ func Api_w_xref(db *sql.DB, config tool.Config) string {
         num = page*50 - 50
     }
 
-    var link_case_insensitive string
-
-    err := db.QueryRow(tool.DB_change("select data from other where name = 'link_case_insensitive'")).Scan(&link_case_insensitive)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            link_case_insensitive = ""
-        } else {
-            panic(err)
-        }
-    }
+    link_case_insensitive := ""
+    tool.QueryRow_DB(
+        db,
+        tool.DB_change("select data from other where name = 'link_case_insensitive'"),
+        []any{ &link_case_insensitive },
+        other_set["name"],
+    )
 
     if link_case_insensitive != "" {
         link_case_insensitive = " collate nocase"

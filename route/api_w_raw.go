@@ -19,57 +19,44 @@ func Api_w_raw(db *sql.DB, config tool.Config) string {
     if !tool.Check_acl(db, other_set["name"], "", "render", config.IP) {
         new_data["response"] = "require auth"
     } else if other_set["exist_check"] != "" {
-        stmt, err := db.Prepare(tool.DB_change("select title from data where title = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
+        title := ""
+        exist := tool.QueryRow_DB(
+            db,
+            tool.DB_change("select title from data where title = ?"),
+            []any{ &title },
+            other_set["name"],
+        )
 
-        var title string
-
-        err = stmt.QueryRow(other_set["name"]).Scan(&title)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                new_data["exist"] = false
-            } else {
-                panic(err)
-            }
+        if !exist {
+            new_data["exist"] = false
         } else {
             new_data["exist"] = true
         }
 
         new_data["response"] = "ok"
-    } else {
-        var data string
+    } else {        
+        exist := false
+
+        data := ""
         hide := ""
-
-        var stmt *sql.Stmt
-        var err error
-
         if other_set["rev"] != "" {
-            stmt, err = db.Prepare(tool.DB_change("select data, hide from history where title = ? and id = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            err = stmt.QueryRow(other_set["name"], other_set["rev"]).Scan(&data, &hide)
+            exist = tool.QueryRow_DB(
+                db,
+                tool.DB_change("select data, hide from history where title = ? and id = ?"),
+                []any{ &data, &hide },
+                other_set["name"], other_set["rev"],
+            )
         } else {
-            stmt, err = db.Prepare(tool.DB_change("select data from data where title = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            err = stmt.QueryRow(other_set["name"]).Scan(&data)
+            exist = tool.QueryRow_DB(
+                db,
+                tool.DB_change("select data from data where title = ?"),
+                []any{ &data },
+                other_set["name"],
+            )
         }
 
-        if err != nil {
-            if err == sql.ErrNoRows {
-                new_data["response"] = "not exist"
-            } else {
-                panic(err)
-            }
+        if !exist {
+            new_data["response"] = "not exist"
         } else {
             check_pass := false
             if hide != "" {

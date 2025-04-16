@@ -31,32 +31,26 @@ func Api_bbs_w_tabom_post(db *sql.DB, config tool.Config) string {
     if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
         return_data["response"] = "require auth"
     } else {
-        not_exist := false
         no_data := ""
-
-        tool.QueryRow_DB(
+        exist := tool.QueryRow_DB(
             db,
             tool.DB_change("select set_data from bbs_data where set_name = 'tabom_list' and set_data = ? and set_id = ? and set_code = ?"),
             []any{ &no_data },
             config.IP, bbs_num, post_num,
         )
 
-        if no_data == "" {
-            not_exist = true
-        }
-
-        if not_exist {
+        if !exist {
             return_data["response"] = "ok"
         
             tabom_count := ""
-            tool.QueryRow_DB(
+            exsit := tool.QueryRow_DB(
                 db,
                 tool.DB_change("select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?"),
                 []any{ &tabom_count },
                 bbs_num, post_num,
             )
         
-            if tabom_count == "" {
+            if !exsit {
                 tool.Exec_DB(
                     db,
                     "insert into bbs_data (set_name, set_data, set_id, set_code) values ('tabom_count', ?, ?, ?)",

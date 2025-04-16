@@ -14,14 +14,11 @@ func Get_language(db *sql.DB, data string, safe bool) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     language := "ko-KR"
-
-    err := db.QueryRow(DB_change("select data from other where name = 'language'")).Scan(&language)
-    if err != nil {
-        if err == sql.ErrNoRows {
-        } else {
-            panic(err)
-        }
-    }
+    QueryRow_DB(
+        db,
+        DB_change("select data from other where name = 'language'"),
+        []any{ &language },
+    )
 
     if _, ok := global_lang_data[language + "_" + data]; ok {
         if safe {

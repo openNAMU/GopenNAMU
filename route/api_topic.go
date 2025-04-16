@@ -15,21 +15,13 @@ func Api_topic(db *sql.DB, config tool.Config) string {
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
     if other_set["tool"] == "length" {
-        stmt, err := db.Prepare(tool.DB_change("select id from topic where code = ? order by id + 0 desc limit 1"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        var length string
-        err = stmt.QueryRow(other_set["topic_num"]).Scan(&length)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                length = "0"
-            } else {
-                panic(err)
-            }
-        }
+        length := "0"
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select id from topic where code = ? order by id + 0 desc limit 1"),
+            []any{ &length },
+            other_set["topic_num"],
+        )
 
         new_data := map[string]string{}
         new_data["length"] = length

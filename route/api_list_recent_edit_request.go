@@ -42,54 +42,29 @@ func Api_list_recent_edit_request(db *sql.DB, config tool.Config) string {
             panic(err)
         }
 
-        var ip string
-        var send string
-        var leng string
+        ip := ""
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from data_set where set_name = 'edit_request_user' and doc_rev = ? and doc_name = ?"),
+            []any{ &ip },
+            doc_rev, doc_name,
+        )
 
-        stmt, err := db.Prepare(tool.DB_change("select set_data from data_set where set_name = 'edit_request_user' and doc_rev = ? and doc_name = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
+        send := ""
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from data_set where set_name = 'edit_request_send' and doc_rev = ? and doc_name = ?"),
+            []any{ &send },
+            doc_rev, doc_name,
+        )
 
-        err = stmt.QueryRow(doc_rev, doc_name).Scan(&ip)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                ip = ""
-            } else {
-                panic(err)
-            }
-        }
-
-        stmt, err = db.Prepare(tool.DB_change("select set_data from data_set where set_name = 'edit_request_send' and doc_rev = ? and doc_name = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        err = stmt.QueryRow(doc_rev, doc_name).Scan(&send)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                send = ""
-            } else {
-                panic(err)
-            }
-        }
-
-        stmt, err = db.Prepare(tool.DB_change("select set_data from data_set where set_name = 'edit_request_leng' and doc_rev = ? and doc_name = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        err = stmt.QueryRow(doc_rev, doc_name).Scan(&leng)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                leng = ""
-            } else {
-                panic(err)
-            }
-        }
+        leng := ""
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from data_set where set_name = 'edit_request_leng' and doc_rev = ? and doc_name = ?"),
+            []any{ &leng },
+            doc_rev, doc_name,
+        )
 
         data_list = append(data_list, []string{
             doc_name,

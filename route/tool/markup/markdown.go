@@ -111,22 +111,13 @@ func Markdown(db *sql.DB, data map[string]string) map[string]interface{} {
                 backlink[link] = map[string]string{}
             }
 
-            var exist string
-
-            stmt, err := db.Prepare(tool.DB_change("select title from data where title = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            err = stmt.QueryRow(link).Scan(&exist)
-            if err != nil {
-                if err == sql.ErrNoRows {
-                    exist = ""
-                } else {
-                    panic(err)
-                }
-            }
+            exist := ""
+            tool.QueryRow_DB(
+                db,
+                tool.DB_change("select title from data where title = ?"),
+                []any{ &exist },
+                link,
+            )
 
             backlink[link][""] = ""
             link_count += 1

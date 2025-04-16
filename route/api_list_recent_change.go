@@ -60,32 +60,18 @@ func Api_list_recent_change(db *sql.DB, config tool.Config) string {
             panic(err)
         }
 
-        var date string
-        var ip string
-        var send string
-        var leng string
-        var hide string
-        var type_data string
-
-        stmt, err := db.Prepare(tool.DB_change("select date, ip, send, leng, hide, type from history where id = ? and title = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        err = stmt.QueryRow(id, title).Scan(&date, &ip, &send, &leng, &hide, &type_data)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                date = ""
-                ip = ""
-                send = ""
-                leng = ""
-                hide = ""
-                type_data = ""
-            } else {
-                panic(err)
-            }
-        }
+        date := ""
+        ip := ""
+        send := ""
+        leng := ""
+        hide := ""
+        type_data := ""
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select date, ip, send, leng, hide, type from history where id = ? and title = ?"),
+            []any{ &date, &ip, &send, &leng, &hide, &type_data },
+            id, title,
+        )
 
         var ip_pre string
         var ip_render string

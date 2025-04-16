@@ -11,16 +11,12 @@ import (
 func Api_w_random(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
     
-    var title string
-
-    err := db.QueryRow(tool.DB_change("select title from data where title not like 'user:%' and title not like 'category:%' and title not like 'file:%' order by random() limit 1")).Scan(&title)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            title = ""
-        } else {
-            panic(err)
-        }
-    }
+    title := "Test"
+    tool.QueryRow_DB(
+        db,
+        tool.DB_change("select title from data where title not like 'user:%' and title not like 'category:%' and title not like 'file:%' order by random() limit 1"),
+        []any{ &title },
+    )
 
     new_data := map[string]string{}
     new_data["data"] = title

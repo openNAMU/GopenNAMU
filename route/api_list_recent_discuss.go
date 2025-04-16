@@ -68,23 +68,14 @@ func Api_list_recent_discuss(db *sql.DB, config tool.Config) string {
             panic(err)
         }
 
-        stmt, err := db.Prepare(tool.DB_change("select ip, id from topic where code = ? order by id + 0 desc limit 1"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        var ip string
-        var id string
-
-        err = stmt.QueryRow(code).Scan(&ip, &id)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                ip = ""
-            } else {
-                panic(err)
-            }
-        }
+        ip := ""
+        id := ""
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select ip, id from topic where code = ? order by id + 0 desc limit 1"),
+            []any{ &ip, &id },
+            code,
+        )
 
         var ip_pre string
         var ip_render string
