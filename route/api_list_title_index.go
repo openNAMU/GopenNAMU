@@ -25,16 +25,11 @@ func Api_list_title_index(db *sql.DB, config tool.Config) string {
         page_int = 0
     }
 
-    stmt, err := db.Prepare(tool.DB_change("select title from data limit ?, 50"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    rows, err := stmt.Query(page_int)
-    if err != nil {
-        panic(err)
-    }
+    rows := tool.Query_DB(
+        db,
+        tool.DB_change("select title from data limit ?, 50"),
+        page_int,
+    )
     defer rows.Close()
 
     data_list := []string{}

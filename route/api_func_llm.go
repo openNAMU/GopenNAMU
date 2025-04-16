@@ -16,22 +16,13 @@ func Api_func_llm(db *sql.DB, config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    var api_key string
-
-    stmt, err := db.Prepare(tool.DB_change("select data from user_set where name = 'llm_api_key' and id = ?"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    err = stmt.QueryRow(config.IP).Scan(api_key)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            api_key = ""
-        } else {
-            panic(err)
-        }
-    }
+    api_key := ""
+    tool.QueryRow_DB(
+        db,
+        tool.DB_change("select data from user_set where name = 'llm_api_key' and id = ?"),
+        []any{ &api_key },
+        config.IP,
+    )
 
     ctx := context.Background()
 

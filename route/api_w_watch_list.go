@@ -30,22 +30,18 @@ func Api_w_watch_list(db *sql.DB, config tool.Config) string {
         return_data["response"] = "require auth"
         return_data["data"] = []string{}
     } else {
-        var stmt *sql.Stmt
-        var err error
+        query := ""
         if other_set["do_type"] == "star_doc" {
-            stmt, err = db.Prepare(tool.DB_change("select id from user_set where name = 'star_doc' and data = ? limit ?, 50"))
+            query = tool.DB_change("select id from user_set where name = 'star_doc' and data = ? limit ?, 50")
         } else {
-            stmt, err = db.Prepare(tool.DB_change("select id from user_set where name = 'watchlist' and data = ? limit ?, 50"))
+            query = tool.DB_change("select id from user_set where name = 'watchlist' and data = ? limit ?, 50")
         }
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
 
-        rows, err := stmt.Query(other_set["name"], num)
-        if err != nil {
-            panic(err)
-        }
+        rows := tool.Query_DB(
+            db,
+            query,
+            other_set["name"], num,
+        )
         defer rows.Close()
 
         data_list := [][]string{}

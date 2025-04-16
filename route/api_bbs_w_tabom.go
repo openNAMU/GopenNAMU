@@ -31,22 +31,13 @@ func Api_bbs_w_tabom(db *sql.DB, config tool.Config) string {
         return_data["response"] = "require auth"
         return_data["data"] = "0"
     } else {
-        stmt, err := db.Prepare(tool.DB_change("select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-    
-        var tabom_count string
-    
-        err = stmt.QueryRow(bbs_num, post_num).Scan(&tabom_count)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                tabom_count = "0"
-            } else {
-                panic(err)
-            }
-        }
+        tabom_count := "0"
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?"),
+            []any{ &tabom_count },
+            bbs_num, post_num,
+        )
     
         return_data["response"] = "ok"
         return_data["data"] = tabom_count

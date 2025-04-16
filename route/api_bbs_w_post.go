@@ -21,19 +21,14 @@ func Api_bbs_w_post(db *sql.DB, config tool.Config) string {
         json_data, _ := json.Marshal(return_data)
         return string(json_data)
     }
-    
-    stmt, err := db.Prepare(tool.DB_change("select set_code from bbs_data where set_name = 'title' and set_id = ? order by set_code + 0 desc"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
 
-    var set_code string
-
-    err = stmt.QueryRow(other_set["set_id"]).Scan(&set_code)
-    if err != nil {
-        panic(err)
-    }
+    set_code := ""
+    tool.QueryRow_DB(
+        db,
+        tool.DB_change("select set_code from bbs_data where set_name = 'title' and set_id = ? order by set_code + 0 desc"),
+        []any{ &set_code },
+        other_set["set_id"],
+    )
 
     set_code_int, _ := strconv.Atoi(set_code)
     set_code_int += 1

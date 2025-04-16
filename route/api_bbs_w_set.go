@@ -40,18 +40,13 @@ func Api_bbs_w_set(db *sql.DB, config tool.Config) string {
             }
         }
 
-        stmt, err := db.Prepare(tool.DB_change("select set_data, set_code from bbs_set where set_name = ? and set_id = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        rows, err := stmt.Query(other_set["set_name"], other_set["set_id"])
-        if err != nil {
-            panic(err)
-        }
+        rows := tool.Query_DB(
+            db,
+            tool.DB_change("select set_data, set_code from bbs_set where set_name = ? and set_id = ?"),
+            other_set["set_name"], other_set["set_id"],
+        )
         defer rows.Close()
-
+        
         data_list := [][]string{}
 
         for rows.Next() {

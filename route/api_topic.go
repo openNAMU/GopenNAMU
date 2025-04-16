@@ -40,39 +40,24 @@ func Api_topic(db *sql.DB, config tool.Config) string {
         var rows *sql.Rows
 
         if other_set["tool"] == "top" {
-            stmt, err := db.Prepare(tool.DB_change("select id, data, date, ip, block, top from topic where code = ? and top = 'O' order by id + 0 asc"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            rows, err = stmt.Query(other_set["topic_num"])
-            if err != nil {
-                panic(err)
-            }
+            rows = tool.Query_DB(
+                db,
+                tool.DB_change("select id, data, date, ip, block, top from topic where code = ? and top = 'O' order by id + 0 asc"),
+                other_set["topic_num"],
+            )
         } else {
             if other_set["s_num"] != "" && other_set["e_num"] != "" {
-                stmt, err := db.Prepare(tool.DB_change("select id, data, date, ip, block, top from topic where code = ? and ? + 0 <= id + 0 and id + 0 <= ? + 0 order by id + 0 asc"))
-                if err != nil {
-                    panic(err)
-                }
-                defer stmt.Close()
-
-                rows, err = stmt.Query(other_set["topic_num"], other_set["s_num"], other_set["e_num"])
-                if err != nil {
-                    panic(err)
-                }
+                rows = tool.Query_DB(
+                    db,
+                    tool.DB_change("select id, data, date, ip, block, top from topic where code = ? and ? + 0 <= id + 0 and id + 0 <= ? + 0 order by id + 0 asc"),
+                    other_set["topic_num"], other_set["s_num"], other_set["e_num"],
+                )
             } else {
-                stmt, err := db.Prepare(tool.DB_change("select id, data, date, ip, block, top from topic where code = ? order by id + 0 asc"))
-                if err != nil {
-                    panic(err)
-                }
-                defer stmt.Close()
-
-                rows, err = stmt.Query(other_set["topic_num"])
-                if err != nil {
-                    panic(err)
-                }
+                rows = tool.Query_DB(
+                    db,
+                    tool.DB_change("select id, data, date, ip, block, top from topic where code = ? order by id + 0 asc"),
+                    other_set["topic_num"],
+                )
             }
         }
         defer rows.Close()

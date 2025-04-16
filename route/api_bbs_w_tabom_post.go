@@ -31,46 +31,37 @@ func Api_bbs_w_tabom_post(db *sql.DB, config tool.Config) string {
     if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
         return_data["response"] = "require auth"
     } else {
-        stmt1, err := db.Prepare(tool.DB_change("select set_data from bbs_data where set_name = 'tabom_list' and set_data = ? and set_id = ? and set_code = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt1.Close()
-
         not_exist := false
-        var no_data string
+        no_data := ""
 
-        err = stmt1.QueryRow(config.IP, bbs_num, post_num).Scan(&no_data)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                not_exist = true
-            } else {
-                panic(err)
-            }
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from bbs_data where set_name = 'tabom_list' and set_data = ? and set_id = ? and set_code = ?"),
+            []any{ &no_data },
+            config.IP, bbs_num, post_num,
+        )
+
+        if no_data == "" {
+            not_exist = true
         }
 
         if not_exist {
             return_data["response"] = "ok"
-
-            stmt2, err := db.Prepare(tool.DB_change("select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt2.Close()
         
-            var tabom_count string
+            tabom_count := ""
+            tool.QueryRow_DB(
+                db,
+                tool.DB_change("select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?"),
+                []any{ &tabom_count },
+                bbs_num, post_num,
+            )
         
-            err = stmt2.QueryRow(bbs_num, post_num).Scan(&tabom_count)
-            if err != nil {
-                if err == sql.ErrNoRows {
-                    tool.Exec_DB(
-                        db,
-                        "insert into bbs_data (set_name, set_data, set_id, set_code) values ('tabom_count', ?, ?, ?)",
-                        tabom_count, bbs_num, post_num,
-                    )
-                } else {
-                    panic(err)
-                }
+            if tabom_count == "" {
+                tool.Exec_DB(
+                    db,
+                    "insert into bbs_data (set_name, set_data, set_id, set_code) values ('tabom_count', ?, ?, ?)",
+                    tabom_count, bbs_num, post_num,
+                )
             }
 
             tabom_count_int, _ := strconv.Atoi(tabom_count)

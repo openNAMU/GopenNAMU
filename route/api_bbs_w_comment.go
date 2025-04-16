@@ -49,40 +49,23 @@ func Api_bbs_w_comment(db *sql.DB, config tool.Config) string {
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
     if other_set["tool"] == "length" {
-        stmt, err := db.Prepare(tool.DB_change("select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        var comment_length string
         bbs_and_post_num := other_set["sub_code"]
 
-        err = stmt.QueryRow(bbs_and_post_num).Scan(&comment_length)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                comment_length = "0"
-            } else {
-                panic(err)
-            }
-        }
+        comment_length := "0"
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc"),
+            []any{ &comment_length },
+            bbs_and_post_num,
+        )
 
-        stmt, err = db.Prepare(tool.DB_change("select count(*) from bbs_data where set_name = 'comment_date' and set_id like ? order by set_code + 0 desc"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        var reply_length string
-
-        err = stmt.QueryRow(bbs_and_post_num + "-%").Scan(&reply_length)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                reply_length = "0"
-            } else {
-                panic(err)
-            }
-        }
+        reply_length := "0"
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc"),
+            []any{ &reply_length },
+            bbs_and_post_num + "-%",
+        )
 
         comment_length_int, _ := strconv.Atoi(comment_length)
         reply_length_int, _ := strconv.Atoi(reply_length)

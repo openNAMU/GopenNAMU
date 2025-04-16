@@ -39,16 +39,11 @@ func Api_list_recent_change(db *sql.DB, config tool.Config) string {
         page_int = 0
     }
 
-    stmt, err := db.Prepare(tool.DB_change("select id, title from rc where type = ? order by date desc limit ?, ?"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    rows, err := stmt.Query(set_type, page_int, limit_int)
-    if err != nil {
-        panic(err)
-    }
+    rows := tool.Query_DB(
+        db,
+        tool.DB_change("select id, title from rc where type = ? order by date desc limit ?, ?"),
+        set_type, page_int, limit_int,
+    )
     defer rows.Close()
 
     data_list := [][]string{}

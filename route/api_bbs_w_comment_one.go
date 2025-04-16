@@ -32,27 +32,17 @@ func Api_bbs_w_comment_one(db *sql.DB, config tool.Config, already_auth_check bo
 
     var rows *sql.Rows
     if other_set["tool"] == "around" {
-        stmt, err := db.Prepare(tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        rows, err = stmt.Query(new_sub_code)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ?"),
+            new_sub_code,
+        )
     } else {
-        stmt, err := db.Prepare(tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ? and set_code = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        rows, err = stmt.Query(new_sub_code, sub_code_last)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ? and set_code = ?"),
+            new_sub_code, sub_code_last,
+        )
     }
     defer rows.Close()
 

@@ -8,10 +8,10 @@ import (
 )
 
 func Send_email(db *sql.DB, ip string, recipient string, title string, body string) error {
-    rows, err := db.Query(`select name, data from other where name in ("smtp_email", "smtp_pass", "smtp_server", "smtp_port", "smtp_security")`)
-    if err != nil {
-        return fmt.Errorf("failed to query smtp config: %v", err)
-    }
+    rows := Query_DB(
+        db,
+        `select name, data from other where name in ("smtp_email", "smtp_pass", "smtp_server", "smtp_port", "smtp_security")`,
+    )
     defer rows.Close()
 
     smtp_email := ""
@@ -22,9 +22,11 @@ func Send_email(db *sql.DB, ip string, recipient string, title string, body stri
 
     for rows.Next() {
         var name, data string
+        
         if err := rows.Scan(&name, &data); err != nil {
             return fmt.Errorf("failed to scan row: %v", err)
         }
+
         switch name {
         case "smtp_email":
             smtp_email = data

@@ -23,16 +23,11 @@ func Api_list_recent_edit_request(db *sql.DB, config tool.Config) string {
         limit_int = 50
     }
 
-    stmt, err := db.Prepare(tool.DB_change("select doc_name, doc_rev, set_data from data_set where set_name = 'edit_request_doing' order by set_data desc limit ?"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    rows, err := stmt.Query(limit_int)
-    if err != nil {
-        panic(err)
-    }
+    rows := tool.Query_DB(
+        db,
+        tool.DB_change("select doc_name, doc_rev, set_data from data_set where set_name = 'edit_request_doing' order by set_data desc limit ?"),
+        limit_int,
+    )
     defer rows.Close()
 
     var doc_name string

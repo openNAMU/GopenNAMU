@@ -25,16 +25,11 @@ func Api_topic_list(db *sql.DB, config tool.Config) string {
         page_int = 0
     }
 
-    stmt, err := db.Prepare(tool.DB_change("select code, sub, stop, agree, date from rd where title = ? order by sub asc limit ?, 50"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    rows, err := stmt.Query(other_set["name"], page_int)
-    if err != nil {
-        panic(err)
-    }
+    rows := tool.Query_DB(
+        db,
+        tool.DB_change("select code, sub, stop, agree, date from rd where title = ? order by sub asc limit ?, 50"),
+        other_set["name"], page_int,
+    )
     defer rows.Close()
 
     data_list := [][]string{}

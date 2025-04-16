@@ -74,31 +74,18 @@ func Get_session(c *gin.Context) string {
 
 func Get_document_setting(db *sql.DB, doc_name string, set_name string, doc_rev string) [][]string {
     var rows *sql.Rows
-
     if doc_rev != "" {
-        stmt, err := db.Prepare(DB_change("select set_data, doc_rev from data_set where doc_name = ? and doc_rev = ? and set_name = ?"))
-        if err != nil {
-            panic(err)
-        }
-
-        defer stmt.Close()
-
-        rows, err = stmt.Query(doc_name, doc_rev, set_name)
-        if err != nil {
-            panic(err)
-        }
+        rows = Query_DB(
+            db,
+            DB_change("select set_data, doc_rev from data_set where doc_name = ? and doc_rev = ? and set_name = ?"),
+            doc_name, doc_rev, set_name,
+        )
     } else {
-        stmt, err := db.Prepare(DB_change("select set_data, doc_rev from data_set where doc_name = ? and set_name = ?"))
-        if err != nil {
-            panic(err)
-        }
-
-        defer stmt.Close()
-
-        rows, err = stmt.Query(doc_name, set_name)
-        if err != nil {
-            panic(err)
-        }
+        rows = Query_DB(
+            db,
+            DB_change("select set_data, doc_rev from data_set where doc_name = ? and set_name = ?"),
+            doc_name, set_name,
+        )
     }
     defer rows.Close()
 
@@ -121,31 +108,18 @@ func Get_document_setting(db *sql.DB, doc_name string, set_name string, doc_rev 
 
 func Get_setting(db *sql.DB, set_name string, data_coverage string) [][]string {
     var rows *sql.Rows
-
     if data_coverage != "" {
-        stmt, err := db.Prepare(DB_change("select data, coverage from other where name = ? and coverage = ?"))
-        if err != nil {
-            panic(err)
-        }
-
-        defer stmt.Close()
-
-        rows, err = stmt.Query(set_name, data_coverage)
-        if err != nil {
-            panic(err)
-        }
+        rows = Query_DB(
+            db,
+            DB_change("select data, coverage from other where name = ? and coverage = ?"),
+            set_name, data_coverage,
+        )
     } else {
-        stmt, err := db.Prepare(DB_change("select data, coverage from other where name = ?"))
-        if err != nil {
-            panic(err)
-        }
-
-        defer stmt.Close()
-
-        rows, err = stmt.Query(set_name)
-        if err != nil {
-            panic(err)
-        }
+        rows = Query_DB(
+            db,
+            DB_change("select data, coverage from other where name = ?"),
+            set_name,
+        )
     }
     defer rows.Close()
 

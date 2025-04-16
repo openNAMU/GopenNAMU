@@ -236,10 +236,10 @@ func Get_user_ban_type(ban_type string) string {
 }
 
 func Get_user_ban(db *sql.DB, ip string, tool string) []string {
-    rows, err := db.Query(DB_change("select login, block from rb where band = 'regex' and ongoing = '1'"))
-    if err != nil {
-        panic(err)
-    }
+    rows := Query_DB(
+        db,
+        DB_change("select login, block from rb where band = 'regex' and ongoing = '1'"),
+    )
     defer rows.Close()
 
     for rows.Next() {
@@ -275,10 +275,10 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
     }
 
     if IP_or_user(ip) {
-        rows, err = db.Query(DB_change("select login, block from rb where band = 'cidr' and ongoing = '1'"))
-        if err != nil {
-            panic(err)
-        }
+        rows := Query_DB(
+            db,
+            DB_change("select login, block from rb where band = 'cidr' and ongoing = '1'"),
+        )
         defer rows.Close()
 
         for rows.Next() {

@@ -32,27 +32,17 @@ func Api_list_history(db *sql.DB, config tool.Config) string {
     }
 
     if other_set["set_type"] == "normal" {
-        stmt, err := db.Prepare(tool.DB_change("select id, title, date, ip, send, leng, hide, type from history where title = ? order by id + 0 desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        rows, err = stmt.Query(other_set["doc_name"], page_int)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select id, title, date, ip, send, leng, hide, type from history where title = ? order by id + 0 desc limit ?, 50"),
+            other_set["doc_name"], page_int,
+        )
     } else {
-        stmt, err := db.Prepare(tool.DB_change("select id, title, date, ip, send, leng, hide, type from history where title = ? and type = ? order by id + 0 desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        rows, err = stmt.Query(other_set["doc_name"], other_set["set_type"], page_int)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select id, title, date, ip, send, leng, hide, type from history where title = ? and type = ? order by id + 0 desc limit ?, 50"),
+            other_set["doc_name"], other_set["set_type"], page_int,
+        )
     }
     defer rows.Close()
 

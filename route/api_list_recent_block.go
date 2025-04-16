@@ -26,92 +26,70 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
     }
 
     // private 공개 안되도록 조심할 것
-    var stmt *sql.Stmt
     var rows *sql.Rows
     switch other_set["set_type"] {
     case "all":
+        query := ""
         if other_set["why"] != "" {
-            stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band != 'private' and why like ? order by today desc limit ?, 50"))
+            query = tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band != 'private' and why like ? order by today desc limit ?, 50")
         } else {
-            stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band != 'private' order by today desc limit ?, 50"))
-        }
-
-        if err != nil {
-            panic(err)
+            query = tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band != 'private' order by today desc limit ?, 50")
         }
 
         if other_set["why"] != "" {
-            rows, err = stmt.Query(other_set["why"]+"%", page_int)
+            rows = tool.Query_DB(
+                db,
+                query,
+                other_set["why"] + "%", page_int,
+            )
         } else {
-            rows, err = stmt.Query(page_int)
+            rows = tool.Query_DB(
+                db,
+                query,
+                page_int,
+            )
         }
 
         if err != nil {
             panic(err)
         }
     case "ongoing":
-        stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where ongoing = '1' and band != 'private' order by end desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-
-        rows, err = stmt.Query(page_int)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where ongoing = '1' and band != 'private' order by end desc limit ?, 50"),
+            page_int,
+        )
     case "regex":
-        stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'regex' order by today desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-
-        rows, err = stmt.Query(page_int)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'regex' order by today desc limit ?, 50"),
+            page_int,
+        )
     case "private":
-        stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'private' order by today desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-
-        rows, err = stmt.Query(page_int)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'private' order by today desc limit ?, 50"),
+            page_int,
+        )
     case "user":
-        stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where block = ? and band != 'private' order by today desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-
-        rows, err = stmt.Query(other_set["user_name"], page_int)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where block = ? and band != 'private' order by today desc limit ?, 50"),
+            other_set["user_name"], page_int,
+        )
     case "cidr":
-        stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'cidr' order by today desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-
-        rows, err = stmt.Query(page_int)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'cidr' order by today desc limit ?, 50"),
+            page_int,
+        )
     default:
-        stmt, err = db.Prepare(tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where blocker = ? and band != 'private' order by today desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-
-        rows, err = stmt.Query(other_set["user_name"], page_int)
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where blocker = ? and band != 'private' order by today desc limit ?, 50"),
+            other_set["user_name"], page_int,
+        )
     }
-
-    defer stmt.Close()
     defer rows.Close()
 
     data_list := [][]string{}

@@ -37,16 +37,10 @@ func List_acl(func_type string) []string {
 }
 
 func List_auth(db *sql.DB) []string {
-    stmt, err := db.Prepare(DB_change("select distinct name from alist"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    rows, err := stmt.Query()
-    if err != nil {
-        panic(err)
-    }
+    rows := Query_DB(
+        db,
+        DB_change("select distinct name from alist"),
+    )
     defer rows.Close()
 
     data_list := []string{}
@@ -114,16 +108,11 @@ func Get_user_auth(db *sql.DB, ip string) string {
 }
 
 func Get_auth_group_info(db *sql.DB, auth string) map[string]bool {
-    stmt, err := db.Prepare(DB_change("select acl from alist where name = ?"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    rows, err := stmt.Query(auth)
-    if err != nil {
-        panic(err)
-    }
+    rows := Query_DB(
+        db,
+        DB_change("select acl from alist where name = ?"),
+        auth,
+    )
     defer rows.Close()
 
     data_list := map[string]bool{}

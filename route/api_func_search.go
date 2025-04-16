@@ -21,27 +21,20 @@ func Api_func_search(db *sql.DB, config tool.Config) string {
         num = page * 50 - 50
     }
 
-    var stmt *sql.Stmt
-    var err error
+    query := ""
     if other_set["search_type"] == "title" {
-        stmt, err = db.Prepare(tool.DB_change("select title from data where title collate nocase like ? order by title limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
+        query = tool.DB_change("select title from data where title collate nocase like ? order by title limit ?, 50")
     } else {
-        stmt, err = db.Prepare(tool.DB_change("select title from data where data collate nocase like ? order by title limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
+        query = tool.DB_change("select title from data where data collate nocase like ? order by title limit ?, 50")
     }
-    defer stmt.Close()
 
     title_list := []string{}
 
-    rows, err := stmt.Query("%"+other_set["name"]+"%", num)
-    if err != nil {
-        panic(err)
-    }
+    rows := tool.Query_DB(
+        db,
+        query,
+        "%" + other_set["name"] + "%", num,
+    )
     defer rows.Close()
 
     for rows.Next() {

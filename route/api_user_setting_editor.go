@@ -15,16 +15,11 @@ func Api_user_setting_editor(db *sql.DB, config tool.Config) string {
 
     ip := config.IP
     if !tool.IP_or_user(ip) {
-        stmt, err := db.Prepare(tool.DB_change("select data from user_set where id = ? and name = 'user_editor_top'"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        rows, err := stmt.Query(ip)
-        if err != nil {
-            panic(err)
-        }
+        rows := tool.Query_DB(
+            db,
+            tool.DB_change("select data from user_set where id = ? and name = 'user_editor_top'"),
+            ip,
+        )
         defer rows.Close()
 
         data_list := []string{}

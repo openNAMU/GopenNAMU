@@ -14,16 +14,14 @@ func Api_bbs(db *sql.DB, config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    rows := []*sql.Rows{}
+    rows_arr := []*sql.Rows{}
     if other_set["bbs_num"] == "" {
-        var err error
+        rows := tool.Query_DB(
+            db,
+            tool.DB_change("select set_code, set_id, '0' from bbs_data where set_name = 'date' order by set_data desc limit 50"),
+        )
 
-        row, err := db.Query(tool.DB_change("select set_code, set_id, '0' from bbs_data where set_name = 'date' order by set_data desc limit 50"))
-        if err != nil {
-            panic(err)
-        }
-
-        rows = append(rows, row)
+        rows_arr = append(rows_arr, rows)
     } else {
         page, _ := strconv.Atoi(other_set["page"])
         num := 0
@@ -31,47 +29,37 @@ func Api_bbs(db *sql.DB, config tool.Config) string {
             num = page * 50 - 50
         }
 
-        stmt, err := db.Prepare(tool.DB_change("select set_code, set_id, '1' from bbs_data where set_name = 'pinned' and set_id like ? order by set_data desc"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
+        rows := tool.Query_DB(
+            db,
+            tool.DB_change("select set_code, set_id, '1' from bbs_data where set_name = 'pinned' and set_id like ? order by set_data desc"),
+            other_set["bbs_num"],
+        )
+        
+        rows_arr = append(rows_arr, rows)
 
-        row, err := stmt.Query(other_set["bbs_num"])
-        if err != nil {
-            panic(err)
-        }
+        rows = tool.Query_DB(
+            db,
+            tool.DB_change("select set_code, set_id, '0' from bbs_data where set_name = 'title' and set_id like ? order by set_code + 0 desc limit ?, 50"),
+            other_set["bbs_num"], num,
+        )
 
-        rows = append(rows, row)
-
-        stmt, err = db.Prepare(tool.DB_change("select set_code, set_id, '0' from bbs_data where set_name = 'title' and set_id like ? order by set_code + 0 desc limit ?, 50"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        row, err = stmt.Query(other_set["bbs_num"], num)
-        if err != nil {
-            panic(err)
-        }
-
-        rows = append(rows, row)
+        rows_arr = append(rows_arr, rows)
     }
 
     data_list := []map[string]string{}
     ip_parser_temp := map[string][]string{}
 
-    for for_a := 0; for_a < len(rows); for_a++ {
-        defer rows[for_a].Close()
+    for for_a := 0; for_a < len(rows_arr); for_a++ {
+        defer rows_arr[for_a].Close()
 
-        for rows[for_a].Next() {
+        for rows_arr[for_a].Next() {
             temp_data := make(map[string]string)
 
             var set_code string
             var set_id string
             var pinned string
 
-            err := rows[for_a].Scan(&set_code, &set_id, &pinned)
+            err := rows_arr[for_a].Scan(&set_code, &set_id, &pinned)
             if err != nil {
                 panic(err)
             }
@@ -80,16 +68,11 @@ func Api_bbs(db *sql.DB, config tool.Config) string {
             temp_data["set_id"] = set_id
             temp_data["pinned"] = pinned
 
-            stmt, err := db.Prepare(tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where set_code = ? and set_id = ?"))
-            if err != nil {
-                panic(err)
-            }
-            defer stmt.Close()
-
-            rows, err := stmt.Query(set_code, set_id)
-            if err != nil {
-                panic(err)
-            }
+            rows := tool.Query_DB(
+                db,
+                tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where set_code = ? and set_id = ?"),
+                set_code, set_id,
+            )
             defer rows.Close()
 
             for rows.Next() {

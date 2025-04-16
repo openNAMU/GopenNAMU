@@ -8,10 +8,7 @@ import (
 )
 
 func bbs_list(db *sql.DB) map[string]string {
-    rows, err := db.Query(tool.DB_change("select set_data, set_id from bbs_set where set_name = 'bbs_name'"))
-    if err != nil {
-        panic(err)
-    }
+    rows := tool.Query_DB(db, tool.DB_change("select set_data, set_id from bbs_set where set_name = 'bbs_name'"))
     defer rows.Close()
 
     data_list := map[string]string{}
@@ -38,39 +35,21 @@ func Api_bbs_list(db *sql.DB, config tool.Config) string {
     data_list_sub := map[string][]string{}
 
     for k, v := range data_list {
-        stmt, err := db.Prepare(tool.DB_change("select set_data from bbs_set where set_name = 'bbs_type' and set_id = ?"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
+        bbs_type := ""
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from bbs_set where set_name = 'bbs_type' and set_id = ?"),
+            []any{ &bbs_type },
+            v,
+        )
 
-        var bbs_type string
-
-        err = stmt.QueryRow(v).Scan(&bbs_type)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                bbs_type = ""
-            } else {
-                panic(err)
-            }
-        }
-
-        stmt, err = db.Prepare(tool.DB_change("select set_data from bbs_data where set_id = ? and set_name = 'date' order by set_code + 0 desc limit 1"))
-        if err != nil {
-            panic(err)
-        }
-        defer stmt.Close()
-
-        var bbs_date string
-
-        err = stmt.QueryRow(v).Scan(&bbs_date)
-        if err != nil {
-            if err == sql.ErrNoRows {
-                bbs_date = ""
-            } else {
-                panic(err)
-            }
-        }
+        bbs_date := ""
+        tool.QueryRow_DB(
+            db,
+            tool.DB_change("select set_data from bbs_data where set_id = ? and set_name = 'date' order by set_code + 0 desc limit 1"),
+            []any{ &bbs_date },
+            v,
+        )
 
         data_list_sub[k] = []string{v, bbs_type, bbs_date}
     }

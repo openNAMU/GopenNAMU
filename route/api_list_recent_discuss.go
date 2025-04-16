@@ -34,27 +34,22 @@ func Api_list_recent_discuss(db *sql.DB, config tool.Config) string {
         page_int = 0
     }
 
-    var stmt *sql.Stmt
-
     set_type := other_set["set_type"]
+    query := ""
     switch set_type {
     case "normal":
-        stmt, err = db.Prepare(tool.DB_change("select title, sub, date, code, stop, agree from rd order by date desc limit ?, ?"))
+        query = tool.DB_change("select title, sub, date, code, stop, agree from rd order by date desc limit ?, ?")
     case "close":
-        stmt, err = db.Prepare(tool.DB_change("select title, sub, date, code, stop, agree from rd where stop = 'O' order by date desc limit ?, ?"))
+        query = tool.DB_change("select title, sub, date, code, stop, agree from rd where stop = 'O' order by date desc limit ?, ?")
     default:
-        stmt, err = db.Prepare(tool.DB_change("select title, sub, date, code, stop, agree from rd where stop != 'O' order by date desc limit ?, ?"))
+        query = tool.DB_change("select title, sub, date, code, stop, agree from rd where stop != 'O' order by date desc limit ?, ?")
     }
 
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
-    rows, err := stmt.Query(page_int, limit_int)
-    if err != nil {
-        panic(err)
-    }
+    rows := tool.Query_DB(
+        db,
+        query,
+        page_int, limit_int,
+    )
     defer rows.Close()
 
     data_list := [][]string{}

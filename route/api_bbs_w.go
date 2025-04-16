@@ -14,12 +14,6 @@ func Api_bbs_w(db *sql.DB, config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    stmt, err := db.Prepare(tool.DB_change("select set_name, set_data from bbs_data where set_id = ? and set_code = ?"))
-    if err != nil {
-        panic(err)
-    }
-    defer stmt.Close()
-
     sub_code := other_set["sub_code"]
     sub_code_parts := strings.Split(sub_code, "-")
 
@@ -31,11 +25,13 @@ func Api_bbs_w(db *sql.DB, config tool.Config) string {
         post_num = sub_code_parts[1]
     }
 
-    rows, err := stmt.Query(bbs_num, post_num)
-    if err != nil {
-        panic(err)
-    }
-
+    rows := tool.Query_DB(
+        db,
+        tool.DB_change("select set_name, set_data from bbs_data where set_id = ? and set_code = ?"),
+        bbs_num, post_num,
+    )
+    defer rows.Close()
+    
     data_list := map[string]string{}
 
     for rows.Next() {

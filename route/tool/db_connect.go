@@ -12,7 +12,7 @@ import (
 
 var db_set = map[string]string{}
 
-func Exec_DB(db *sql.DB, query string, values ...interface{}) {
+func Exec_DB(db *sql.DB, query string, values ...any) {
     const retryDelay = 10 * time.Millisecond
 
     stmt, err := db.Prepare(DB_change(query))
@@ -24,6 +24,57 @@ func Exec_DB(db *sql.DB, query string, values ...interface{}) {
     for {
         _, err = stmt.Exec(values...)
         if err == nil {
+            return
+        }
+
+        if strings.Contains(err.Error(), "database is locked") {
+            time.Sleep(retryDelay)
+            continue
+        }
+
+        panic(err)
+    }
+}
+
+func Query_DB(db *sql.DB, query string, values ...any) *sql.Rows {
+    const retryDelay = 10 * time.Millisecond
+
+    stmt, err := db.Prepare(DB_change(query))
+    if err != nil {
+        panic(err)
+    }
+    defer stmt.Close()
+
+    for {
+        rows, err := stmt.Query(values...)
+        if err == nil {
+            return rows
+        }
+
+        if strings.Contains(err.Error(), "database is locked") {
+            time.Sleep(retryDelay)
+            continue
+        }
+
+        panic(err)
+    }
+}
+
+// 이래서 포인터를 배우는구나...
+func QueryRow_DB(db *sql.DB, query string, var_list []any, values ...any) {
+    const retryDelay = 10 * time.Millisecond
+
+    stmt, err := db.Prepare(DB_change(query))
+    if err != nil {
+        panic(err)
+    }
+    defer stmt.Close()
+
+    for {
+        row := stmt.QueryRow(values...)
+
+        err := row.Scan(var_list...)
+        if err == nil || err == sql.ErrNoRows {
             return
         }
 
