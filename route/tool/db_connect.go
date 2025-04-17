@@ -74,9 +74,10 @@ func QueryRow_DB(db *sql.DB, query string, var_list []any, values ...any) bool {
         row := stmt.QueryRow(values...)
 
         err := row.Scan(var_list...)
-        if err == nil {
+        switch err {
+        case nil:
             return true
-        } else if err == sql.ErrNoRows {
+        case sql.ErrNoRows:
             return false
         }
 

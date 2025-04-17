@@ -323,9 +323,13 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
         if !Check_acl(db, name, topic_number, "bbs_view", ip) {
             return false
         }
+    } else if Arr_in_str([]string{"topic"}, tool) {
+        if !Check_acl(db, name, topic_number, "topic_view", ip) {
+            return false
+        }
     }
 
-    if tool == "topic" {
+    if Arr_in_str([]string{"topic", "topic_view"}, tool) {
         if name == "" {
             name = "test"
             QueryRow_DB(
@@ -486,10 +490,22 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
         } else if tool == "topic_view" {
             acl_pass_auth = "topic"
 
-            if auth_info["discuss_view"] {
+            if for_a == 0 {
+                end_number += 1
+
                 acl_data = ""
+                QueryRow_DB(
+                    db,
+                    DB_change("select set_data from topic_set where thread_code = ? and set_name = 'thread_view_acl'"),
+                    []any{ &acl_data },
+                    topic_number,
+                )
             } else {
-                acl_data = "owner"
+                if auth_info["discuss_view"] {
+                    acl_data = ""
+                } else {
+                    acl_data = "owner"
+                }
             }
         } else if tool == "upload" {
             acl_pass_auth = "admin_default_feature"

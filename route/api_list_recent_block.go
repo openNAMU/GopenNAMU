@@ -49,10 +49,6 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
                 page_int,
             )
         }
-
-        if err != nil {
-            panic(err)
-        }
     case "ongoing":
         rows = tool.Query_DB(
             db,

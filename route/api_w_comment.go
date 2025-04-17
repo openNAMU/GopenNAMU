@@ -37,6 +37,8 @@ func Api_w_comment(db *sql.DB, config tool.Config) string {
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
     db_code := tool.Get_document_setting(db, other_set["doc_name"], "document_comment_code", "")
+    
+    /*
     db_code_str := ""
     if len(db_code) >= 1 {
         db_code_str = db_code[0][0]
@@ -45,6 +47,7 @@ func Api_w_comment(db *sql.DB, config tool.Config) string {
     if db_code_str == "" {
         db_code_str = Api_bbs_w_comment_make(db, other_set["doc_name"])
     }
+    */
 
     return_data := make(map[string]interface{})
     return_data["response"] = "ok"
