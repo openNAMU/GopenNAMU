@@ -20,7 +20,7 @@ func Api_w_watch_list(db *sql.DB, config tool.Config) string {
         num = page * 50 - 50
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["language"] = map[string]string{
         "watchlist": tool.Get_language(db, "watchlist", false),
         "star_doc":  tool.Get_language(db, "star_doc", false),

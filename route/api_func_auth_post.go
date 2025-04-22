@@ -18,7 +18,7 @@ func Api_func_auth_post(db *sql.DB, config tool.Config) string {
 
     tool.Do_insert_auth_history(db, ip, what)
 
-    new_data := make(map[string]interface{})
+    new_data := make(map[string]any)
     new_data["response"] = "ok"
 
     json_data, _ := json.Marshal(new_data)

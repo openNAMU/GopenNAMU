@@ -15,7 +15,7 @@ func Api_bbs_w_post(db *sql.DB, config tool.Config) string {
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
     if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         return_data["response"] = "require auth"
 
         json_data, _ := json.Marshal(return_data)
@@ -51,7 +51,7 @@ func Api_bbs_w_post(db *sql.DB, config tool.Config) string {
         )
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["response"] = "ok"
     return_data["data"] = set_code_str
 

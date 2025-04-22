@@ -54,7 +54,7 @@ func Api_bbs_list(db *sql.DB, config tool.Config) string {
         data_list_sub[k] = []string{v, bbs_type, bbs_date}
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["language"] = map[string]string{
         "thread_base":  tool.Get_language(db, "thread_base", false),
         "comment_base": tool.Get_language(db, "comment_base", false),

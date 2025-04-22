@@ -155,7 +155,7 @@ func Api_list_recent_block(db *sql.DB, config tool.Config) string {
         }
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["language"] = map[string]string{
         "all":         tool.Get_language(db, "all", false),
         "regex":       tool.Get_language(db, "regex", false),

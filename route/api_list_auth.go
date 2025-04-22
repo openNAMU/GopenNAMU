@@ -9,7 +9,7 @@ import (
 func Api_list_auth(db *sql.DB, config tool.Config) string {
     data := tool.List_auth(db)
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["response"] = "ok"
     return_data["language"] = map[string]string{
         "send":             tool.Get_language(db, "send", false),

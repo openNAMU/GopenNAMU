@@ -16,7 +16,7 @@ func Api_func_auth(db *sql.DB, config tool.Config) string {
     auth_name := tool.Get_user_auth(db, config.IP)
     auth_info := tool.Get_auth_group_info(db, auth_name)
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["response"] = "ok"
     return_data["name"] = auth_name
     return_data["info"] = auth_info

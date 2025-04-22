@@ -26,7 +26,7 @@ func Api_bbs_w_tabom_post(db *sql.DB, config tool.Config) string {
         post_num = sub_code_parts[1]
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
 
     if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
         return_data["response"] = "require auth"

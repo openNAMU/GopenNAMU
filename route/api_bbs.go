@@ -111,7 +111,7 @@ func Api_bbs(db *sql.DB, config tool.Config) string {
         }
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["language"] = map[string]string{}
     return_data["data"] = data_list
 

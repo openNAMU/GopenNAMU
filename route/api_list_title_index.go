@@ -45,7 +45,7 @@ func Api_list_title_index(db *sql.DB, config tool.Config) string {
         data_list = append(data_list, title)
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["data"] = data_list
 
     json_data, _ := json.Marshal(return_data)

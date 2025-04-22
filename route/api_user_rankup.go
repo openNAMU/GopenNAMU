@@ -37,7 +37,7 @@ func Api_user_rankup(db *sql.DB, config tool.Config) string {
 
         return_data_api := tool.Get_setting(db, "rankup_condition", coverage)
 
-        end_data := make(map[string]interface{})
+        end_data := make(map[string]any)
         if len(return_data_api) != 0 {
             for k := range return_data_api {
                 rank_name := string(return_data_api[k][0])
@@ -48,7 +48,7 @@ func Api_user_rankup(db *sql.DB, config tool.Config) string {
                     type_data := User_rankup_condition(split_data[0])
                     if type_data != "" {
                         if _, ok := end_data[rank_name]; !ok {
-                            end_data[rank_name] = make(map[string]interface{})
+                            end_data[rank_name] = make(map[string]any)
                         }
 
                         if type_data == "int" {
@@ -67,7 +67,7 @@ func Api_user_rankup(db *sql.DB, config tool.Config) string {
         json_data_end, _ := json.Marshal(end_data)
         return string(json_data_end)
     } else {
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         return_data["response"] = "require auth"
         return_data["language"] = map[string]string{
             "authority_error": tool.Get_language(db, "authority_error", false),

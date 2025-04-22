@@ -68,7 +68,7 @@ func Api_topic(db *sql.DB, config tool.Config) string {
             data_list = append(data_list, []string{id, data, date, ip, block, top})
         }
 
-        new_data := make(map[string]interface{})
+        new_data := make(map[string]any)
         new_data["data"] = []map[string]string{}
         data_slice := []map[string]string{}
 

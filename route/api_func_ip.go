@@ -15,7 +15,7 @@ func Api_func_ip(db *sql.DB, config tool.Config) string {
 
     ip_data := tool.IP_parser(db, other_set["data"], config.IP)
 
-    new_data := make(map[string]interface{})
+    new_data := make(map[string]any)
     new_data["response"] = "ok"
     new_data["data"] = ip_data
 

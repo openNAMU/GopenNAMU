@@ -30,87 +30,40 @@ func Namumark_new(db *sql.DB, data map[string]string) *namumark {
     }
 }
 
+type replacer struct {
+    re *regexp2.Regexp
+    prefix string
+}
+
 func (class *namumark) render_text() {
     string_data := class.render_data
 
-    r := regexp2.MustCompile(`'''((?:(?!''').)+)'''`, 0)
-    for {
-        if m, _ := r.FindStringMatch(string_data); m != nil {
-            gps := m.Groups()
-            m_string := m.String()
-
-            string_data = strings.Replace(string_data, m_string, "[b(" + gps[1].Captures[0].String() + ")]", 1)
-        } else {
-            break
-        }
+    replacers := []replacer{
+        { regexp2.MustCompile(`'''((?:(?!''').)+)'''`, 0), "b" },
+        { regexp2.MustCompile(`''((?:(?!'').)+)''`, 0), "i" },
+        { regexp2.MustCompile(`__((?:(?!__).)+)__`, 0), "u" },
+        { regexp2.MustCompile(`\^\^\^((?:(?!\^\^\^).)+)\^\^\^`, 0), "sup" },
+        { regexp2.MustCompile(`\^\^((?:(?!\^\^).)+)\^\^`, 0), "sup" },
+        { regexp2.MustCompile(`,,,((?:(?!,,,).)+),,,`, 0), "sub" },
+        { regexp2.MustCompile(`,,((?:(?!,,).)+),,`, 0), "sub" },
+        { regexp2.MustCompile(`--((?:(?!--).)+)--`, 0), "s" },
+        { regexp2.MustCompile(`~~((?:(?!~~).)+)~~`, 0), "s" },
     }
 
-    r = regexp2.MustCompile(`''((?:(?!'').)+)''`, 0)
-    for {
-        if m, _ := r.FindStringMatch(string_data); m != nil {
-            gps := m.Groups()
-            m_string := m.String()
-
-            string_data = strings.Replace(string_data, m_string, "[i(" + gps[1].Captures[0].String() + ")]", 1)
-        } else {
-            break
-        }
-    }
-
-    r = regexp2.MustCompile(`__((?:(?!__).)+)__`, 0)
-    for {
-        if m, _ := r.FindStringMatch(string_data); m != nil {
-            gps := m.Groups()
-            m_string := m.String()
-
-            string_data = strings.Replace(string_data, m_string, "[u(" + gps[1].Captures[0].String() + ")]", 1)
-        } else {
-            break
-        }
-    }
-
-    r_list := []string{`\^\^\^((?:(?!\^\^\^).)+)\^\^\^`, `\^\^((?:(?!\^\^).)+)\^\^`}
-    for for_a := 0; for_a < len(r_list); for_a++ {
-        r = regexp2.MustCompile(r_list[for_a], 0)
+    for _, rep := range replacers {
         for {
-            if m, _ := r.FindStringMatch(string_data); m != nil {
-                gps := m.Groups()
-                m_string := m.String()
-
-                string_data = strings.Replace(string_data, m_string, "[sup(" + gps[1].Captures[0].String() + ")]", 1)
-            } else {
+            m, _ := rep.re.FindStringMatch(string_data)
+            if m == nil {
                 break
             }
-        }
-    }
+            
+            gps := m.Groups()
 
-    r_list = []string{`,,,((?:(?!,,,).)+),,,`, `,,((?:(?!,,).)+),,`}
-    for for_a := 0; for_a < len(r_list); for_a++ {
-        r = regexp2.MustCompile(r_list[for_a], 0)
-        for {
-            if m, _ := r.FindStringMatch(string_data); m != nil {
-                gps := m.Groups()
-                m_string := m.String()
+            start := m.Index
+            end := start + len(m.String())
+            replacement := "[" + rep.prefix + "(" + gps[1].Captures[0].String() + ")]"
 
-                string_data = strings.Replace(string_data, m_string, "[sub(" + gps[1].Captures[0].String() + ")]", 1)
-            } else {
-                break
-            }
-        }
-    }
-
-    r_list = []string{`--((?:(?!--).)+)--`, `~~((?:(?!~~).)+)~~`}
-    for for_a := 0; for_a < len(r_list); for_a++ {
-        r = regexp2.MustCompile(r_list[for_a], 0)
-        for {
-            if m, _ := r.FindStringMatch(string_data); m != nil {
-                gps := m.Groups()
-                m_string := m.String()
-
-                string_data = strings.Replace(string_data, m_string, "[s(" + gps[1].Captures[0].String() + ")]", 1)
-            } else {
-                break
-            }
+            string_data = string_data[:start] + replacement + string_data[end:]
         }
     }
 
@@ -132,7 +85,7 @@ func (class *namumark) render_last() {
     r = regexp.MustCompile(`<back_br>\n?`)
     string_data = r.ReplaceAllString(string_data, "")
 
-    string_data = strings.Replace(string_data, "\n", "<br>", -1)
+    string_data = strings.ReplaceAll(string_data, "\n", "<br>")
 
     class.render_data = string_data
 }
@@ -142,11 +95,11 @@ func (class *namumark) render_heading() {
     string_data := class.render_data
 
     r := regexp.MustCompile(`\n(?:(={1,6})(#?) ?([^\n]+))\n`)
+    r_sub := regexp.MustCompile(` ?(#?={1,6}[^=]*)$`)
     string_data = r.ReplaceAllStringFunc(string_data, func(m string) string {
         match := r.FindStringSubmatch(m)
 
-        r = regexp.MustCompile(` ?(#?={1,6}[^=]*)$`)
-        heading_data := r.ReplaceAllString(match[3], "")
+        heading_data := r_sub.ReplaceAllString(match[3], "")
 
         heading_len := strconv.Itoa(len(match[1]))
         heading_render := "[h" + heading_len + "(" + heading_data + ")]"
@@ -157,7 +110,7 @@ func (class *namumark) render_heading() {
     class.render_data = string_data
 }
 
-func (class namumark) main() map[string]interface{} {
+func (class namumark) main() map[string]any {
     class.render_text()
     class.render_heading()
     class.render_last()
@@ -167,9 +120,7 @@ func (class namumark) main() map[string]interface{} {
     class.data["data"] = class.render_data
 
     render_data_class := Macromark_new(class.db, class.data)
-
-    render_data := make(map[string]interface{})
-    render_data = render_data_class.main()
+    render_data := render_data_class.main()
 
     return render_data
 }

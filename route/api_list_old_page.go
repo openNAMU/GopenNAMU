@@ -53,7 +53,7 @@ func Api_list_old_page(db *sql.DB, config tool.Config) string {
         data_list = append(data_list, []string{doc_name, date})
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["data"] = data_list
 
     json_data, _ := json.Marshal(return_data)

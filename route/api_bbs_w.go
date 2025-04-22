@@ -57,7 +57,7 @@ func Api_bbs_w(db *sql.DB, config tool.Config) string {
         }
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
 
     if !tool.Check_acl(db, "", "", "bbs_view", config.IP) {
         data_list = map[string]string{}

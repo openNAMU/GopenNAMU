@@ -49,7 +49,7 @@ func Api_w_comment(db *sql.DB, config tool.Config) string {
     }
     */
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["response"] = "ok"
     return_data["data"] = db_code
 

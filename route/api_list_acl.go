@@ -15,7 +15,7 @@ func Api_list_acl(db *sql.DB, config tool.Config) string {
 
     data := tool.List_acl(other_set["type"])
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["response"] = "ok"
     return_data["data"] = data
 

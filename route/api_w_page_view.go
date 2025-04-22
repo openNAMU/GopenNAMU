@@ -94,7 +94,7 @@ func Api_w_page_view(db *sql.DB, config tool.Config) string {
         }
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["response"] = "ok"
 
     json_data, _ := json.Marshal(return_data)

@@ -32,7 +32,7 @@ func Api_bbs_w_set(db *sql.DB, config tool.Config) string {
     if val, ok := setting_acl[other_set["set_name"]]; ok {
         if val != "" {
             if !tool.Check_acl(db, "", "", "owner_auth", config.IP) {
-                return_data := make(map[string]interface{})
+                return_data := make(map[string]any)
                 return_data["response"] = "require auth"
 
                 json_data, _ := json.Marshal(return_data)
@@ -61,14 +61,14 @@ func Api_bbs_w_set(db *sql.DB, config tool.Config) string {
             data_list = append(data_list, []string{set_data, set_coverage})
         }
 
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         return_data["response"] = "ok"
         return_data["data"] = data_list
 
         json_data, _ := json.Marshal(return_data)
         return string(json_data)
     } else {
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         return_data["response"] = "not exist"
 
         json_data, _ := json.Marshal(return_data)

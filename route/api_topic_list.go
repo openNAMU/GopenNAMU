@@ -81,7 +81,7 @@ func Api_topic_list(db *sql.DB, config tool.Config) string {
         })
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["language"] = map[string]string{
         "closed":            tool.Get_language(db, "closed", false),
         "agreed_discussion": tool.Get_language(db, "agreed_discussion", false),

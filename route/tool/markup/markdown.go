@@ -15,7 +15,7 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
-func Markdown(db *sql.DB, data map[string]string) map[string]interface{} {
+func Markdown(db *sql.DB, data map[string]string) map[string]any {
     backlink := map[string]map[string]string{}
     link_count := 0
 
@@ -143,7 +143,7 @@ func Markdown(db *sql.DB, data map[string]string) map[string]interface{} {
         }
     }
 
-    end_data := make(map[string]interface{})
+    end_data := make(map[string]any)
     end_data["data"] = string_data
     end_data["js_data"] = "opennamu_do_toc();"
     end_data["backlink"] = end_backlink

@@ -10,10 +10,10 @@ import (
 func Api_func_language(db *sql.DB, config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-    other_set := make(map[string]interface{})
+    other_set := make(map[string]any)
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    temp_list := other_set["data"].([]interface{})
+    temp_list := other_set["data"].([]any)
 
     if other_set["legacy"] != "" {
         data_list := map[string][]string{}
@@ -26,7 +26,7 @@ func Api_func_language(db *sql.DB, config tool.Config) string {
         json_data, _ := json.Marshal(data_list)
         return string(json_data)
     } else {
-        new_data := make(map[string]interface{})
+        new_data := make(map[string]any)
         new_data["response"] = "ok"
 
         data_list := map[string]string{}

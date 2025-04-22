@@ -25,7 +25,7 @@ func Api_w_set(db *sql.DB, config tool.Config) string {
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
     set_list := Document_set_list()
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
 
     if _, ok := set_list[other_set["set_name"]]; ok {
         doc_rev := ""

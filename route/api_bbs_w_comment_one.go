@@ -99,7 +99,7 @@ func Api_bbs_w_comment_one(db *sql.DB, config tool.Config, already_auth_check bo
         data_list = append(data_list, temp_dict)
     }
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     if !already_auth_check {
         if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
             data_list = []map[string]string{}

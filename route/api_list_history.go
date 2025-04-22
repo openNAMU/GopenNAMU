@@ -99,7 +99,7 @@ func Api_list_history(db *sql.DB, config tool.Config) string {
     auth_name := tool.Get_user_auth(db, config.IP)
     auth_info := tool.Get_auth_group_info(db, auth_name)
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["language"] = map[string]string{
         "tool":           tool.Get_language(db, "tool", false),
         "normal":         tool.Get_language(db, "normal", false),

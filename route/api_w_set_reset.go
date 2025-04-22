@@ -43,7 +43,7 @@ func Api_w_set_reset(db *sql.DB, config tool.Config) string {
             )
         }
 
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         return_data["response"] = "ok"
         return_data["language"] = map[string]string{
             "reset": tool.Get_language(db, "reset", false),
@@ -52,7 +52,7 @@ func Api_w_set_reset(db *sql.DB, config tool.Config) string {
         json_data, _ := json.Marshal(return_data)
         return string(json_data)
     } else {
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         return_data["response"] = "require auth"
         return_data["language"] = map[string]string{
             "authority_error": tool.Get_language(db, "authority_error", false),

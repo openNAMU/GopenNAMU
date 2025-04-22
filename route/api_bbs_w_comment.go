@@ -82,7 +82,7 @@ func Api_bbs_w_comment(db *sql.DB, config tool.Config) string {
         json_data, _ := json.Marshal(data_list)
         return string(json_data)
     } else {
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         
         temp := []map[string]string{}
         if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {

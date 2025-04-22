@@ -16,7 +16,7 @@ func Api_list_markup(db *sql.DB, config tool.Config) string {
 
     data := markup.List_markup()
 
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
     return_data["response"] = "ok"
     return_data["data"] = data
 

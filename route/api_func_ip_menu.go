@@ -15,7 +15,7 @@ func Api_func_ip_menu(db *sql.DB, config tool.Config) string {
 
     ip_data := tool.IP_menu(db, config.IP, other_set["my_ip"], other_set["option"])
 
-    new_data := make(map[string]interface{})
+    new_data := make(map[string]any)
     new_data["response"] = "ok"
     new_data["data"] = ip_data
 

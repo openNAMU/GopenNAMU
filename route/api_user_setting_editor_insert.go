@@ -22,7 +22,7 @@ func Api_user_setting_editor_post(db *sql.DB, config tool.Config) string {
             ip, other_set["data"],
         )
         
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         return_data["response"] = "ok"
         return_data["language"] = map[string]string{
             "save": tool.Get_language(db, "save", false),
@@ -31,7 +31,7 @@ func Api_user_setting_editor_post(db *sql.DB, config tool.Config) string {
         json_data, _ := json.Marshal(return_data)
         return string(json_data)
     } else {
-        return_data := make(map[string]interface{})
+        return_data := make(map[string]any)
         return_data["response"] = "require auth"
         return_data["language"] = map[string]string{
             "authority_error": tool.Get_language(db, "authority_error", false),

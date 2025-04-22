@@ -190,13 +190,13 @@ func (class *macromark) render_last() {
     class.render_data_js += "opennamu_do_toc();"
 }
 
-func (class macromark) main() map[string]interface{} {
+func (class macromark) main() map[string]any {
     class.render_text()
     class.render_last()
 
     log.Default().Println(class.render_data)
 
-    end_data := make(map[string]interface{})
+    end_data := make(map[string]any)
     end_data["data"] = class.render_data
     end_data["js_data"] = class.render_data_js
     end_data["backlink"] = class.backlink

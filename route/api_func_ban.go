@@ -15,7 +15,7 @@ func Api_func_ban(db *sql.DB, config tool.Config) string {
 
     ip_data := tool.Get_user_ban(db, config.IP, other_set["type"])
 
-    new_data := make(map[string]interface{})
+    new_data := make(map[string]any)
     new_data["response"] = "ok"
     new_data["ban"] = ip_data[0]
     new_data["ban_type"] = ip_data[1]

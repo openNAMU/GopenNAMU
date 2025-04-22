@@ -16,7 +16,7 @@ func Api_setting_put(db *sql.DB, config tool.Config) string {
     auth_info := tool.Check_acl(db, "", "", "owner_auth", config.IP)
 
     setting_acl := Setting_list()
-    return_data := make(map[string]interface{})
+    return_data := make(map[string]any)
 
     if _, ok := setting_acl[other_set["set_name"]]; ok {
         if auth_info {

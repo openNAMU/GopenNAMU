@@ -26,7 +26,7 @@ func Api_func_ip_post(db *sql.DB, config tool.Config) string {
         }
     }
 
-    new_data := make(map[string]interface{})
+    new_data := make(map[string]any)
     new_data["response"] = "ok"
     new_data["data"] = ip_data
 
