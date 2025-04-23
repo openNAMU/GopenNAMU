@@ -14,6 +14,10 @@ func Api_func_auth_post(db *sql.DB, config tool.Config) string {
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
     ip := config.IP
+    if _, exist := other_set["ip"]; exist {
+        ip = other_set["ip"]
+    }
+
     what := other_set["what"]
 
     tool.Do_insert_auth_history(db, ip, what)

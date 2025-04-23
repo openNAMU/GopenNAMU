@@ -13,7 +13,12 @@ func Api_func_auth(db *sql.DB, config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    auth_name := tool.Get_user_auth(db, config.IP)
+    ip := config.IP
+    if _, exist := other_set["ip"]; exist {
+        ip = other_set["ip"]
+    }
+
+    auth_name := tool.Get_user_auth(db, ip)
     auth_info := tool.Get_auth_group_info(db, auth_name)
 
     return_data := make(map[string]any)

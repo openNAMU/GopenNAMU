@@ -13,7 +13,12 @@ func Api_func_ban(db *sql.DB, config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    ip_data := tool.Get_user_ban(db, config.IP, other_set["type"])
+    ip := config.IP
+    if _, exist := other_set["ip"]; exist {
+        ip = other_set["ip"]
+    }
+
+    ip_data := tool.Get_user_ban(db, ip, other_set["type"])
 
     new_data := make(map[string]any)
     new_data["response"] = "ok"
