@@ -28,7 +28,10 @@ func bbs_list(db *sql.DB) map[string]string {
     return data_list
 }
 
-func Api_bbs_list(db *sql.DB, config tool.Config) string {
+func Api_bbs_list(config tool.Config) string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     data_list := bbs_list(db)

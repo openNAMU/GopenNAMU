@@ -1,7 +1,6 @@
 package route
 
 import (
-	"database/sql"
 	"encoding/json"
 	"opennamu/route/tool"
 	"strconv"
@@ -9,7 +8,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs_w_comment_all(db *sql.DB, sub_code string, already_auth_check bool) []map[string]string {
+func Api_bbs_w_comment_all(sub_code string, already_auth_check bool) []map[string]string {
     end_data := []map[string]string{}
 
     inter_other_set := map[string]string{}
@@ -23,7 +22,7 @@ func Api_bbs_w_comment_all(db *sql.DB, sub_code string, already_auth_check bool)
         Other_set: string(json_data),
     }
     
-    return_data := Api_bbs_w_comment_one(db, send_request, already_auth_check)
+    return_data := Api_bbs_w_comment_one(send_request, already_auth_check)
 
     return_data_api := []map[string]string{}
     json.Unmarshal([]byte(return_data), &return_data_api)
@@ -31,7 +30,7 @@ func Api_bbs_w_comment_all(db *sql.DB, sub_code string, already_auth_check bool)
     for for_a := 0; for_a < len(return_data_api); for_a++ {
         end_data = append(end_data, return_data_api[for_a])
 
-        temp := Api_bbs_w_comment_all(db, sub_code + "-" + return_data_api[for_a]["code"], already_auth_check)
+        temp := Api_bbs_w_comment_all(sub_code + "-" + return_data_api[for_a]["code"], already_auth_check)
         if len(temp) > 0 {
             for for_b := 0; for_b < len(temp); for_b++ {
                 end_data = append(end_data, temp[for_b])
@@ -42,7 +41,10 @@ func Api_bbs_w_comment_all(db *sql.DB, sub_code string, already_auth_check bool)
     return end_data
 }
 
-func Api_bbs_w_comment(db *sql.DB, config tool.Config) string {
+func Api_bbs_w_comment(config tool.Config) string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
@@ -88,7 +90,7 @@ func Api_bbs_w_comment(db *sql.DB, config tool.Config) string {
         if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
             return_data["response"] = "require auth"
         } else {
-            temp = Api_bbs_w_comment_all(db, other_set["sub_code"], true)
+            temp = Api_bbs_w_comment_all(other_set["sub_code"], true)
         }
 
         if other_set["legacy"] != "" {

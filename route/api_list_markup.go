@@ -1,14 +1,13 @@
 package route
 
 import (
-	"database/sql"
 	"opennamu/route/tool"
 	"opennamu/route/tool/markup"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_list_markup(db *sql.DB, config tool.Config) string {
+func Api_list_markup(config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}

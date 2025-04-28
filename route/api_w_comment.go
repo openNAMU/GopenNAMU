@@ -22,7 +22,7 @@ func Api_bbs_w_comment_make(db *sql.DB, doc_name string) string {
         IP: "tool:system",
     }
 
-    return_data := Api_bbs_w_comment_one(db, send_request, false)
+    return_data := Api_bbs_w_comment_one(send_request, false)
 
     return_data_api := map[string]string{}
     json.Unmarshal([]byte(return_data), &return_data_api)
@@ -30,7 +30,10 @@ func Api_bbs_w_comment_make(db *sql.DB, doc_name string) string {
     return return_data_api["data"]
 }
 
-func Api_w_comment(db *sql.DB, config tool.Config) string {
+func Api_w_comment(config tool.Config) string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+    
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
@@ -45,7 +48,7 @@ func Api_w_comment(db *sql.DB, config tool.Config) string {
     }
 
     if db_code_str == "" {
-        db_code_str = Api_bbs_w_comment_make(db, other_set["doc_name"])
+        db_code_str = Api_bbs_w_comment_make(other_set["doc_name"])
     }
     */
 

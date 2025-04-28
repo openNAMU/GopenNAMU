@@ -8,7 +8,10 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs_w_comment_one(db *sql.DB, config tool.Config, already_auth_check bool) string {
+func Api_bbs_w_comment_one(config tool.Config, already_auth_check bool) string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}

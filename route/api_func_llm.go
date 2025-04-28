@@ -2,7 +2,6 @@ package route
 
 import (
 	"context"
-	"database/sql"
 	"opennamu/route/tool"
 
 	"github.com/google/generative-ai-go/genai"
@@ -10,7 +9,10 @@ import (
 	"google.golang.org/api/option"
 )
 
-func Api_func_llm(db *sql.DB, config tool.Config) string {
+func Api_func_llm(config tool.Config) string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+    
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}

@@ -1,14 +1,16 @@
 package route
 
 import (
-	"database/sql"
 	"opennamu/route/tool"
 	"strconv"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_list_old_page(db *sql.DB, config tool.Config) string {
+func Api_list_old_page(config tool.Config) string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+    
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}

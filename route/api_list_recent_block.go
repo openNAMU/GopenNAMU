@@ -8,7 +8,10 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_list_recent_block(db *sql.DB, config tool.Config) string {
+func Api_list_recent_block(config tool.Config) string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+    
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}

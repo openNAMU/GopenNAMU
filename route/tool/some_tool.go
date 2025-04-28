@@ -306,6 +306,10 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
             []any{ &set_logo },
         )
     }
+
+    if set_logo == "" {
+        set_logo = set_wiki_name
+    }
     
     set_head := ""
     QueryRow_DB(
@@ -321,6 +325,16 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
         []any{ &set_head_skin },
         skin_name,
     )
+
+    set_head_dark := ""
+    if strings.Contains(cookies, "main_css_darkmode=1") {
+        QueryRow_DB(
+            db,
+            DB_change("select data from other where name = 'head' and coverage = ?"),
+            []any{ &set_head_dark },
+            skin_name + "-cssdark",
+        )
+    }
     
     set_top_menu := ""
     QueryRow_DB(
@@ -333,8 +347,8 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     QueryRow_DB(
         db,
         DB_change("select data from user_set where name = 'top_menu' and id = ?"),
-        []any{ &set_top_menu },
-        skin_name,
+        []any{ &set_top_menu_user },
+        ip,
     )
 
     set_top_menu = strings.ReplaceAll(set_top_menu, "\r", "")
@@ -342,20 +356,21 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
 
     set_top_menu_mix := ""
     if set_top_menu != "" && set_top_menu_user != "" {
-        set_top_menu_mix = set_top_menu + "\n" + set_top_menu_mix
+        set_top_menu_mix = set_top_menu + "\n" + set_top_menu_user
     } else {
         set_top_menu_mix = set_top_menu + set_top_menu_user
     }
 
-    set_top_menu_lst := strings.Split(set_top_menu_mix, "\n")
-    if len(set_top_menu_lst) % 2 != 0 {
-        set_top_menu_lst = append(set_top_menu_lst, "")
-    }
-
     set_top_menu_result := [][]string{}
-    for i := 0; i < len(set_top_menu_lst) - 1; i += 2 {
-        pair := []string{ set_top_menu_lst[i], set_top_menu_lst[i + 1] }
-        set_top_menu_result = append(set_top_menu_result, pair)
+    if set_top_menu_mix != "" {
+        lst := strings.Split(set_top_menu_mix, "\n")
+        if len(lst) % 2 != 0 {
+            lst = append(lst, "")
+        }
+
+        for i := 0; i < len(lst) - 1; i += 2 {
+            set_top_menu_result = append(set_top_menu_result, []string{lst[i], lst[i+1]})
+        }
     }
 
     template_var := []any{}
@@ -373,9 +388,17 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     
     data_list = append(data_list, set_wiki_name)
     data_list = append(data_list, set_license)
+    data_list = append(data_list, "")
+    data_list = append(data_list, "")
     data_list = append(data_list, set_logo)
-    data_list = append(data_list, set_head + set_head_skin)
-    data_list = append(data_list, set_top_menu_result)
+    data_list = append(data_list, set_head + set_head_skin + set_head_dark)
+    
+    if len(set_top_menu_result) > 0 {
+        data_list = append(data_list, set_top_menu_result)
+    } else {
+        data_list = append(data_list, "")
+    }
+
     data_list = append(data_list, template_var...)
 
     return data_list

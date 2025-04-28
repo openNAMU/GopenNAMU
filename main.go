@@ -71,9 +71,6 @@ func main() {
             tool.DB_init(main_set["data"])
         }
 
-        db := tool.DB_connect()
-        defer tool.DB_close(db)
-
         if len(os.Args) > 2 && os.Args[2] == "dev" {
             log.Default().Println(main_set["url"])
         }
@@ -91,109 +88,113 @@ func main() {
         case "main_func_easter_egg":
             route_data = route.View_main_func_easter_egg()
         case "api_w_raw":
-            route_data = route.Api_w_raw(db, config)
+            route_data = route.Api_w_raw(config)
         case "api_func_sha224":
-            route_data = route.Api_func_sha224(db, config)
+            route_data = route.Api_func_sha224(config)
         case "api_w_random":
-            route_data = route.Api_w_random(db, config)
+            route_data = route.Api_w_random(config)
         case "api_func_search":
-            route_data = route.Api_func_search(db, config)
+            route_data = route.Api_func_search(config)
         case "api_topic":
-            route_data = route.Api_topic(db, config)
+            route_data = route.Api_topic(config)
         case "api_func_ip":
-            route_data = route.Api_func_ip(db, config)
+            route_data = route.Api_func_ip(config)
         case "api_list_recent_change":
-            route_data = route.Api_list_recent_change(db, config)
+            route_data = route.Api_list_recent_change(config)
         case "api_list_recent_edit_request":
-            route_data = route.Api_list_recent_edit_request(db, config)
+            route_data = route.Api_list_recent_edit_request(config)
         case "api_bbs":
-            route_data = route.Api_bbs(db, config)
+            route_data = route.Api_bbs(config)
         case "api_w_xref":
-            route_data = route.Api_w_xref(db, config)
+            route_data = route.Api_w_xref(config)
         case "api_w_watch_list":
-            route_data = route.Api_w_watch_list(db, config)
+            route_data = route.Api_w_watch_list(config)
         case "api_user_watch_list":
-            route_data = route.Api_user_watch_list(db, config)
+            route_data = route.Api_user_watch_list(config)
         case "api_w_render":
-            route_data = route.Api_w_render(db, config)
+            route_data = route.Api_w_render(config)
         case "api_func_llm":
-            route_data = route.Api_func_llm(db, config)
+            route_data = route.Api_func_llm(config)
         case "api_func_language":
-            route_data = route.Api_func_language(db, config)
+            route_data = route.Api_func_language(config)
         case "api_func_auth":
-            route_data = route.Api_func_auth(db, config)
+            route_data = route.Api_func_auth(config)
         case "api_list_recent_discuss":
-            route_data = route.Api_list_recent_discuss(db, config)
+            route_data = route.Api_list_recent_discuss(config)
         case "api_bbs_list":
-            route_data = route.Api_bbs_list(db, config)
+            route_data = route.Api_bbs_list(config)
         case "api_list_old_page":
-            route_data = route.Api_list_old_page(db, config)
+            route_data = route.Api_list_old_page(config)
         case "api_topic_list":
-            route_data = route.Api_topic_list(db, config)
+            route_data = route.Api_topic_list(config)
         case "api_bbs_w_n":
-            route_data = route.Api_bbs_w(db, config)
+            route_data = route.Api_bbs_w(config)
         case "api_w_set_reset":
-            route_data = route.Api_w_set_reset(db, config)
+            route_data = route.Api_w_set_reset(config)
         case "api_list_recent_block":
-            route_data = route.Api_list_recent_block(db, config)
+            route_data = route.Api_list_recent_block(config)
         case "api_list_title_index":
-            route_data = route.Api_list_title_index(db, config)
+            route_data = route.Api_list_title_index(config)
         case "api_user_setting_editor_post":
-            route_data = route.Api_user_setting_editor_post(db, config)
+            route_data = route.Api_user_setting_editor_post(config)
         case "api_user_setting_editor_delete":
-            route_data = route.Api_user_setting_editor_delete(db, config)
+            route_data = route.Api_user_setting_editor_delete(config)
         case "api_user_setting_editor":
-            route_data = route.Api_user_setting_editor(db, config)
+            route_data = route.Api_user_setting_editor(config)
         case "api_setting":
-            route_data = route.Api_setting(db, config)
+            route_data = route.Api_setting(config)
         case "api_setting_put":
-            route_data = route.Api_setting_put(db, config)
+            route_data = route.Api_setting_put(config)
         case "api_func_ip_menu":
-            route_data = route.Api_func_ip_menu(db, config)
+            route_data = route.Api_func_ip_menu(config)
         case "api_func_ip_post":
-            route_data = route.Api_func_ip_post(db, config)
+            route_data = route.Api_func_ip_post(config)
         case "api_list_acl":
-            route_data = route.Api_list_acl(db, config)
+            route_data = route.Api_list_acl(config)
         case "api_user_rankup":
-            route_data = route.Api_user_rankup(db, config)
+            route_data = route.Api_user_rankup(config)
         case "api_func_acl":
-            route_data = route.Api_func_acl(db, config)
+            route_data = route.Api_func_acl(config)
         case "api_func_ban":
-            route_data = route.Api_func_ban(db, config)
+            route_data = route.Api_func_ban(config)
         case "api_func_auth_post":
-            route_data = route.Api_func_auth_post(db, config)
+            route_data = route.Api_func_auth_post(config)
         case "api_give_auth_patch":
-            route_data = route.Api_give_auth_patch(db, config)
+            route_data = route.Api_give_auth_patch(config)
         case "api_list_auth":
-            route_data = route.Api_list_auth(db, config)
+            route_data = route.Api_list_auth(config)
         case "api_w_page_view":
-            route_data = route.Api_w_page_view(db, config)
+            route_data = route.Api_w_page_view(config)
         case "api_bbs_w_comment_one":
-            route_data = route.Api_bbs_w_comment_one(db, config, false)
+            route_data = route.Api_bbs_w_comment_one(config, false)
         case "api_bbs_w_comment":
-            route_data = route.Api_bbs_w_comment(db, config)
+            route_data = route.Api_bbs_w_comment(config)
         case "api_list_history":
-            route_data = route.Api_list_history(db, config)
+            route_data = route.Api_list_history(config)
         case "api_list_markup":
-            route_data = route.Api_list_markup(db, config)
+            route_data = route.Api_list_markup(config)
         case "api_bbs_w_set":
-            route_data = route.Api_bbs_w_set(db, config)
+            route_data = route.Api_bbs_w_set(config)
         case "api_bbs_w_set_put":
-            route_data = route.Api_bbs_w_set_put(db, config)
+            route_data = route.Api_bbs_w_set_put(config)
         case "api_func_alarm_post":
-            route_data = route.Api_func_alarm_post(db, config)
+            route_data = route.Api_func_alarm_post(config)
         case "api_bbs_w":
-            route_data = route.Api_bbs_w(db, config)
+            route_data = route.Api_bbs_w(config)
         case "api_bbs_w_post":
-            route_data = route.Api_bbs_w_post(db, config)
+            route_data = route.Api_bbs_w_post(config)
         case "api_w_comment":
-            route_data = route.Api_w_comment(db, config)
+            route_data = route.Api_w_comment(config)
         case "api_bbs_w_tabom":
-            route_data = route.Api_bbs_w_tabom(db, config)
+            route_data = route.Api_bbs_w_tabom(config)
         case "api_bbs_w_tabom_post":
-            route_data = route.Api_bbs_w_tabom_post(db, config)
+            route_data = route.Api_bbs_w_tabom_post(config)
         case "api_func_email_post":
-            route_data = route.Api_func_email_post(db, config)
+            route_data = route.Api_func_email_post(config)
+        case "api_func_level":
+            route_data = route.Api_func_level(config)
+        case "api_func_wiki_set":
+            route_data = route.Api_func_wiki_set(config)
         default:
             route_data = "{ \"response\" : \"404\" }"
         }

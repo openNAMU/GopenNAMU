@@ -1,7 +1,6 @@
 package route
 
 import (
-	"database/sql"
 	"opennamu/route/tool"
 	"strconv"
 	"strings"
@@ -22,7 +21,10 @@ func User_rankup_condition(data string) string {
     }
 }
 
-func Api_user_rankup(db *sql.DB, config tool.Config) string {
+func Api_user_rankup(config tool.Config) string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+    
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
