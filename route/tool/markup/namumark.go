@@ -3,124 +3,46 @@ package markup
 import (
 	"database/sql"
 	"log"
-	"regexp"
-	"strconv"
 	"strings"
-
-	"github.com/dlclark/regexp2"
 )
 
 type namumark struct {
-    db *sql.DB
-    data map[string]string
+	db   *sql.DB
+	data map[string]string
 
-    render_data string
+	render_data string
 }
 
 func Namumark_new(db *sql.DB, data map[string]string) *namumark {
-    data_string := data["data"]
-    data_string = "\n" + data_string + "\n"
-    data_string = strings.ReplaceAll(data_string, "\r", "")
+	data_string := data["data"]
+	data_string = "\n" + data_string + "\n"
+	data_string = strings.ReplaceAll(data_string, "\r", "")
 
-    return &namumark{
-        db,
-        data,
+	return &namumark{
+		db,
+		data,
 
-        data_string,
-    }
+		data_string,
+	}
 }
 
-type replacer struct {
-    re *regexp2.Regexp
-    prefix string
-}
-
-func (class *namumark) render_text() {
-    string_data := class.render_data
-
-    replacers := []replacer{
-        { regexp2.MustCompile(`'''((?:(?!''').)+)'''`, 0), "b" },
-        { regexp2.MustCompile(`''((?:(?!'').)+)''`, 0), "i" },
-        { regexp2.MustCompile(`__((?:(?!__).)+)__`, 0), "u" },
-        { regexp2.MustCompile(`\^\^\^((?:(?!\^\^\^).)+)\^\^\^`, 0), "sup" },
-        { regexp2.MustCompile(`\^\^((?:(?!\^\^).)+)\^\^`, 0), "sup" },
-        { regexp2.MustCompile(`,,,((?:(?!,,,).)+),,,`, 0), "sub" },
-        { regexp2.MustCompile(`,,((?:(?!,,).)+),,`, 0), "sub" },
-        { regexp2.MustCompile(`--((?:(?!--).)+)--`, 0), "s" },
-        { regexp2.MustCompile(`~~((?:(?!~~).)+)~~`, 0), "s" },
-    }
-
-    for _, rep := range replacers {
-        for {
-            m, _ := rep.re.FindStringMatch(string_data)
-            if m == nil {
-                break
-            }
-            
-            gps := m.Groups()
-
-            start := m.Index
-            end := start + len(m.String())
-            replacement := "[" + rep.prefix + "(" + gps[1].Captures[0].String() + ")]"
-
-            string_data = string_data[:start] + replacement + string_data[end:]
-        }
-    }
-
-    class.render_data = string_data
-}
-
-func (class *namumark) render_last() {
-    string_data := class.render_data
-
-    r := regexp.MustCompile(`(\n| )+$`)
-    string_data = r.ReplaceAllString(string_data, "")
-
-    r = regexp.MustCompile(`^(\n| )+`)
-    string_data = r.ReplaceAllString(string_data, "")
-
-    r = regexp.MustCompile(`\n?<front_br>`)
-    string_data = r.ReplaceAllString(string_data, "")
-
-    r = regexp.MustCompile(`<back_br>\n?`)
-    string_data = r.ReplaceAllString(string_data, "")
-
-    string_data = strings.ReplaceAll(string_data, "\n", "<br>")
-
-    class.render_data = string_data
-}
-
-
-func (class *namumark) render_heading() {
-    string_data := class.render_data
-
-    r := regexp.MustCompile(`\n(?:(={1,6})(#?) ?([^\n]+))\n`)
-    r_sub := regexp.MustCompile(` ?(#?={1,6}[^=]*)$`)
-    string_data = r.ReplaceAllStringFunc(string_data, func(m string) string {
-        match := r.FindStringSubmatch(m)
-
-        heading_data := r_sub.ReplaceAllString(match[3], "")
-
-        heading_len := strconv.Itoa(len(match[1]))
-        heading_render := "[h" + heading_len + "(" + heading_data + ")]"
-
-        return heading_render
-    })
-
-    class.render_data = string_data
+func (class *namumark) line_render(line string) string {
+	return line
 }
 
 func (class namumark) main() map[string]any {
-    class.render_text()
-    class.render_heading()
-    class.render_last()
+	lines := strings.Split(class.render_data, "\n")
+	for i, line := range lines {
+		lines[i] = class.line_render(line)
+	}
 
-    log.Default().Println(class.render_data)
+	class.render_data = strings.Join(lines, "\n")
+	log.Default().Println(class.render_data)
 
-    class.data["data"] = class.render_data
+	class.data["data"] = class.render_data
 
-    render_data_class := Macromark_new(class.db, class.data)
-    render_data := render_data_class.main()
+	render_data_class := Macromark_new(class.db, class.data)
+	render_data := render_data_class.main()
 
-    return render_data
+	return render_data
 }
