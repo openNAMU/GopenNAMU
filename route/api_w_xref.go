@@ -18,8 +18,8 @@ func Api_w_xref(config tool.Config) string {
 
     page, _ := strconv.Atoi(other_set["page"])
     num := 0
-    if page*50 > 0 {
-        num = page*50 - 50
+    if page * 50 > 0 {
+        num = page * 50 - 50
     }
 
     link_case_insensitive := ""
