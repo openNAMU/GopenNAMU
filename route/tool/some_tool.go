@@ -15,6 +15,7 @@ import (
 
 	"github.com/CloudyKit/jet/v6"
 	"github.com/gin-gonic/gin"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func Sha224(data string) string {
@@ -271,6 +272,135 @@ func Get_domain(db *sql.DB, full_string bool) string {
     }
 
     return domain
+}
+
+func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) []any {
+    var json = jsoniter.ConfigCompatibleWithStandardLibrary
+    
+    session := map[string]string{}
+    json.Unmarshal([]byte(session_str), &session)
+
+    skin_name := "_" + Get_use_skin_name(db, ip)
+
+    user_icon := 1
+    user_name := ip
+    user_head := ""
+    user_email := ""
+    user_admin := "0"
+    user_acl_list := []string{}
+    user_notice_count := 0
+
+    if !IP_or_user(ip) {
+        user_head_main := ""
+        QueryRow_DB(
+            db,
+            DB_change("select data from user_set where id = ? and name = 'custom_css'"),
+            []any{ &user_head_main },
+            ip,
+        )
+
+        user_head_skin := ""
+        QueryRow_DB(
+            db,
+            DB_change("select data from user_set where id = ? and name = ?"),
+            []any{ &user_head_main },
+            ip,
+            "custom_css" + skin_name,
+        )
+
+        user_head += user_head_main + user_head_skin
+
+        QueryRow_DB(
+            db,
+            DB_change("select data from user_set where name = 'email' and id = ?"),
+            []any{ &user_email },
+            ip,
+        )
+
+        if Check_acl(db, "", "", "all_admin_auth", ip) {
+            user_admin = "1"
+
+            acl_name := ""
+            QueryRow_DB(
+                db,
+                DB_change("select data from user_set where id = ? and name = 'acl'"),
+                []any{ &acl_name },
+                ip,
+            )
+
+            rows := Query_DB(
+                db,
+                DB_change("select acl from alist where name = ?"),
+                acl_name,
+            )
+            defer rows.Close()
+
+            for rows.Next() {
+                user_acl_name := ""
+
+                err := rows.Scan(&user_acl_name)
+                if err != nil {
+                    panic(err)
+                }
+
+                user_acl_list = append(user_acl_list, user_acl_name)
+            }
+        }
+
+        QueryRow_DB(
+            db,
+            DB_change("select data from user_set where id = ? and name = 'acl'"),
+            []any{ &user_notice_count },
+            ip,
+        )
+    } else {
+        user_icon = 0
+        user_name = Get_language(db, "user", true)
+        user_email = ""
+        user_acl_list = []string{}
+        user_notice_count = 0
+        user_head = ""
+    }
+
+    user_ban := "0"
+    user_ban_check := Get_user_ban(db, ip, "")[0]
+    if user_ban_check == "true" {
+        user_ban = "1"
+    }
+
+    user_topic := "0"
+    user_topic_check := QueryRow_DB(
+        db,
+        DB_change("select title from rd where title = ? and stop = '' limit 1"),
+        []any{},
+        "user:" + ip,
+    )
+    if user_topic_check {
+        user_topic = "1"
+    }
+
+    return []any{
+        "",
+        "",
+        user_icon,
+        user_head,
+        user_email,
+        user_name,
+        user_admin,
+        user_ban,
+        user_notice_count,
+        func(user_acl_list []string) any {
+            if len(user_acl_list) == 0 {
+                return "0"
+            } else {
+                return user_acl_list
+            }
+        }(user_acl_list),
+        ip,
+        user_topic,
+        "",
+        Get_level(db, ip),
+    }
 }
 
 func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {

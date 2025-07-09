@@ -195,6 +195,8 @@ func main() {
             route_data = route.Api_func_wiki_set(config)
         case "api_func_skin_name":
             route_data = route.Api_func_skin_name(config)
+        case "api_func_wiki_custom":
+            route_data = route.Api_func_wiki_custom(config)
         default:
             route_data = "{ \"response\" : \"404\" }"
         }
