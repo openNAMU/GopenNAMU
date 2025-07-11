@@ -6,8 +6,8 @@ toolchain go1.24.1
 
 require (
 	github.com/3th1nk/cidr v0.2.0
-	github.com/CloudyKit/jet/v6 v6.2.0
 	github.com/dlclark/regexp2 v1.11.0
+	github.com/flosch/pongo2/v6 v6.0.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/google/generative-ai-go v0.11.0
@@ -25,7 +25,6 @@ require (
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	cloud.google.com/go/longrunning v0.5.6 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/CloudyKit/fastprinter v0.0.0-20200109182630-33d98a066a53 // indirect
 	github.com/bytedance/sonic v1.12.3 // indirect
 	github.com/bytedance/sonic/loader v0.2.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect

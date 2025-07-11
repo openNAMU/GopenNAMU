@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
@@ -12,6 +14,7 @@ import (
 
 	"net/http"
 
+	"github.com/flosch/pongo2/v6"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -39,6 +42,30 @@ func error_handler() gin.HandlerFunc {
     }
 }
 
+func pongo_init() {
+	pongo2.RegisterFilter("md5_replace", func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+		h := md5.Sum([]byte(in.String()))
+		
+        return pongo2.AsValue(hex.EncodeToString(h[:])), nil
+	})
+
+	pongo2.RegisterFilter("load_lang", func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+        db := tool.DB_connect()
+        defer tool.DB_close(db)
+
+        return pongo2.AsValue(tool.Get_language(db, in.String(), false)), nil
+	})
+
+	pongo2.RegisterFilter("cut_100", func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+		s := in.String()
+		if len(s) > 100 {
+			s = s[:100]
+		}
+
+		return pongo2.AsValue(s), nil
+	})
+}
+
 func main() {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
@@ -53,6 +80,7 @@ func main() {
     }
 
     r.Use(error_handler())
+    pongo_init()
 
     r.POST("/", func(c *gin.Context) {
         route_data := ""
@@ -197,6 +225,8 @@ func main() {
             route_data = route.Api_func_skin_name(config)
         case "api_func_wiki_custom":
             route_data = route.Api_func_wiki_custom(config)
+        case "view_render":
+            route_data = route.View_render(config)
         default:
             route_data = "{ \"response\" : \"404\" }"
         }

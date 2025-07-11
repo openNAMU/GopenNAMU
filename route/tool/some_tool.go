@@ -1,19 +1,18 @@
 package tool
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
 	"html"
 	"html/template"
+	"log"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/CloudyKit/jet/v6"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -205,25 +204,8 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
     return skin
 }
 
-func Get_template(db *sql.DB, ip string, data jet.VarMap) string {
-    views := jet.NewSet(
-        jet.NewOSFileSystemLoader("./views/" + Get_use_skin_name(db, ip)),
-        jet.InDevelopmentMode(),
-    )
-
-    tmpl, err := views.GetTemplate("example.jet")
-    if err != nil {
-        panic(err)
-    }
-
-    var buf bytes.Buffer
-
-    err = tmpl.Execute(&buf, data, nil)
-    if err != nil {
-        panic(err)
-    }
-
-    return buf.String()
+func Get_skin_route(db *sql.DB, ip string) string {
+    return "./views/" + Get_use_skin_name(db, ip) + "/index.html"
 }
 
 func Get_domain(db *sql.DB, full_string bool) string {
@@ -457,7 +439,9 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     )
 
     set_head_dark := ""
-    if strings.Contains(cookies, "main_css_darkmode=1") {
+
+    cookie_map := Get_cookie_header(cookies)
+    if cookie_map["main_css_darkmode"] == "1" {
         QueryRow_DB(
             db,
             DB_change("select data from other where name = 'head' and coverage = ?"),
@@ -561,4 +545,66 @@ type Config struct {
     IP string
     Cookies string
     Session string
+}
+
+func Cache_v() string {
+    return ".cache_v288"
+}
+
+func Get_wiki_css(data []any, cookies string) []any {
+    for len(data) < 4 {
+        data = append(data, "")
+    }
+
+    data_css := ""
+    data_css_dark := ""
+
+    data_css_ver := Cache_v()
+
+    // Cache Control
+    data_css += `<meta http-equiv="Cache-Control" content="max-age=31536000">`
+
+    // External JS
+    data_css += `<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>`
+    data_css += `<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" integrity="sha512-rdhY3cbXURo13l/WU9VlaRyaIYeJ/KBakckXIvJNAQde8DgpOmE+eZf7ha4vdqVjTtwQt69bD2wH2LXob/LB7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>`
+    data_css += `<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/x86asm.min.js" integrity="sha512-HeAchnWb+wLjUb2njWKqEXNTDlcd1QcyOVxb+Mc9X0bWY0U5yNHiY5hTRUt/0twG8NEZn60P3jttqBvla/i2gA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>`
+    data_css += `<script defer src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.48.0/min/vs/loader.min.js" integrity="sha512-ZG31AN9z/CQD1YDDAK4RUAvogwbJHv6bHrumrnMLzdCrVu4HeAqrUX7Jsal/cbUwXGfaMUNmQU04tQ8XXl5Znw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>`
+    data_css += `<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>`
+
+    // Func JS
+    data_css += `<script defer src="/views/main_css/js/func/func.js` + data_css_ver + `"></script>`
+    data_css += `<script defer src="/views/main_css/js/func/insert_version.js` + data_css_ver + `"></script>`
+    data_css += `<script defer src="/views/main_css/js/func/insert_user_info.js` + data_css_ver + `"></script>`
+    data_css += `<script defer src="/views/main_css/js/func/insert_version_skin.js` + data_css_ver + `"></script>`
+    data_css += `<script defer src="/views/main_css/js/func/insert_http_warning_text.js` + data_css_ver + `"></script>`
+    data_css += `<script defer src="/views/main_css/js/func/ie_end_of_life.js` + data_css_ver + `"></script>`
+    data_css += `<script defer src="/views/main_css/js/func/shortcut.js` + data_css_ver + `"></script>`
+    data_css += `<script defer src="/views/main_css/js/func/editor.js` + data_css_ver + `"></script>`
+    data_css += `<script defer src="/views/main_css/js/func/render.js` + data_css_ver + `"></script>`
+
+    // Main CSS
+    data_css += `<link rel="stylesheet" href="/views/main_css/css/main.css` + data_css_ver + `">`
+
+    // External CSS
+    data_css += `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">`
+    data_css += `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css" integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />`
+    data_css += `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.41.0/min/vs/editor/editor.main.min.css" integrity="sha512-MFDhxgOYIqLdcYTXw7en/n5BshKoduTitYmX8TkQ+iJOGjrWusRi8+KmfZOrgaDrCjZSotH2d1U1e/Z1KT6nWw==" crossorigin="anonymous" referrerpolicy="no-referrer" />`
+
+    cookie_map := Get_cookie_header(cookies)
+    if cookie_map["main_css_darkmode"] == "1" {
+        // Main CSS
+        data_css_dark += `<link rel="stylesheet" href="/views/main_css/css/sub/dark.css` + data_css_ver + `">`
+
+        // External CSS
+        data_css_dark += `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/dark.min.css" integrity="sha512-bfLTSZK4qMP/TWeS1XJAR/VDX0Uhe84nN5YmpKk5x8lMkV0D+LwbuxaJMYTPIV13FzEv4CUOhHoc+xZBDgG9QA==" crossorigin="anonymous" referrerpolicy="no-referrer" />`
+    }
+
+    new_data := append([]any{}, data[:2]...)
+    new_data = append(new_data, "", data_css)
+    new_data = append(new_data, data[2], data_css_dark)
+    new_data = append(new_data, data[3:]...)
+
+    log.Default().Println(new_data)
+
+    return new_data
 }
