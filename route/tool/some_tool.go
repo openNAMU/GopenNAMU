@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/flosch/pongo2/v6"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -607,4 +608,29 @@ func Get_wiki_css(data []any, cookies string) []any {
     log.Default().Println(new_data)
 
     return new_data
+}
+
+func Get_template(db *sql.DB, config Config, name string, data string) string {
+    context := pongo2.Context{
+		"imp" : []any{
+			name,
+			Get_wiki_set(db, config.IP, config.Cookies),
+			Get_wiki_custom(db, config.IP, config.Session, config.Cookies),
+			Get_wiki_css([]any{0, 0}, config.Cookies),
+		},
+		"data" : data,
+		"menu" : 0,
+	}
+
+	tpl, err := pongo2.FromFile(Get_skin_route(db, config.IP))
+	if err != nil {
+		panic(err)
+	}
+
+	out, err := tpl.Execute(context)
+	if err != nil {
+		panic(err)
+	}
+
+    return out
 }

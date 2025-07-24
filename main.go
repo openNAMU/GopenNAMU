@@ -225,8 +225,10 @@ func main() {
             route_data = route.Api_func_skin_name(config)
         case "api_func_wiki_custom":
             route_data = route.Api_func_wiki_custom(config)
-        case "view_render":
-            route_data = route.View_render(config)
+        case "api_list_random":
+            route_data = route.Api_list_random_exter(config)
+        case "view_list_random":
+            route_data = route.View_list_random(config)
         default:
             route_data = "{ \"response\" : \"404\" }"
         }
