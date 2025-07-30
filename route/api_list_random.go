@@ -12,14 +12,17 @@ func Api_list_random(config tool.Config) map[string]any {
 	data_list := []string{}
 
 	for i := 0; i < 50; i++ {
-		title := "Test"
+		title := ""
+
 		tool.QueryRow_DB(
 			db,
 			tool.DB_change("select title from data where title not like 'user:%' and title not like 'category:%' and title not like 'file:%' order by random() limit 1"),
 			[]any{&title},
 		)
 
-		data_list = append(data_list, title)
+		if title != "" {
+			data_list = append(data_list, title)
+		}
 	}
 
 	return_data := make(map[string]any)

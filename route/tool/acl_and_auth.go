@@ -956,3 +956,20 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
 
     return false
 }
+
+func Get_error_page(db *sql.DB, config Config, error_name string) string {
+    data := ""
+    if error_name == "auth" {
+        data = Get_language(db, "authority_error", true)
+    }
+
+    return Get_template(
+        db,
+        config,
+        Get_language(db, "error", true),
+        `<h2>` + Get_language(db, "error", true) + `</h2>` +
+        `<ul>` +
+            `<li>` + data + `</li>` +
+        `</ul>`,
+    )
+}

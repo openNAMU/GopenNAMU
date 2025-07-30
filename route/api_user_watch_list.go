@@ -7,23 +7,17 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_user_watch_list(config tool.Config) string {
+func Api_user_watch_list(config tool.Config, name string, num_str string, do_type string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    page, _ := strconv.Atoi(other_set["num"])
+    page, _ := strconv.Atoi(num_str)
     num := 0
-    if page*50 > 0 {
-        num = page*50 - 50
+    if page * 50 > 0 {
+        num = page * 50 - 50
     }
 
     ip := config.IP
-    name := other_set["name"]
 
     return_data := make(map[string]any)
     return_data["language"] = map[string]string{
@@ -36,7 +30,7 @@ func Api_user_watch_list(config tool.Config) string {
         return_data["data"] = []string{}
     } else {
         query := ""
-        if other_set["do_type"] == "star_doc" {
+        if do_type == "star_doc" {
             query = tool.DB_change("select data from user_set where name = 'star_doc' and id = ? limit ?, 50")
         } else {
             query = tool.DB_change("select data from user_set where name = 'watchlist' and id = ? limit ?, 50")
@@ -65,6 +59,17 @@ func Api_user_watch_list(config tool.Config) string {
         return_data["response"] = "ok"
         return_data["data"] = data_list
     }
+
+    return return_data
+}
+
+func Api_user_watch_list_exter(config tool.Config) string {
+    var json = jsoniter.ConfigCompatibleWithStandardLibrary
+
+    other_set := map[string]string{}
+    json.Unmarshal([]byte(config.Other_set), &other_set)
+
+    return_data := Api_user_watch_list(config, other_set["name"], other_set["num"], other_set["do_type"])
 
     json_data, _ := json.Marshal(return_data)
     return string(json_data)

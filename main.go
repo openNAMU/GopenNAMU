@@ -134,9 +134,9 @@ func main() {
         case "api_w_xref":
             route_data = route.Api_w_xref(config)
         case "api_w_watch_list":
-            route_data = route.Api_w_watch_list(config)
+            route_data = route.Api_w_watch_list_exter(config)
         case "api_user_watch_list":
-            route_data = route.Api_user_watch_list(config)
+            route_data = route.Api_user_watch_list_exter(config)
         case "api_w_render":
             route_data = route.Api_w_render(config)
         case "api_func_llm":
@@ -229,6 +229,10 @@ func main() {
             route_data = route.Api_list_random_exter(config)
         case "view_list_random":
             route_data = route.View_list_random(config)
+        case "view_w_watch_list":
+            route_data = route.View_w_watch_list(config)
+        case "view_user_watch_list":
+            route_data = route.View_user_watch_list(config)
         default:
             route_data = "{ \"response\" : \"404\" }"
         }

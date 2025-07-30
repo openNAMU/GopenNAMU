@@ -16,7 +16,7 @@ func View_list_random(config tool.Config) string {
 
 	data_html := "<ul>"
 	for _, title := range data_list["data"].([]string) {
-		data_html += "<li>" + title + "</li>"
+		data_html += "<li><a href=\"/w/" + tool.Url_parser(title) + "\">" + title + "</a></li>"
 	}
 	data_html += "</ul>"
 
