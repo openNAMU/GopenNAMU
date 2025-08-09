@@ -332,7 +332,7 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
 
         QueryRow_DB(
             db,
-            DB_change("select data from user_set where id = ? and name = 'acl'"),
+            DB_change("select count(*) from user_notice where name = ? and readme = ''"),
             []any{ &user_notice_count },
             ip,
         )
