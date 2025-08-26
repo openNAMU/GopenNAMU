@@ -7,13 +7,13 @@ import (
 )
 
 func View_bbs_in(config tool.Config) string {
-	db := tool.DB_connect()
-	defer tool.DB_close(db)
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
 
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
+    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
-	json.Unmarshal([]byte(config.Other_set), &other_set)
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     bbs_name := ""
 

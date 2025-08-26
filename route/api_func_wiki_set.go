@@ -7,10 +7,10 @@ import (
 )
 
 func Api_func_wiki_set(config tool.Config) string {
-	db := tool.DB_connect()
-	defer tool.DB_close(db)
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
 
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
+    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     wiki_set := tool.Get_wiki_set(db, config.IP, config.Cookies)
 

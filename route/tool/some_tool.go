@@ -612,25 +612,25 @@ func Get_wiki_css(data []any, cookies string) []any {
 
 func Get_template(db *sql.DB, config Config, name string, data string) string {
     context := pongo2.Context{
-		"imp" : []any{
-			name,
-			Get_wiki_set(db, config.IP, config.Cookies),
-			Get_wiki_custom(db, config.IP, config.Session, config.Cookies),
-			Get_wiki_css([]any{0, 0}, config.Cookies),
-		},
-		"data" : data,
-		"menu" : 0,
-	}
+        "imp" : []any{
+            name,
+            Get_wiki_set(db, config.IP, config.Cookies),
+            Get_wiki_custom(db, config.IP, config.Session, config.Cookies),
+            Get_wiki_css([]any{0, 0}, config.Cookies),
+        },
+        "data" : data,
+        "menu" : 0,
+    }
 
-	tpl, err := pongo2.FromFile(Get_skin_route(db, config.IP))
-	if err != nil {
-		panic(err)
-	}
+    tpl, err := pongo2.FromFile(Get_skin_route(db, config.IP))
+    if err != nil {
+        panic(err)
+    }
 
-	out, err := tpl.Execute(context)
-	if err != nil {
-		panic(err)
-	}
+    out, err := tpl.Execute(context)
+    if err != nil {
+        panic(err)
+    }
 
     return out
 }

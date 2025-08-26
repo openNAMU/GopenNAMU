@@ -12,15 +12,15 @@ func View_list_random(config tool.Config) string {
     
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-	data_list := Api_list_random(config)
+    data_list := Api_list_random(config)
 
-	data_html := "<ul>"
-	for _, title := range data_list["data"].([]string) {
-		data_html += "<li><a href=\"/w/" + tool.Url_parser(title) + "\">" + title + "</a></li>"
-	}
-	data_html += "</ul>"
+    data_html := "<ul>"
+    for _, title := range data_list["data"].([]string) {
+        data_html += "<li><a href=\"/w/" + tool.Url_parser(title) + "\">" + title + "</a></li>"
+    }
+    data_html += "</ul>"
 
-	out := tool.Get_template(db, config, tool.Get_language(db, "random_list", true), data_html)
+    out := tool.Get_template(db, config, tool.Get_language(db, "random_list", true), data_html)
 
     return_data := make(map[string]any)
     return_data["response"] = "ok"

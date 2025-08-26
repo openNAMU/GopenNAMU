@@ -11,23 +11,23 @@ import (
 )
 
 type namumark struct {
-	db   *sql.DB
-	data map[string]string
+    db   *sql.DB
+    data map[string]string
 
-	render_data string
+    render_data string
 }
 
 func Namumark_new(db *sql.DB, data map[string]string) *namumark {
-	data_string := data["data"]
-	data_string = "\n" + data_string + "\n"
-	data_string = strings.ReplaceAll(data_string, "\r", "")
+    data_string := data["data"]
+    data_string = "\n" + data_string + "\n"
+    data_string = strings.ReplaceAll(data_string, "\r", "")
 
-	return &namumark{
-		db,
-		data,
+    return &namumark{
+        db,
+        data,
 
-		data_string,
-	}
+        data_string,
+    }
 }
 
 type replacer struct {
@@ -90,26 +90,26 @@ func (class *namumark) render_heading() {
 }
 
 func (class *namumark) render_link() {
-	string_data := class.render_data
+    string_data := class.render_data
 
-	r := regexp2.MustCompile(`\[\[((?:(?!\[\[|\]\]|\|).)+)(?:\|((?:(?!\[\[|\]\]).)+))?\]\]`, 0)
+    r := regexp2.MustCompile(`\[\[((?:(?!\[\[|\]\]|\|).)+)(?:\|((?:(?!\[\[|\]\]).)+))?\]\]`, 0)
 
-	string_data, _ = r.ReplaceFunc(
-		string_data,
-		func(m regexp2.Match) string {
-			target := m.GroupByNumber(1).String()
-			label  := m.GroupByNumber(2).String()
-			if label == "" {
-				label = target
-			}
+    string_data, _ = r.ReplaceFunc(
+        string_data,
+        func(m regexp2.Match) string {
+            target := m.GroupByNumber(1).String()
+            label  := m.GroupByNumber(2).String()
+            if label == "" {
+                label = target
+            }
 
-			return "[a(" + target + ", " + label + ")]"
-		},
-		-1,
-		-1,
-	)
+            return "[a(" + target + ", " + label + ")]"
+        },
+        -1,
+        -1,
+    )
 
-	class.render_data = string_data
+    class.render_data = string_data
 }
 
 func (class *namumark) render_last() {
@@ -135,16 +135,16 @@ func (class *namumark) render_last() {
 
 func (class *namumark) main() map[string]any {
     class.render_text()
-	class.render_link()
+    class.render_link()
     class.render_heading()
     class.render_last()
 
-	log.Default().Println(class.render_data)
+    log.Default().Println(class.render_data)
 
-	class.data["data"] = class.render_data
+    class.data["data"] = class.render_data
 
-	render_data_class := Macromark_new(class.db, class.data)
-	render_data := render_data_class.main()
+    render_data_class := Macromark_new(class.db, class.data)
+    render_data := render_data_class.main()
 
-	return render_data
+    return render_data
 }
