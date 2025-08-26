@@ -104,6 +104,7 @@ func Api_list_history(config tool.Config) string {
 
     return_data := make(map[string]any)
     return_data["language"] = map[string]string{
+        "view":           tool.Get_language(db, "view", false),
         "tool":           tool.Get_language(db, "tool", false),
         "normal":         tool.Get_language(db, "normal", false),
         "edit":           tool.Get_language(db, "edit", false),
