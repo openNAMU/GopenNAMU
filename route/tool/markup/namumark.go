@@ -89,6 +89,29 @@ func (class *namumark) render_heading() {
     class.render_data = string_data
 }
 
+func (class *namumark) render_link() {
+	string_data := class.render_data
+
+	r := regexp2.MustCompile(`\[\[((?:(?!\[\[|\]\]|\|).)+)(?:\|((?:(?!\[\[|\]\]).)+))?\]\]`, 0)
+
+	string_data, _ = r.ReplaceFunc(
+		string_data,
+		func(m regexp2.Match) string {
+			target := m.GroupByNumber(1).String()
+			label  := m.GroupByNumber(2).String()
+			if label == "" {
+				label = target
+			}
+
+			return "[a(" + target + ", " + label + ")]"
+		},
+		-1,
+		-1,
+	)
+
+	class.render_data = string_data
+}
+
 func (class *namumark) render_last() {
     string_data := class.render_data
 
@@ -112,6 +135,7 @@ func (class *namumark) render_last() {
 
 func (class *namumark) main() map[string]any {
     class.render_text()
+	class.render_link()
     class.render_heading()
     class.render_last()
 
