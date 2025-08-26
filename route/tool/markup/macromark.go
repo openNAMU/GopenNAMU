@@ -191,8 +191,8 @@ func (class *macromark) render_last() {
 }
 
 func (class macromark) main() map[string]any {
-    class.render_text()
-    class.render_last()
+    // class.render_text()
+    // class.render_last()
 
     log.Default().Println(class.render_data)
 
