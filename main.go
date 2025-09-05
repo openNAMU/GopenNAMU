@@ -16,7 +16,6 @@ import (
 
 	"github.com/flosch/pongo2/v6"
 	"github.com/gin-gonic/gin"
-	jsoniter "github.com/json-iterator/go"
 )
 
 func error_handler() gin.HandlerFunc {
@@ -67,13 +66,18 @@ func pongo_init() {
 }
 
 func main() {
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
     log.SetFlags(log.LstdFlags | log.Lshortfile)
         
+    standalone_mode := false
+
     var r *gin.Engine
     if len(os.Args) > 2 && os.Args[2] == "dev" {
         r = gin.Default()
+
+        if len(os.Args) > 3 && os.Args[3] == "standalone" {
+            standalone_mode = true
+            tool.IN_mod_OUT_mod(standalone_mode)
+        }
     } else {
         gin.SetMode(gin.ReleaseMode)
         r = gin.New()
@@ -81,8 +85,9 @@ func main() {
 
     r.Use(error_handler())
     pongo_init()
+    tool.DB_init()
 
-    r.POST("/", func(c *gin.Context) {
+    r.POST("/:url", func(c *gin.Context) {
         route_data := ""
         
         body, err := io.ReadAll(c.Request.Body)
@@ -93,15 +98,15 @@ func main() {
         body_string := string(body)
 
         main_set := map[string]string{}
-        json.Unmarshal([]byte(body_string), &main_set)
+        main_set["data"] = body_string
 
-        if main_set["url"] == "test" {
-            tool.DB_init(main_set["data"])
-        }
+        if standalone_mode {
+            main_set["ip"] = tool.Get_IP(c)
+            main_set["cookies"] = tool.Get_Cookies(c)
+            main_set["session"] = ""
+        }        
 
-        if len(os.Args) > 2 && os.Args[2] == "dev" {
-            log.Default().Println(main_set["url"])
-        }
+        url_param := c.Param("url")
 
         config := tool.Config{
             Other_set: main_set["data"],
@@ -110,7 +115,7 @@ func main() {
             Session: main_set["session"],
         }
         
-        switch main_set["url"] {
+        switch url_param {
         case "test":
             route_data = "ok"
         case "api_w_raw":
@@ -228,7 +233,7 @@ func main() {
         case "api_list_random":
             route_data = route.Api_list_random_exter(config)
         case "view_list_random":
-            route_data = route.View_list_random(config)
+            route_data = route.View_list_random(config).JSON
         case "view_w_watch_list":
             route_data = route.View_w_watch_list(config)
         case "view_user_watch_list":
@@ -239,6 +244,32 @@ func main() {
     
         c.Data(http.StatusOK, "application/json", []byte(route_data))
     })
+
+    r.GET("/list/random", func(c *gin.Context) {
+        main_set := map[string]string{}
+        if standalone_mode {
+            main_set["ip"] = tool.Get_IP(c)
+            main_set["cookies"] = tool.Get_Cookies(c)
+            main_set["session"] = ""
+        }
+
+        config := tool.Config{
+            Other_set: main_set["data"],
+            IP: main_set["ip"],
+            Cookies: main_set["cookies"],
+            Session: main_set["session"],
+        }
+
+        route_data := route.View_list_random(config).HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
     
-    r.Run(":" + os.Args[1])
+    r.GET("/view/*name", route.View_view_file)
+    r.GET("/views/*name", route.View_view_file)
+
+    if standalone_mode {
+        r.Run("0.0.0.0:" + os.Args[1])
+    } else {
+        r.Run("127.0.0.1:" + os.Args[1])
+    }
 }

@@ -6,7 +6,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func View_list_random(config tool.Config) string {
+func View_list_random(config tool.Config) tool.View_result {
     db := tool.DB_connect()
     defer tool.DB_close(db)
     
@@ -27,5 +27,11 @@ func View_list_random(config tool.Config) string {
     return_data["data"] = out
 
     json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+
+    result_data := tool.View_result{
+        HTML : out,
+        JSON : string(json_data),
+    }
+
+    return result_data
 }

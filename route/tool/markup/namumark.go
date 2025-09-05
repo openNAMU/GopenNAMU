@@ -132,7 +132,6 @@ func (class *namumark) render_last() {
     class.render_data = string_data
 }
 
-
 func (class *namumark) main() map[string]any {
     class.render_text()
     class.render_link()

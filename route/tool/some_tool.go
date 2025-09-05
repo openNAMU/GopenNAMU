@@ -18,6 +18,8 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+var standalone_mode = false
+
 func Sha224(data string) string {
     hasher := sha256.New224()
     hasher.Write([]byte(data))
@@ -62,7 +64,11 @@ func Get_month() string {
 }
 
 func Get_IP(c *gin.Context) string {
-    return c.Request.Header.Get("X-Forwarded-For")
+    if standalone_mode {
+        return c.ClientIP()
+    } else {
+        return c.Request.Header.Get("X-Forwarded-For")
+    }
 }
 
 func Get_Cookies(c *gin.Context) string {
@@ -633,4 +639,27 @@ func Get_template(db *sql.DB, config Config, name string, data string) string {
     }
 
     return out
+}
+
+func Choose(v string, def string) string {
+	if strings.TrimSpace(v) == "" {
+		return def
+	}
+
+	return v
+}
+
+func File_exist_check(path string) bool {
+	_, err := os.Stat(path)
+    
+	return err == nil
+}
+
+func IN_mod_OUT_mod(data bool) {
+    standalone_mode = data
+}
+
+type View_result struct {
+    HTML string
+    JSON string
 }
