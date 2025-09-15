@@ -68,7 +68,7 @@ func DB_init_standalone() {
         return
     }
     
-    path_dir := filepath.Join("..", "..", "data", "set.json")
+    path_dir := filepath.Join("..", "data", "set.json")
     if File_exist_check(path_dir) {
         raw, err := os.ReadFile(path_dir)
         if err == nil {
@@ -98,7 +98,7 @@ func DB_init_standalone() {
 }
 
 func DB_init_standalone_MySQL() {
-    path := filepath.Join("..", "..", "data", "mysql.json")
+    path := filepath.Join("..", "data", "mysql.json")
 	if !File_exist_check(path) {
 		return
 	}
