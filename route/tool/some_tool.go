@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -148,7 +149,7 @@ func Get_setting(db *sql.DB, set_name string, data_coverage string) [][]string {
 }
 
 func Get_skin_list(data string, default_flag bool) []string {
-    entries, err := os.ReadDir("views")
+    entries, err := os.ReadDir(filepath.Join("..", "views"))
     if err != nil {
         return nil
     }
@@ -212,7 +213,7 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
 }
 
 func Get_skin_route(db *sql.DB, ip string) string {
-    return "./views/" + Get_use_skin_name(db, ip) + "/index.html"
+    return filepath.Join("..", "views", Get_use_skin_name(db, ip), "index.html")
 }
 
 func Get_domain(db *sql.DB, full_string bool) string {
@@ -651,7 +652,6 @@ func Choose(v string, def string) string {
 
 func File_exist_check(path string) bool {
 	_, err := os.Stat(path)
-    
 	return err == nil
 }
 

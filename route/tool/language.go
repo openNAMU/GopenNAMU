@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"path/filepath"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -27,7 +28,7 @@ func Get_language(db *sql.DB, data string, safe bool) string {
             return HTML_escape(global_lang_data[language + "_" + data])
         }
     } else {
-        file, err := os.Open("./lang/" + language + ".json")
+        file, err := os.Open(filepath.Join("..", "lang", language + ".json"))
         if err != nil {
             panic(err)
         }

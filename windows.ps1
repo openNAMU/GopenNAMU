@@ -1,7 +1,7 @@
-$file_name = Read-Host "file_name "
+$file_name = "main"
 
 $to = $args[0]
-if($to -eq $null) {
+if($null -eq $to) {
     $to = "all"
 }
 

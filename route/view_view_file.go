@@ -56,7 +56,7 @@ func View_view_file(c *gin.Context) {
 		}
 	}
 
-	final_path := filepath.Join("./views", dir_name, file_name)
+	final_path := filepath.Join("..", "views", dir_name, file_name)
 	if _, err := os.Stat(final_path); err != nil {
 		if os.IsNotExist(err) {
 			c.String(http.StatusOK, "")
