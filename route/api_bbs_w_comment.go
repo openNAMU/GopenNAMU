@@ -69,8 +69,8 @@ func Api_bbs_w_comment(config tool.Config) string {
             bbs_and_post_num + "-%",
         )
 
-        comment_length_int, _ := strconv.Atoi(comment_length)
-        reply_length_int, _ := strconv.Atoi(reply_length)
+        comment_length_int := tool.Str_to_int(comment_length)
+        reply_length_int := tool.Str_to_int(reply_length)
 
         length_int := comment_length_int + reply_length_int
         length_str := strconv.Itoa(length_int)

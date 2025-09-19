@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"html"
 	"html/template"
-	"log"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -607,12 +606,23 @@ func Get_wiki_css(data []any, cookies string) []any {
         data_css_dark += `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/dark.min.css" integrity="sha512-bfLTSZK4qMP/TWeS1XJAR/VDX0Uhe84nN5YmpKk5x8lMkV0D+LwbuxaJMYTPIV13FzEv4CUOhHoc+xZBDgG9QA==" crossorigin="anonymous" referrerpolicy="no-referrer" />`
     }
 
-    new_data := append([]any{}, data[:2]...)
-    new_data = append(new_data, "", data_css)
-    new_data = append(new_data, data[2], data_css_dark)
-    new_data = append(new_data, data[3:]...)
+    end := 2
+    if end > len(data) {
+        end = len(data)
+    }
 
-    log.Default().Println(new_data)
+    new_data := append([]any{}, data[:end]...)
+    new_data = append(new_data, "", data_css)
+
+    if len(data) >= 3 {
+        new_data = append(new_data, data[2])
+    }
+
+    new_data = append(new_data, data_css_dark)
+
+    if len(data) >= 3 {
+        new_data = append(new_data, data[3:]...)
+    }
 
     return new_data
 }
@@ -625,7 +635,7 @@ func Get_template(db *sql.DB, config Config, name string, data string) string {
             Get_wiki_custom(db, config.IP, config.Session, config.Cookies),
             Get_wiki_css([]any{0, 0}, config.Cookies),
         },
-        "data" : data,
+        "data" : `<div class="opennamu_main">` + data + `</div>`,
         "menu" : 0,
     }
 
@@ -662,4 +672,9 @@ func IN_mod_OUT_mod(data bool) {
 type View_result struct {
     HTML string
     JSON string
+}
+
+func Str_to_int(data string) int {
+    num, _ := strconv.Atoi(data)
+    return num
 }

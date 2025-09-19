@@ -2,7 +2,6 @@ package tool
 
 import (
 	"database/sql"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -244,7 +243,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
         level = Get_level(db, ip)[0]
     }
 
-    level_int, _ := strconv.Atoi(level)
+    level_int := Str_to_int(level)
 
     get_ban := ""
     ban_type := ""

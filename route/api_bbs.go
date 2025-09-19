@@ -3,7 +3,6 @@ package route
 import (
 	"database/sql"
 	"opennamu/route/tool"
-	"strconv"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -26,7 +25,7 @@ func Api_bbs(config tool.Config) string {
 
         rows_arr = append(rows_arr, rows)
     } else {
-        page, _ := strconv.Atoi(other_set["page"])
+        page := tool.Str_to_int(other_set["page"])
         num := 0
         if page * 50 > 0 {
             num = page * 50 - 50

@@ -2,7 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-	"strconv"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -16,11 +15,7 @@ func Api_topic_list(config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    page_int, err := strconv.Atoi(other_set["num"])
-    if err != nil {
-        panic(err)
-    }
-
+    page_int := tool.Str_to_int(other_set["num"])
     if page_int > 0 {
         page_int = (page_int * 50) - 50
     } else {

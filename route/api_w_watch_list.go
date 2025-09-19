@@ -2,7 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-	"strconv"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -11,7 +10,7 @@ func Api_w_watch_list(config tool.Config, name string, num_str string, do_type s
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    page, _ := strconv.Atoi(num_str)
+    page := tool.Str_to_int(num_str)
     num := 0
     if page * 50 > 0 {
         num = page * 50 - 50

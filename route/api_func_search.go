@@ -1,8 +1,6 @@
 package route
 
 import (
-	"strconv"
-
 	"opennamu/route/tool"
 
 	jsoniter "github.com/json-iterator/go"
@@ -17,7 +15,7 @@ func Api_func_search(config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    page, _ := strconv.Atoi(other_set["num"])
+    page := tool.Str_to_int(other_set["num"])
     num := 0
     if page * 50 > 0 {
         num = page * 50 - 50

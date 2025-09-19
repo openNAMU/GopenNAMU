@@ -2,7 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-	"strconv"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -34,7 +33,7 @@ func Api_w_page_view(config tool.Config) string {
                 other_set["doc_name"],
             )
         } else {
-            view_count_int, _ := strconv.Atoi(view_count)
+            view_count_int := tool.Str_to_int(view_count)
 
             tool.Exec_DB(
                 db,
@@ -60,7 +59,7 @@ func Api_w_page_view(config tool.Config) string {
                 other_set["doc_name"], now_date,
             )
         } else {
-            view_count_int, _ := strconv.Atoi(view_count)
+            view_count_int := tool.Str_to_int(view_count)
 
             tool.Exec_DB(
                 db,
@@ -86,7 +85,7 @@ func Api_w_page_view(config tool.Config) string {
                 other_set["doc_name"], now_date,
             )
         } else {
-            view_count_int, _ := strconv.Atoi(view_count)
+            view_count_int := tool.Str_to_int(view_count)
 
             tool.Exec_DB(
                 db,

@@ -32,7 +32,7 @@ func Api_bbs_w_post(config tool.Config) string {
         other_set["set_id"],
     )
 
-    set_code_int, _ := strconv.Atoi(set_code)
+    set_code_int := tool.Str_to_int(set_code)
     set_code_int += 1
 
     set_code_str := strconv.Itoa(set_code_int)

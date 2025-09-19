@@ -263,6 +263,48 @@ func main() {
         route_data := route.View_list_random(config).HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
+
+    r.GET("/upload", func(c *gin.Context) {
+        main_set := map[string]string{}
+        if standalone_mode {
+            main_set["ip"] = tool.Get_IP(c)
+            main_set["cookies"] = tool.Get_Cookies(c)
+            main_set["session"] = ""
+        }
+
+        config := tool.Config{
+            Other_set: main_set["data"],
+            IP: main_set["ip"],
+            Cookies: main_set["cookies"],
+            Session: main_set["session"],
+        }
+
+        route_data := route.View_edit_file_upload(config).HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.POST("/upload", func(c *gin.Context) {
+        form, err := c.MultipartForm()
+        if err != nil || form == nil {
+            c.String(http.StatusBadRequest, "invalid multipart form")
+            return
+        }
+
+        files := form.File["f_data[]"]
+        if len(files) == 0 {
+            c.String(http.StatusBadRequest, "no file")
+            return
+        }
+
+        // posted_name := c.PostForm("f_name")
+        
+        main_set := map[string]string{}
+        if standalone_mode {
+            main_set["ip"] = tool.Get_IP(c)
+            main_set["cookies"] = tool.Get_Cookies(c)
+            main_set["session"] = ""
+        }
+    })
     
     r.GET("/view/*name", route.View_view_file)
     r.GET("/views/*name", route.View_view_file)

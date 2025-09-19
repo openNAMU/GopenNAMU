@@ -2,7 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-	"strconv"
 	"strings"
 
 	jsoniter "github.com/json-iterator/go"
@@ -54,10 +53,8 @@ func Api_user_rankup(config tool.Config) string {
                         }
 
                         if type_data == "int" {
-                            split_int, err := strconv.Atoi(split_data[1])
-                            if err == nil {
-                                end_data[rank_name].(map[string]int)[split_data[0]] = split_int
-                            }
+                            split_int := tool.Str_to_int(split_data[1])
+                            end_data[rank_name].(map[string]int)[split_data[0]] = split_int
                         } else {
                             end_data[rank_name].(map[string]string)[split_data[0]] = split_data[1]
                         }

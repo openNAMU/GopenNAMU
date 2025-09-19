@@ -2,7 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-	"strconv"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -21,20 +20,12 @@ func Api_list_recent_change(config tool.Config) string {
         set_type = ""
     }
 
-    limit_int, err := strconv.Atoi(other_set["limit"])
-    if err != nil {
-        panic(err)
-    }
-
+    limit_int := tool.Str_to_int(other_set["limit"])
     if limit_int > 50 || limit_int < 0 {
         limit_int = 50
     }
 
-    page_int, err := strconv.Atoi(other_set["num"])
-    if err != nil {
-        panic(err)
-    }
-
+    page_int := tool.Str_to_int(other_set["num"])
     if page_int > 0 {
         page_int = (page_int * limit_int) - limit_int
     } else {

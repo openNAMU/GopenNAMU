@@ -60,7 +60,7 @@ func Api_bbs_w_tabom_post(config tool.Config) string {
                 )
             }
 
-            tabom_count_int, _ := strconv.Atoi(tabom_count)
+            tabom_count_int := tool.Str_to_int(tabom_count)
             tabom_count_int += 1
 
             tabom_count_str := strconv.Itoa(tabom_count_int)

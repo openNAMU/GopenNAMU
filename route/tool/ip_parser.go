@@ -36,7 +36,7 @@ func Get_level(db *sql.DB, ip string) []string {
         ip,
     )
 
-    level_int, _ := strconv.Atoi(level)
+    level_int := Str_to_int(level)
     max_exp := strconv.Itoa(level_int * 50 + 500)
 
     return []string{level, exp, max_exp}

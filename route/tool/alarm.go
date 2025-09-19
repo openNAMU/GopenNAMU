@@ -2,7 +2,6 @@ package tool
 
 import (
 	"database/sql"
-	"strconv"
 )
 
 func Send_alarm(db *sql.DB, from string, target string, data string) {
@@ -19,7 +18,7 @@ func Send_alarm(db *sql.DB, from string, target string, data string) {
             target,
         )
 
-        count_int, _ := strconv.Atoi(count)
+        count_int := Str_to_int(count)
         count_int += 1
 
         Exec_DB(
