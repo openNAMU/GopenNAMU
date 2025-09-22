@@ -2,12 +2,15 @@ package main
 
 import (
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"runtime/debug"
+	"strings"
 
 	"opennamu/route"
 	"opennamu/route/tool"
@@ -16,6 +19,7 @@ import (
 
 	"github.com/flosch/pongo2/v6"
 	"github.com/gin-gonic/gin"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func error_handler() gin.HandlerFunc {
@@ -235,9 +239,9 @@ func main() {
         case "view_list_random":
             route_data = route.View_list_random(config).JSON
         case "view_w_watch_list":
-            route_data = route.View_w_watch_list(config)
+            route_data = route.View_w_watch_list(config).JSON
         case "view_user_watch_list":
-            route_data = route.View_user_watch_list(config)
+            route_data = route.View_user_watch_list(config).JSON
         default:
             route_data = "{ \"response\" : \"404\" }"
         }
@@ -295,8 +299,6 @@ func main() {
             c.String(http.StatusBadRequest, "no file")
             return
         }
-
-        // posted_name := c.PostForm("f_name")
         
         main_set := map[string]string{}
         if standalone_mode {
@@ -304,6 +306,53 @@ func main() {
             main_set["cookies"] = tool.Get_Cookies(c)
             main_set["session"] = ""
         }
+
+        config := tool.Config{
+            IP: main_set["ip"],
+            Cookies: main_set["cookies"],
+            Session: main_set["session"],
+        }
+        
+        posted_name := strings.TrimSpace(c.PostForm("f_name"))
+        other_set_arr := []map[string]string{}
+
+        count := 0
+        for _, fh := range files {
+            f, err := fh.Open()
+            if err != nil {
+                continue
+            }
+            
+            b, err := io.ReadAll(f)
+            
+            _ = f.Close()
+            if err != nil {
+                continue
+            }
+
+            name := posted_name
+
+            name = strings.TrimSpace(name)
+            ext := strings.TrimPrefix(strings.ToLower(filepath.Ext(name)), ".")
+            ext = strings.TrimSpace(ext)
+
+            b64 := base64.StdEncoding.EncodeToString(b)
+
+            other_set := map[string]string{
+                "file_name": name,
+                "file_ext": ext,
+                "file_data": b64,
+            }
+
+            other_set_arr = append(other_set_arr, other_set)
+            count += 1
+        }
+        
+        other_set_arr_str, _ := jsoniter.ConfigCompatibleWithStandardLibrary.MarshalToString(other_set_arr)
+        config.Other_set = other_set_arr_str
+
+        route_data := route.View_edit_file_upload_post(config).HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
     
     r.GET("/view/*name", route.View_view_file)

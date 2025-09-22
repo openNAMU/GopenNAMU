@@ -6,7 +6,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func View_user_watch_list(config tool.Config) string {
+func View_user_watch_list(config tool.Config) tool.View_result {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -24,7 +24,13 @@ func View_user_watch_list(config tool.Config) string {
         return_data["data"] = tool.Get_error_page(db, config, "auth")
 
         json_data, _ := json.Marshal(return_data)
-        return string(json_data)
+
+        data := tool.View_result{
+            HTML : "",
+            JSON : string(json_data),
+        }
+
+        return data
     } else {
         data_html += "<ul>"
         for _, title := range api_data["data"].([]string) {
@@ -38,7 +44,13 @@ func View_user_watch_list(config tool.Config) string {
     return_data := make(map[string]any)
     return_data["response"] = "ok"
     return_data["data"] = out
-
+    
     json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+
+    data := tool.View_result{
+        HTML : out,
+        JSON : string(json_data),
+    }
+
+    return data
 }
