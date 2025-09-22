@@ -250,18 +250,11 @@ func main() {
     })
 
     r.GET("/list/random", func(c *gin.Context) {
-        main_set := map[string]string{}
-        if standalone_mode {
-            main_set["ip"] = tool.Get_IP(c)
-            main_set["cookies"] = tool.Get_Cookies(c)
-            main_set["session"] = ""
-        }
-
         config := tool.Config{
-            Other_set: main_set["data"],
-            IP: main_set["ip"],
-            Cookies: main_set["cookies"],
-            Session: main_set["session"],
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
         }
 
         route_data := route.View_list_random(config).HTML
@@ -269,18 +262,11 @@ func main() {
     })
 
     r.GET("/upload", func(c *gin.Context) {
-        main_set := map[string]string{}
-        if standalone_mode {
-            main_set["ip"] = tool.Get_IP(c)
-            main_set["cookies"] = tool.Get_Cookies(c)
-            main_set["session"] = ""
-        }
-
         config := tool.Config{
-            Other_set: main_set["data"],
-            IP: main_set["ip"],
-            Cookies: main_set["cookies"],
-            Session: main_set["session"],
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
         }
 
         route_data := route.View_edit_file_upload(config).HTML
@@ -288,6 +274,12 @@ func main() {
     })
 
     r.POST("/upload", func(c *gin.Context) {
+        config := tool.Config{
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }
+
         form, err := c.MultipartForm()
         if err != nil || form == nil {
             c.String(http.StatusBadRequest, "invalid multipart form")
@@ -299,20 +291,7 @@ func main() {
             c.String(http.StatusBadRequest, "no file")
             return
         }
-        
-        main_set := map[string]string{}
-        if standalone_mode {
-            main_set["ip"] = tool.Get_IP(c)
-            main_set["cookies"] = tool.Get_Cookies(c)
-            main_set["session"] = ""
-        }
 
-        config := tool.Config{
-            IP: main_set["ip"],
-            Cookies: main_set["cookies"],
-            Session: main_set["session"],
-        }
-        
         posted_name := strings.TrimSpace(c.PostForm("f_name"))
         other_set_arr := []map[string]string{}
 
@@ -347,7 +326,7 @@ func main() {
             other_set_arr = append(other_set_arr, other_set)
             count += 1
         }
-        
+
         other_set_arr_str, _ := jsoniter.ConfigCompatibleWithStandardLibrary.MarshalToString(other_set_arr)
         config.Other_set = other_set_arr_str
 
