@@ -250,36 +250,26 @@ func main() {
     })
 
     r.GET("/list/random", func(c *gin.Context) {
-        config := tool.Config{
+        route_data := route.View_list_random(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }
-
-        route_data := route.View_list_random(config).HTML
+        }).HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/upload", func(c *gin.Context) {
-        config := tool.Config{
+        route_data := route.View_edit_file_upload(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }
-
-        route_data := route.View_edit_file_upload(config).HTML
+        }).HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.POST("/upload", func(c *gin.Context) {
-        config := tool.Config{
-            IP: tool.Get_IP(c),
-            Cookies: tool.Get_Cookies(c),
-            Session: "",
-        }
-
         form, err := c.MultipartForm()
         if err != nil || form == nil {
             c.String(http.StatusBadRequest, "invalid multipart form")
@@ -295,7 +285,7 @@ func main() {
         posted_name := strings.TrimSpace(c.PostForm("f_name"))
         other_set_arr := []map[string]string{}
 
-        count := 0
+        count := 1
         for _, fh := range files {
             f, err := fh.Open()
             if err != nil {
@@ -328,14 +318,19 @@ func main() {
         }
 
         other_set_arr_str, _ := jsoniter.ConfigCompatibleWithStandardLibrary.MarshalToString(other_set_arr)
-        config.Other_set = other_set_arr_str
 
-        route_data := route.View_edit_file_upload_post(config).HTML
+        route_data := route.View_edit_file_upload_post(tool.Config{
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+            Other_set: other_set_arr_str,
+        }).HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
     
     r.GET("/view/*name", route.View_view_file)
     r.GET("/views/*name", route.View_view_file)
+    r.GET("/image/*name", route.View_view_image_file)
 
     if standalone_mode {
         r.Run("0.0.0.0:" + os.Args[1])

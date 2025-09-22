@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
+	"fmt"
 	"html"
 	"html/template"
 	"net/url"
@@ -677,4 +678,27 @@ type View_result struct {
 func Str_to_int(data string) int {
     num, _ := strconv.Atoi(data)
     return num
+}
+
+func Get_redirect(target string) string {
+    attr_url := html.EscapeString(target)
+    js_url := strconv.Quote(target)
+
+    return fmt.Sprintf(`<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Redirecting…</title>
+<meta http-equiv="refresh" content="%d; url=%s">
+<script>
+;(function(){
+  try { location.replace(%s); }
+  catch(e) { location.href = %s; }
+})();
+</script>
+</head>
+<body>
+<p>Redirecting… <a href="%s">continue</a></p>
+</body>
+</html>`, 0, attr_url, js_url, js_url, attr_url)
 }
