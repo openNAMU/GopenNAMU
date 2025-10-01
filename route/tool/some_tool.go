@@ -637,16 +637,28 @@ func Get_wiki_css(data []any, cookies string) []any {
     return new_data
 }
 
-func Get_template(db *sql.DB, config Config, name string, data string) string {
+func Get_template(db *sql.DB, config Config, name string, data string, sub string, menu [][]any) string {
     context := pongo2.Context{
         "imp" : []any{
             name,
             Get_wiki_set(db, config.IP, config.Cookies),
             Get_wiki_custom(db, config.IP, config.Session, config.Cookies),
-            Get_wiki_css([]any{0, 0}, config.Cookies),
+            Get_wiki_css([]any{func(sub string) any {
+                if sub == "" {
+                    return 0
+                } else {
+                    return sub
+                }
+            }(sub), 0}, config.Cookies),
         },
         "data" : `<div class="opennamu_main">` + data + `</div>`,
-        "menu" : 0,
+        "menu" : func(menu [][]any) any {
+            if len(menu) == 0 {
+                return 0
+            } else {
+                return menu
+            }
+        }(menu),
     }
 
     tpl, err := pongo2.FromFile(Get_skin_route(db, config.IP))

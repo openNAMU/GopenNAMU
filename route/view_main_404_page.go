@@ -39,9 +39,23 @@ func View_main_404_page(config tool.Config) tool.View_result {
         )
 
         if db_data != "" {
-            return_data["data"] = tool.Get_template(db, config, "404", db_data)
+            return_data["data"] = tool.Get_template(
+                db,
+                config,
+                "404",
+                db_data,
+                "",
+                [][]any{},
+            )
         } else {
-            return_data["data"] = tool.Get_template(db, config, "404", tool.Get_language(db, "func_404_error", true))
+            return_data["data"] = tool.Get_template(
+                db,
+                config,
+                "404",
+                tool.Get_language(db, "func_404_error", true),
+                "",
+                [][]any{},
+            )
         }
     }
 

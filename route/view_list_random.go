@@ -20,7 +20,14 @@ func View_list_random(config tool.Config) tool.View_result {
     }
     data_html += "</ul>"
 
-    out := tool.Get_template(db, config, tool.Get_language(db, "random_list", true), data_html)
+    out := tool.Get_template(
+        db,
+        config,
+        tool.Get_language(db, "random_list", true),
+        data_html,
+        "",
+        [][]any{},
+    )
 
     return_data := make(map[string]any)
     return_data["response"] = "ok"

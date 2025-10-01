@@ -970,5 +970,7 @@ func Get_error_page(db *sql.DB, config Config, error_name string) string {
         `<ul>` +
             `<li>` + data + `</li>` +
         `</ul>`,
+        "",
+        [][]any{},
     )
 }

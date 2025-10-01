@@ -20,7 +20,14 @@ func View_edit_file_upload(config tool.Config) tool.View_result {
     data_html += `<button id="opennamu_save_button" type="submit">` + tool.Get_language(db, "save", false) + `</button>`
     data_html += `</form>`
 
-    out := tool.Get_template(db, config, tool.Get_language(db, "upload", true), data_html)
+    out := tool.Get_template(
+        db,
+        config,
+        tool.Get_language(db, "upload", true),
+        data_html,
+        "",
+        [][]any{},
+    )
 
     return_data := make(map[string]any)
     return_data["response"] = "ok"

@@ -49,7 +49,20 @@ func View_w(config tool.Config, doc_name string) tool.View_result {
 		render_data = render_data_api["data"]
 	}
 
-	out := tool.Get_template(db, config, doc_name, render_data)
+	out := tool.Get_template(
+		db,
+		config,
+		doc_name,
+		render_data,
+        "",
+        [][]any{
+			{ "edit/" + tool.Url_parser(doc_name), tool.Get_language(db, "edit", true) },
+			{ "topic/" + tool.Url_parser(doc_name), tool.Get_language(db, "discussion", true) },
+			{ "history/" + tool.Url_parser(doc_name), tool.Get_language(db, "history", true) },
+			{ "xref/" + tool.Url_parser(doc_name), tool.Get_language(db, "backlink", true) },
+			{ "acl/" + tool.Url_parser(doc_name), tool.Get_language(db, "setting", true) },
+		},
+	)
 	return_data["data"] = out
 
     json_data, _ := json.Marshal(return_data)

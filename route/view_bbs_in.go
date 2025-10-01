@@ -24,7 +24,14 @@ func View_bbs_in(config tool.Config) string {
         other_set["bbs_num"],
     )
 
-    out := tool.Get_template(db, config, bbs_name, "")
+    out := tool.Get_template(
+        db,
+        config,
+        bbs_name,
+        "",
+        "",
+        [][]any{},
+    )
 
     return_data := make(map[string]any)
     return_data["response"] = "ok"
