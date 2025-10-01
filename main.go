@@ -337,8 +337,20 @@ func main() {
     r.GET("/views/*name", route.View_view_file)
     r.GET("/image/*name", route.View_view_image_file)
 
+    r.NoRoute(func(c *gin.Context) {
+        route_data := route.View_main_404_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }).HTML
+        c.Data(http.StatusNotFound, "text/html; charset=utf-8", []byte(route_data))
+    })
+
     if standalone_mode {
         r.Run("0.0.0.0:" + port)
+
+        log.Default().Println("Run in http://localhost:" + port)
     } else {
         r.Run("127.0.0.1:" + port)
     }

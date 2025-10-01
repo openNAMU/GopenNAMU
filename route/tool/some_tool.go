@@ -666,6 +666,15 @@ func File_exist_check(path string) bool {
 	return err == nil
 }
 
+func File_text_read(path string) string {
+    raw, err := os.ReadFile(path)
+    if err != nil {
+        return ""
+    }
+
+    return string(raw)
+}
+
 func IN_mod_OUT_mod(data bool) {
     standalone_mode = data
 }
