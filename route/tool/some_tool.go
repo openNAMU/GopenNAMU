@@ -555,6 +555,15 @@ type Config struct {
     Session string
 }
 
+func Deep_copy_config(src Config) Config {
+    return Config{
+        Other_set : strings.Clone(src.Other_set),
+        IP : strings.Clone(src.IP),
+        Cookies : strings.Clone(src.Cookies),
+        Session : strings.Clone(src.Session),
+    }
+}
+
 func Cache_v() string {
     return ".cache_v288"
 }
@@ -682,6 +691,7 @@ func IN_mod_OUT_mod(data bool) {
 type View_result struct {
     HTML string
     JSON string
+    ST int
 }
 
 func Str_to_int(data string) int {

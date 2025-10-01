@@ -6,26 +6,33 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_w_raw(config tool.Config) string {
-    db := tool.DB_connect()
-    defer tool.DB_close(db)
-    
+func Api_w_raw_exter(config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
+    return_data := Api_w_raw(config, other_set["doc_name"], other_set["exist_check"], other_set["rev"])
+
+    json_data, _ := json.Marshal(return_data)
+    return string(json_data)
+}
+
+func Api_w_raw(config tool.Config, doc_name string, exist_check string, rev string) map[string]any {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+
     new_data := make(map[string]any)
 
-    if !tool.Check_acl(db, other_set["name"], "", "render", config.IP) {
+    if !tool.Check_acl(db, doc_name, "", "render", config.IP) {
         new_data["response"] = "require auth"
-    } else if other_set["exist_check"] != "" {
+    } else if exist_check != "" {
         title := ""
         exist := tool.QueryRow_DB(
             db,
             tool.DB_change("select title from data where title = ?"),
             []any{ &title },
-            other_set["name"],
+            doc_name,
         )
 
         if !exist {
@@ -40,19 +47,19 @@ func Api_w_raw(config tool.Config) string {
 
         data := ""
         hide := ""
-        if other_set["rev"] != "" {
+        if rev != "" {
             exist = tool.QueryRow_DB(
                 db,
                 tool.DB_change("select data, hide from history where title = ? and id = ?"),
                 []any{ &data, &hide },
-                other_set["name"], other_set["rev"],
+                doc_name, rev,
             )
         } else {
             exist = tool.QueryRow_DB(
                 db,
                 tool.DB_change("select data from data where title = ?"),
                 []any{ &data },
-                other_set["name"],
+                doc_name,
             )
         }
 
@@ -71,7 +78,7 @@ func Api_w_raw(config tool.Config) string {
             }
 
             if check_pass {
-                new_data["title"] = other_set["name"]
+                new_data["title"] = doc_name
                 new_data["data"] = data
 
                 new_data["response"] = "ok"
@@ -79,6 +86,5 @@ func Api_w_raw(config tool.Config) string {
         }
     }
 
-    json_data, _ := json.Marshal(new_data)
-    return string(json_data)
+    return new_data
 }

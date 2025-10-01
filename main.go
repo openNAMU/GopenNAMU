@@ -128,7 +128,7 @@ func main() {
         case "test":
             route_data = "ok"
         case "api_w_raw":
-            route_data = route.Api_w_raw(config)
+            route_data = route.Api_w_raw_exter(config)
         case "api_func_sha224":
             route_data = route.Api_func_sha224(config)
         case "api_w_random":
@@ -152,7 +152,7 @@ func main() {
         case "api_user_watch_list":
             route_data = route.Api_user_watch_list_exter(config)
         case "api_w_render":
-            route_data = route.Api_w_render(config)
+            route_data = route.Api_w_render_exter(config)
         case "api_func_llm":
             route_data = route.Api_func_llm(config)
         case "api_func_language":
@@ -204,7 +204,7 @@ func main() {
         case "api_list_auth":
             route_data = route.Api_list_auth(config)
         case "api_w_page_view":
-            route_data = route.Api_w_page_view(config)
+            route_data = route.Api_w_page_view_exter(config)
         case "api_bbs_w_comment_one":
             route_data = route.Api_bbs_w_comment_one(config, false)
         case "api_bbs_w_comment":
@@ -272,6 +272,16 @@ func main() {
             Session: "",
         }).HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/w/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"))
+        c.Data(route_data.ST, "text/html; charset=utf-8", []byte(route_data.HTML))
     })
 
     r.POST("/upload", func(c *gin.Context) {
@@ -348,9 +358,8 @@ func main() {
     })
 
     if standalone_mode {
-        r.Run("0.0.0.0:" + port)
-
         log.Default().Println("Run in http://localhost:" + port)
+        r.Run("0.0.0.0:" + port)
     } else {
         r.Run("127.0.0.1:" + port)
     }
