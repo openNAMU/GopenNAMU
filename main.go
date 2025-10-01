@@ -74,17 +74,22 @@ func main() {
         
     standalone_mode := false
 
+    port := "3001"
+    if len(os.Args) > 1 {
+        port = os.Args[1]
+    }
+
     var r *gin.Engine
     if len(os.Args) > 2 && os.Args[2] == "dev" {
         r = gin.Default()
-
-        if len(os.Args) > 3 && os.Args[3] == "standalone" {
-            standalone_mode = true
-            tool.IN_mod_OUT_mod(standalone_mode)
-        }
     } else {
         gin.SetMode(gin.ReleaseMode)
         r = gin.New()
+    }
+
+    if len(os.Args) <= 3 || os.Args[3] != "api" {
+        standalone_mode = true
+        tool.IN_mod_OUT_mod(standalone_mode)
     }
 
     r.Use(error_handler())
@@ -333,8 +338,8 @@ func main() {
     r.GET("/image/*name", route.View_view_image_file)
 
     if standalone_mode {
-        r.Run("0.0.0.0:" + os.Args[1])
+        r.Run("0.0.0.0:" + port)
     } else {
-        r.Run("127.0.0.1:" + os.Args[1])
+        r.Run("127.0.0.1:" + port)
     }
 }

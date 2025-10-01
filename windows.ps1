@@ -2,7 +2,7 @@ $file_name = "main"
 
 $to = $args[0]
 if($null -eq $to) {
-    $to = "all"
+    $to = "windows_amd64"
 }
 
 if($to -eq "linux_amd64" -or $to -eq "all") {
