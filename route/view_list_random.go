@@ -12,7 +12,7 @@ func View_list_random(config tool.Config) tool.View_result {
     
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-    data_list := Api_list_random(config)
+    data_list := Api_list_random(config, 50)
 
     data_html := "<ul>"
     for _, title := range data_list["data"].([]string) {

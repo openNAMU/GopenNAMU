@@ -5,7 +5,7 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_list_random(config tool.Config) map[string]any {
+func Api_list_random(config tool.Config, list_count int) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -13,7 +13,8 @@ func Api_list_random(config tool.Config) map[string]any {
 
     rows := tool.Query_DB(
         db,
-        tool.DB_change("select title from data where title not like 'user:%' and title not like 'category:%' and title not like 'file:%' order by random() limit 50"),
+        tool.DB_change("select title from data where title not like 'user:%' and title not like 'category:%' and title not like 'file:%' order by random() limit ?"),
+        list_count,
     )
 
     for rows.Next() {
@@ -35,7 +36,7 @@ func Api_list_random(config tool.Config) map[string]any {
 }
 
 func Api_list_random_exter(config tool.Config) string {
-    return_data := Api_list_random(config)
+    return_data := Api_list_random(config, 50)
 
     json_data, _ := json.Marshal(return_data)
     return string(json_data)
