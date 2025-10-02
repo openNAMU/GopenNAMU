@@ -32,7 +32,7 @@ func View_edit_file_upload_post(config tool.Config) tool.View_result {
         v_str, _ := jsoniter.ConfigCompatibleWithStandardLibrary.MarshalToString(v)
         config_sub.Other_set = v_str
 
-        data := Api_file_upload(config_sub)
+        data := Api_file_upload_post(config_sub)
 
         data_sub := map[string]any{}
         json.Unmarshal([]byte(data), &data_sub)

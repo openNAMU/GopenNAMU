@@ -362,3 +362,42 @@ func IP_parser(db *sql.DB, ip string, my_ip string) string {
         return ip
     }
 }
+
+func Do_ban_insert(db *sql.DB, user_name string, end_date string, reason string, login string, blocker string, do_type string, release bool) {
+    now_time := Get_time()
+
+    Exec_DB(
+        db,
+        "update rb set ongoing = '' where block = ? and band = ? and ongoing = '1'",
+        user_name,
+        do_type,
+    )
+    if release {
+        Exec_DB(
+            db,
+            `insert into rb (block, end, today, blocker, why, band, ongoing, login) values (?, ?, ?, ?, ?, ?, '', '')`,
+            user_name,
+            "release",
+            now_time,
+            blocker,
+            reason,
+            do_type,
+        )
+    } else {
+        if end_date == "0" {
+            end_date = ""
+        }
+
+        Exec_DB(
+            db,
+            `insert into rb (block, end, today, blocker, why, band, ongoing, login) values (?, ?, ?, ?, ?, ?, '1', ?)`,
+            user_name,
+            end_date,
+            now_time,
+            blocker,
+            reason,
+            do_type,
+            login,
+        )
+    }
+}

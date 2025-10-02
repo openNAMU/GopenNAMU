@@ -17,7 +17,7 @@ func Api_file_upload_make_document(db *sql.DB) {
     
 }
 
-func Api_file_upload(config tool.Config) string {
+func Api_file_upload_post(config tool.Config) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
