@@ -140,7 +140,7 @@ func main() {
         case "api_func_ip":
             route_data = route.Api_func_ip(config)
         case "api_list_recent_change":
-            route_data = route.Api_list_recent_change(config)
+            route_data = route.Api_list_recent_change_exter(config)
         case "api_list_recent_edit_request":
             route_data = route.Api_list_recent_edit_request(config)
         case "api_bbs":
@@ -292,6 +292,36 @@ func main() {
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"))
         c.Data(route_data.ST, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/recent_change", func(c *gin.Context) {
+        route_data := route.View_list_recent_change(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", "50", "1")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/recent_changes", func(c *gin.Context) {
+        route_data := route.View_list_recent_change(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", "50", "1")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/recent_change/:num/:set_type", func(c *gin.Context) {
+        route_data := route.View_list_recent_change(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("set_type"), "50", c.Param("num"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
     })
 
     r.POST("/upload", func(c *gin.Context) {

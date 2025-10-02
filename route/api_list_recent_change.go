@@ -6,26 +6,48 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_list_recent_change(config tool.Config) string {
-    db := tool.DB_connect()
-    defer tool.DB_close(db)
-    
+type Api_list_recent_change_T struct {
+    full map[string]any
+    legacy [][]string
+}
+
+func Api_list_recent_change_exter(config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    set_type := other_set["set_type"]
+    return_data := Api_list_recent_change_call(config, other_set["type"], other_set["limit"], other_set["num"])
+
+    var json_data []byte
+
+    if other_set["legacy"] != "" {
+        json_data, _ = json.Marshal(return_data.legacy)
+    } else {
+        json_data, _ = json.Marshal(return_data.full)
+    }
+    
+    return string(json_data)
+}
+
+func Api_list_recent_change(config tool.Config, set_type string, limit string, num string) map[string]any {
+    return Api_list_recent_change_call(config, set_type, limit, num).full
+}
+
+func Api_list_recent_change_call(config tool.Config, set_type string, limit string, num string) Api_list_recent_change_T {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+
     if set_type == "edit" {
         set_type = ""
     }
 
-    limit_int := tool.Str_to_int(other_set["limit"])
+    limit_int := tool.Str_to_int(limit)
     if limit_int > 50 || limit_int < 0 {
         limit_int = 50
     }
 
-    page_int := tool.Str_to_int(other_set["num"])
+    page_int := tool.Str_to_int(num)
     if page_int > 0 {
         page_int = (page_int * limit_int) - limit_int
     } else {
@@ -96,40 +118,15 @@ func Api_list_recent_change(config tool.Config) string {
         }
     }
 
-    if other_set["legacy"] != "" {
-        json_data, _ := json.Marshal(data_list)
-        return string(json_data)
-    } else {
-        auth_name := tool.Get_user_auth(db, config.IP)
-        auth_info := tool.Get_auth_group_info(db, auth_name)
+    EOL_data := Api_list_recent_change_T{}
 
-        return_data := make(map[string]any)
-        return_data["language"] = map[string]string{
-            "tool":           tool.Get_language(db, "tool", false),
-            "normal":         tool.Get_language(db, "normal", false),
-            "edit":           tool.Get_language(db, "edit", false),
-            "move":           tool.Get_language(db, "move", false),
-            "delete":         tool.Get_language(db, "delete", false),
-            "revert":         tool.Get_language(db, "revert", false),
-            "new_doc":        tool.Get_language(db, "new_doc", false),
-            "edit_request":   tool.Get_language(db, "edit_request", false),
-            "user_document":  tool.Get_language(db, "user_document", false),
-            "raw":            tool.Get_language(db, "raw", false),
-            "compare":        tool.Get_language(db, "compare", false),
-            "history":        tool.Get_language(db, "history", false),
-            "hide":           tool.Get_language(db, "hide", false),
-            "history_delete": tool.Get_language(db, "history_delete", false),
-            "send_edit":      tool.Get_language(db, "send_edit", false),
-            "file":           tool.Get_language(db, "file", false),
-            "category":       tool.Get_language(db, "category", false),
-            "setting":        tool.Get_language(db, "setting", false),
-            "remove_hidden":  tool.Get_language(db, "remove_hidden", false),
-            "admin_tool":     tool.Get_language(db, "admin_tool", false),
-        }
-        return_data["auth"] = auth_info
-        return_data["data"] = data_list
+    EOL_data.legacy = data_list
 
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
-    }
+    return_data := make(map[string]any)
+    return_data["response"] = "ok"
+    return_data["data"] = data_list
+
+    EOL_data.full = return_data
+
+    return EOL_data
 }

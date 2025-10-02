@@ -34,7 +34,7 @@ func View_user_watch_list(config tool.Config) tool.View_result {
     } else {
         data_html += "<ul>"
         for _, title := range api_data["data"].([]string) {
-            data_html += "<li><a href=\"/w/" + tool.Url_parser(title) + "\">" + title + "</a></li>"
+            data_html += "<li><a href=\"/w/" + tool.Url_parser(title) + "\">" + tool.HTML_escape(title) + "</a></li>"
         }
         data_html += "</ul>"
     }
