@@ -7,16 +7,23 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_list_history(config tool.Config) string {
-    db := tool.DB_connect()
-    defer tool.DB_close(db)
-    
+func Api_list_history_exter(config tool.Config) string {    
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    page_int := tool.Str_to_int(other_set["num"])
+    return_data := Api_list_history(config, other_set["doc_name"], other_set["set_type"], other_set["num"])
+
+    json_data, _ := json.Marshal(return_data)
+    return string(json_data)
+}
+
+func Api_list_history(config tool.Config, doc_name string, set_type string, num string) map[string]any {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+
+    page_int := tool.Str_to_int(num)
     if page_int > 0 {
         page_int = (page_int * 50) - 50
     } else {
@@ -25,21 +32,21 @@ func Api_list_history(config tool.Config) string {
 
     var rows *sql.Rows
 
-    if other_set["set_type"] == "edit" {
-        other_set["set_type"] = ""
+    if set_type == "edit" {
+        set_type = ""
     }
 
-    if other_set["set_type"] == "normal" {
+    if set_type == "normal" {
         rows = tool.Query_DB(
             db,
             tool.DB_change("select id, title, date, ip, send, leng, hide, type from history where title = ? order by id + 0 desc limit ?, 50"),
-            other_set["doc_name"], page_int,
+            doc_name, page_int,
         )
     } else {
         rows = tool.Query_DB(
             db,
             tool.DB_change("select id, title, date, ip, send, leng, hide, type from history where title = ? and type = ? order by id + 0 desc limit ?, 50"),
-            other_set["doc_name"], other_set["set_type"], page_int,
+            doc_name, set_type, page_int,
         )
     }
     defer rows.Close()
@@ -94,35 +101,9 @@ func Api_list_history(config tool.Config) string {
         }
     }
 
-    auth_name := tool.Get_user_auth(db, config.IP)
-    auth_info := tool.Get_auth_group_info(db, auth_name)
-
     return_data := make(map[string]any)
-    return_data["language"] = map[string]string{
-        "view":           tool.Get_language(db, "view", false),
-        "tool":           tool.Get_language(db, "tool", false),
-        "normal":         tool.Get_language(db, "normal", false),
-        "edit":           tool.Get_language(db, "edit", false),
-        "move":           tool.Get_language(db, "move", false),
-        "delete":         tool.Get_language(db, "delete", false),
-        "revert":         tool.Get_language(db, "revert", false),
-        "new_doc":        tool.Get_language(db, "new_doc", false),
-        "edit_request":   tool.Get_language(db, "edit_request", false),
-        "user_document":  tool.Get_language(db, "user_document", false),
-        "raw":            tool.Get_language(db, "raw", false),
-        "compare":        tool.Get_language(db, "compare", false),
-        "history":        tool.Get_language(db, "history", false),
-        "hide":           tool.Get_language(db, "hide", false),
-        "history_delete": tool.Get_language(db, "history_delete", false),
-        "send_edit":      tool.Get_language(db, "send_edit", false),
-        "file":           tool.Get_language(db, "file", false),
-        "category":       tool.Get_language(db, "category", false),
-        "setting":        tool.Get_language(db, "setting", false),
-        "remove_hidden":  tool.Get_language(db, "remove_hidden", false),
-    }
+    return_data["response"] = "ok"
     return_data["data"] = data_list
-    return_data["auth"] = auth_info
 
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+    return return_data
 }

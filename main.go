@@ -210,7 +210,7 @@ func main() {
         case "api_bbs_w_comment":
             route_data = route.Api_bbs_w_comment(config)
         case "api_list_history":
-            route_data = route.Api_list_history(config)
+            route_data = route.Api_list_history_exter(config)
         case "api_list_markup":
             route_data = route.Api_list_markup(config)
         case "api_bbs_w_set":
@@ -321,6 +321,16 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, c.Param("set_type"), "50", c.Param("num"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/history/*doc_name", func(c *gin.Context) {
+        route_data := route.View_history(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "", "1")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
     })
 

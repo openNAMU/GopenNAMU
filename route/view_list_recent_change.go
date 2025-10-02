@@ -1,6 +1,7 @@
 package route
 
 import (
+	"database/sql"
 	"opennamu/route/tool"
 	"strconv"
 	"strings"
@@ -12,20 +13,7 @@ func Get_safe_send_data(data string) string {
     return tool.HTML_escape(data)
 }
 
-func View_list_recent_change(config tool.Config, set_type string, limit string, num string) tool.View_result {
-    db := tool.DB_connect()
-    defer tool.DB_close(db)
-
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := make(map[string]any)
-    return_data["response"] = "ok" 
-
-    api_data := Api_list_recent_change(config, set_type, limit, num)
-
+func Get_ui_history(db *sql.DB, config tool.Config, data_all [][]string) string {
     auth_name := tool.Get_user_auth(db, config.IP)
     auth_info := tool.Get_auth_group_info(db, auth_name)
 
@@ -33,7 +21,7 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
     data_html := ""
 
     for_count := 0
-    for _, in_data := range api_data["data"].([][]string) {
+    for _, in_data := range data_all {
         for_count_str := strconv.Itoa(for_count)
         for_count += 1
 
@@ -65,7 +53,7 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
             before_rev := rev_int - 1
             before_rev_str := strconv.Itoa(before_rev)
 
-            rev = `<a href="/diff/` + before_rev_str + `/` + rev_str + `/` + doc_name_url + `">` + rev + `</a>'`
+            rev = `<a href="/diff/` + before_rev_str + `/` + rev_str + `/` + doc_name_url + `">` + rev + `</a>`
         }
 
         right := ""
@@ -147,6 +135,24 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
             }});
         </script>`
     }
+
+    return data_html
+}
+
+func View_list_recent_change(config tool.Config, set_type string, limit string, num string) tool.View_result {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+
+    var json = jsoniter.ConfigCompatibleWithStandardLibrary
+
+    other_set := map[string]string{}
+    json.Unmarshal([]byte(config.Other_set), &other_set)
+
+    return_data := make(map[string]any)
+    return_data["response"] = "ok" 
+
+    api_data := Api_list_recent_change(config, set_type, limit, num)    
+    data_html := Get_ui_history(db, config, api_data["data"].([][]string))
 
     return_data["data"] = tool.Get_template(
         db,
