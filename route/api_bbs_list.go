@@ -7,6 +7,15 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+func Api_bbs_list_exter(config tool.Config) string {
+    var json = jsoniter.ConfigCompatibleWithStandardLibrary
+
+    return_data := Api_bbs_list(config)
+
+    json_data, _ := json.Marshal(return_data)
+    return string(json_data)
+}
+
 func bbs_list(db *sql.DB) map[string]string {
     rows := tool.Query_DB(db, tool.DB_change("select set_data, set_id from bbs_set where set_name = 'bbs_name'"))
     defer rows.Close()
@@ -28,11 +37,9 @@ func bbs_list(db *sql.DB) map[string]string {
     return data_list
 }
 
-func Api_bbs_list(config tool.Config) string {
+func Api_bbs_list(config tool.Config) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     data_list := bbs_list(db)
     data_list_sub := map[string][]string{}
@@ -58,12 +65,8 @@ func Api_bbs_list(config tool.Config) string {
     }
 
     return_data := make(map[string]any)
-    return_data["language"] = map[string]string{
-        "thread_base":  tool.Get_language(db, "thread_base", false),
-        "comment_base": tool.Get_language(db, "comment_base", false),
-    }
+    return_data["response"] = "ok"
     return_data["data"] = data_list_sub
 
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+    return return_data
 }

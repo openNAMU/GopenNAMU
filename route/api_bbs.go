@@ -7,17 +7,24 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Api_bbs(config tool.Config) string {
-    db := tool.DB_connect()
-    defer tool.DB_close(db)
-    
+func Api_bbs_exter(config tool.Config) string {
     var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
+    return_data := Api_bbs(config, other_set["bbs_num"], other_set["page"])
+
+    json_data, _ := json.Marshal(return_data)
+    return string(json_data)
+}
+
+func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+    
     rows_arr := []*sql.Rows{}
-    if other_set["bbs_num"] == "" {
+    if bbs_num == "" {
         rows := tool.Query_DB(
             db,
             tool.DB_change("select set_code, set_id, '0' from bbs_data where set_name = 'date' order by set_data desc limit 50"),
@@ -25,7 +32,7 @@ func Api_bbs(config tool.Config) string {
 
         rows_arr = append(rows_arr, rows)
     } else {
-        page := tool.Str_to_int(other_set["page"])
+        page := tool.Str_to_int(page)
         num := 0
         if page * 50 > 0 {
             num = page * 50 - 50
@@ -34,7 +41,7 @@ func Api_bbs(config tool.Config) string {
         rows := tool.Query_DB(
             db,
             tool.DB_change("select set_code, set_id, '1' from bbs_data where set_name = 'pinned' and set_id like ? order by set_data desc"),
-            other_set["bbs_num"],
+            bbs_num,
         )
         
         rows_arr = append(rows_arr, rows)
@@ -42,7 +49,7 @@ func Api_bbs(config tool.Config) string {
         rows = tool.Query_DB(
             db,
             tool.DB_change("select set_code, set_id, '0' from bbs_data where set_name = 'title' and set_id like ? order by set_code + 0 desc limit ?, 50"),
-            other_set["bbs_num"], num,
+            bbs_num, num,
         )
 
         rows_arr = append(rows_arr, rows)
@@ -114,9 +121,8 @@ func Api_bbs(config tool.Config) string {
     }
 
     return_data := make(map[string]any)
-    return_data["language"] = map[string]string{}
+    return_data["response"] = "ok"
     return_data["data"] = data_list
 
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+    return return_data
 }

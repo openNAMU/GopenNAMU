@@ -144,7 +144,7 @@ func main() {
         case "api_list_recent_edit_request":
             route_data = route.Api_list_recent_edit_request(config)
         case "api_bbs":
-            route_data = route.Api_bbs(config)
+            route_data = route.Api_bbs_exter(config)
         case "api_w_xref":
             route_data = route.Api_w_xref(config)
         case "api_w_watch_list":
@@ -162,7 +162,7 @@ func main() {
         case "api_list_recent_discuss":
             route_data = route.Api_list_recent_discuss(config)
         case "api_bbs_list":
-            route_data = route.Api_bbs_list(config)
+            route_data = route.Api_bbs_list_exter(config)
         case "api_list_old_page":
             route_data = route.Api_list_old_page(config)
         case "api_topic_list":
@@ -321,6 +321,16 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, c.Param("set_type"), "50", c.Param("num"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/bbs/main", func(c *gin.Context) {
+        route_data := route.View_bbs_main(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
     })
 
