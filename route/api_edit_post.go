@@ -31,7 +31,7 @@ func Api_edit_post(config tool.Config, doc_name string, data string, send string
 
     return_data := make(map[string]any)
     
-    date := tool.Get_date()
+    date := tool.Get_time()
     data = strings.ReplaceAll(data, "\r", "")
 
     if !tool.Do_edit_slow_check(db, config, "edit") {
