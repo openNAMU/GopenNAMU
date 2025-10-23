@@ -24,7 +24,7 @@ func Api_w_xref(config tool.Config) string {
     link_case_insensitive := ""
     tool.QueryRow_DB(
         db,
-        tool.DB_change("select data from other where name = 'link_case_insensitive'"),
+        "select data from other where name = 'link_case_insensitive'",
         []any{ &link_case_insensitive },
         other_set["name"],
     )
@@ -35,9 +35,9 @@ func Api_w_xref(config tool.Config) string {
 
     query := ""
     if other_set["do_type"] == "1" {
-        query = tool.DB_change("select distinct link, type from back where title" + link_case_insensitive + " = ? and not type = 'no' and not type = 'nothing' order by type asc, link asc limit ?, 50")
+        query = "select distinct link, type from back where title" + link_case_insensitive + " = ? and not type = 'no' and not type = 'nothing' order by type asc, link asc limit ?, 50"
     } else {
-        query = tool.DB_change("select distinct title, type from back where link" + link_case_insensitive + " = ? and not type = 'no' and not type = 'nothing' order by type asc, title asc limit ?, 50")
+        query = "select distinct title, type from back where link" + link_case_insensitive + " = ? and not type = 'no' and not type = 'nothing' order by type asc, title asc limit ?, 50"
     }
 
     rows := tool.Query_DB(

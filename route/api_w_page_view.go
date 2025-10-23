@@ -29,7 +29,7 @@ func Api_w_page_view(config tool.Config) map[string]any {
         view_count := "0"
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ''"),
+            "select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ''",
             []any{ &view_count },
             other_set["doc_name"],
         )
@@ -55,7 +55,7 @@ func Api_w_page_view(config tool.Config) map[string]any {
         view_count = "0"
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?"),
+            "select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?",
             []any{ &view_count },
             other_set["doc_name"], now_date,
         )
@@ -81,7 +81,7 @@ func Api_w_page_view(config tool.Config) map[string]any {
         view_count = "0"
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?"),
+            "select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?",
             []any{ &view_count },
             other_set["doc_name"], now_date,
         )

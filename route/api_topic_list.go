@@ -24,7 +24,7 @@ func Api_topic_list(config tool.Config) string {
 
     rows := tool.Query_DB(
         db,
-        tool.DB_change("select code, sub, stop, agree, date from rd where title = ? order by sub asc limit ?, 50"),
+        "select code, sub, stop, agree, date from rd where title = ? order by sub asc limit ?, 50",
         other_set["name"], page_int,
     )
     defer rows.Close()
@@ -48,7 +48,7 @@ func Api_topic_list(config tool.Config) string {
         id := ""
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select ip, id from topic where code = ? order by id + 0 desc limit 1"),
+            "select ip, id from topic where code = ? order by id + 0 desc limit 1",
             []any{ &ip, &id },
             code,
         )

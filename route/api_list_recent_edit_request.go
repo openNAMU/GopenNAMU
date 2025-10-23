@@ -22,7 +22,7 @@ func Api_list_recent_edit_request(config tool.Config) string {
 
     rows := tool.Query_DB(
         db,
-        tool.DB_change("select doc_name, doc_rev, set_data from data_set where set_name = 'edit_request_doing' order by set_data desc limit ?"),
+        "select doc_name, doc_rev, set_data from data_set where set_name = 'edit_request_doing' order by set_data desc limit ?",
         limit_int,
     )
     defer rows.Close()
@@ -42,7 +42,7 @@ func Api_list_recent_edit_request(config tool.Config) string {
         ip := ""
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from data_set where set_name = 'edit_request_user' and doc_rev = ? and doc_name = ?"),
+            "select set_data from data_set where set_name = 'edit_request_user' and doc_rev = ? and doc_name = ?",
             []any{ &ip },
             doc_rev, doc_name,
         )
@@ -50,7 +50,7 @@ func Api_list_recent_edit_request(config tool.Config) string {
         send := ""
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from data_set where set_name = 'edit_request_send' and doc_rev = ? and doc_name = ?"),
+            "select set_data from data_set where set_name = 'edit_request_send' and doc_rev = ? and doc_name = ?",
             []any{ &send },
             doc_rev, doc_name,
         )
@@ -58,7 +58,7 @@ func Api_list_recent_edit_request(config tool.Config) string {
         leng := ""
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from data_set where set_name = 'edit_request_leng' and doc_rev = ? and doc_name = ?"),
+            "select set_data from data_set where set_name = 'edit_request_leng' and doc_rev = ? and doc_name = ?",
             []any{ &leng },
             doc_rev, doc_name,
         )

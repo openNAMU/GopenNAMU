@@ -29,9 +29,9 @@ func Api_list_recent_block(config tool.Config) string {
     case "all":
         query := ""
         if other_set["why"] != "" {
-            query = tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band != 'private' and why like ? order by today desc limit ?, 50")
+            query = "select why, block, blocker, end, today, band, ongoing from rb where band != 'private' and why like ? order by today desc limit ?, 50"
         } else {
-            query = tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band != 'private' order by today desc limit ?, 50")
+            query = "select why, block, blocker, end, today, band, ongoing from rb where band != 'private' order by today desc limit ?, 50"
         }
 
         if other_set["why"] != "" {
@@ -50,37 +50,37 @@ func Api_list_recent_block(config tool.Config) string {
     case "ongoing":
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where ongoing = '1' and band != 'private' order by end desc limit ?, 50"),
+            "select why, block, blocker, end, today, band, ongoing from rb where ongoing = '1' and band != 'private' order by end desc limit ?, 50",
             page_int,
         )
     case "regex":
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'regex' order by today desc limit ?, 50"),
+            "select why, block, blocker, end, today, band, ongoing from rb where band = 'regex' order by today desc limit ?, 50",
             page_int,
         )
     case "private":
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'private' order by today desc limit ?, 50"),
+            "select why, block, blocker, end, today, band, ongoing from rb where band = 'private' order by today desc limit ?, 50",
             page_int,
         )
     case "user":
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where block = ? and band != 'private' order by today desc limit ?, 50"),
+            "select why, block, blocker, end, today, band, ongoing from rb where block = ? and band != 'private' order by today desc limit ?, 50",
             other_set["user_name"], page_int,
         )
     case "cidr":
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where band = 'cidr' order by today desc limit ?, 50"),
+            "select why, block, blocker, end, today, band, ongoing from rb where band = 'cidr' order by today desc limit ?, 50",
             page_int,
         )
     default:
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select why, block, blocker, end, today, band, ongoing from rb where blocker = ? and band != 'private' order by today desc limit ?, 50"),
+            "select why, block, blocker, end, today, band, ongoing from rb where blocker = ? and band != 'private' order by today desc limit ?, 50",
             other_set["user_name"], page_int,
         )
     }

@@ -23,9 +23,9 @@ func Api_func_search(config tool.Config) string {
 
     query := ""
     if other_set["search_type"] == "title" {
-        query = tool.DB_change("select title from data where title collate nocase like ? order by title limit ?, 50")
+        query = "select title from data where title collate nocase like ? order by title limit ?, 50"
     } else {
-        query = tool.DB_change("select title from data where data collate nocase like ? order by title limit ?, 50")
+        query = "select title from data where data collate nocase like ? order by title limit ?, 50"
     }
 
     title_list := []string{}

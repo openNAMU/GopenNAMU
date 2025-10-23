@@ -387,3 +387,30 @@ func Do_add_recent_history(db *sql.DB, mode string, id string, title string, dat
         mode,
     )
 }
+
+func Get_document_markup(db *sql.DB, doc_name string, do_type string) string {
+    markup := ""
+
+    if do_type == "document" {
+        QueryRow_DB(
+            db,
+            "select set_data from data_set where doc_name = ? and set_name = 'document_markup'",
+            []any{ &markup },
+            doc_name,
+        )
+
+        if markup == "" {
+            QueryRow_DB(
+                db,
+                "select data from other where name = 'markup'",
+                []any{ &markup },
+            )
+        }
+    }
+
+    if markup == "" || markup == "namumark_beta" {
+        markup = "namumark"
+    }
+
+    return markup
+}

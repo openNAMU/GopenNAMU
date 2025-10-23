@@ -27,7 +27,7 @@ func Api_bbs_w_post(config tool.Config) string {
     set_code := ""
     tool.QueryRow_DB(
         db,
-        tool.DB_change("select set_code from bbs_data where set_name = 'title' and set_id = ? order by set_code + 0 desc"),
+        "select set_code from bbs_data where set_name = 'title' and set_id = ? order by set_code + 0 desc",
         []any{ &set_code },
         other_set["set_id"],
     )

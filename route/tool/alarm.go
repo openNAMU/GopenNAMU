@@ -13,7 +13,7 @@ func Send_alarm(db *sql.DB, from string, target string, data string) {
         count := "1"
         QueryRow_DB(
             db,
-            DB_change("select id from user_notice where name = ? order by id + 0 desc limit 1"),
+            "select id from user_notice where name = ? order by id + 0 desc limit 1",
             []any{ &count },
             target,
         )

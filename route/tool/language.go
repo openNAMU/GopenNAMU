@@ -17,7 +17,7 @@ func Get_language(db *sql.DB, data string, safe bool) string {
     language := "ko-KR"
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'language'"),
+        "select data from other where name = 'language'",
         []any{ &language },
     )
 

@@ -56,7 +56,7 @@ func Api_list_recent_change_call(config tool.Config, set_type string, limit stri
 
     rows := tool.Query_DB(
         db,
-        tool.DB_change("select id, title from rc where type = ? order by date desc limit ?, ?"),
+        "select id, title from rc where type = ? order by date desc limit ?, ?",
         set_type, page_int, limit_int,
     )
     defer rows.Close()
@@ -83,7 +83,7 @@ func Api_list_recent_change_call(config tool.Config, set_type string, limit stri
         type_data := ""
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select date, ip, send, leng, hide, type from history where id = ? and title = ?"),
+            "select date, ip, send, leng, hide, type from history where id = ? and title = ?",
             []any{ &date, &ip, &send, &leng, &hide, &type_data },
             id, title,
         )

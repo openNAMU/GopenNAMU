@@ -86,6 +86,11 @@ type macro_data struct {
 
 type macro_transform_func func(class *macromark, macro_name string, macro_data string, m_string string)
 
+var heading_markdown = func(class *macromark, macro_name string, macro_data string, m_string string) {
+    temp_name := class.func_temp_save("\n## " + macro_data + "\n", m_string)
+    class.render_data = strings.Replace(class.render_data, m_string, temp_name, 1)
+}
+
 var heading_html = func(class *macromark, macro_name string, macro_data string, m_string string) {
     temp_name := class.func_temp_save("<" + macro_name + ">" + macro_data + "</" + macro_name + "><back_br>", m_string)
     class.render_data = strings.Replace(class.render_data, m_string, temp_name, 1)
@@ -99,6 +104,14 @@ var macro_transform_map = map[string]macro_data{
     "namumark" : {
     },
     "markdown" : {
+        function : map[string]macro_transform_func{
+            "h1" : heading_markdown,
+            "h2" : heading_markdown,
+            "h3" : heading_markdown,            
+            "h4" : heading_markdown,
+            "h5" : heading_markdown,
+            "h6" : heading_markdown,
+        },
     },
     "html" : {
         function : map[string]macro_transform_func{
@@ -163,13 +176,13 @@ func (class *macromark) render_text() {
 
             reg, ok := macro_transform_map[class.result_markup]
             if !ok || reg.function == nil {
-                class.render_data = strings.Replace(class.render_data, m_string, "", 1)
+                class.render_data = strings.Replace(class.render_data, m_string, macro_data, 1)
                 continue
             }
 
             fn, ok := reg.function[macro_name]
             if !ok {
-                class.render_data = strings.Replace(class.render_data, m_string, "", 1)
+                class.render_data = strings.Replace(class.render_data, m_string, macro_data, 1)
                 continue
             }
 

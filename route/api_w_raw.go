@@ -30,7 +30,7 @@ func Api_w_raw(config tool.Config, doc_name string, exist_check string, rev stri
         title := ""
         exist := tool.QueryRow_DB(
             db,
-            tool.DB_change("select title from data where title = ?"),
+            "select title from data where title = ?",
             []any{ &title },
             doc_name,
         )
@@ -50,14 +50,14 @@ func Api_w_raw(config tool.Config, doc_name string, exist_check string, rev stri
         if rev != "" {
             exist = tool.QueryRow_DB(
                 db,
-                tool.DB_change("select data, hide from history where title = ? and id = ?"),
+                "select data, hide from history where title = ? and id = ?",
                 []any{ &data, &hide },
                 doc_name, rev,
             )
         } else {
             exist = tool.QueryRow_DB(
                 db,
-                tool.DB_change("select data from data where title = ?"),
+                "select data from data where title = ?",
                 []any{ &data },
                 doc_name,
             )

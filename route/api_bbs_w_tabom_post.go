@@ -36,7 +36,7 @@ func Api_bbs_w_tabom_post(config tool.Config) string {
         no_data := ""
         exist := tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from bbs_data where set_name = 'tabom_list' and set_data = ? and set_id = ? and set_code = ?"),
+            "select set_data from bbs_data where set_name = 'tabom_list' and set_data = ? and set_id = ? and set_code = ?",
             []any{ &no_data },
             config.IP, bbs_num, post_num,
         )
@@ -47,7 +47,7 @@ func Api_bbs_w_tabom_post(config tool.Config) string {
             tabom_count := ""
             exsit := tool.QueryRow_DB(
                 db,
-                tool.DB_change("select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?"),
+                "select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?",
                 []any{ &tabom_count },
                 bbs_num, post_num,
             )

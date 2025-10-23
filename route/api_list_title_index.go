@@ -24,7 +24,7 @@ func Api_list_title_index(config tool.Config) string {
 
     rows := tool.Query_DB(
         db,
-        tool.DB_change("select title from data limit ?, 50"),
+        "select title from data limit ?, 50",
         page_int,
     )
     defer rows.Close()

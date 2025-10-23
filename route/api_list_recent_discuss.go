@@ -31,11 +31,11 @@ func Api_list_recent_discuss(config tool.Config) string {
     query := ""
     switch set_type {
     case "normal":
-        query = tool.DB_change("select title, sub, date, code, stop, agree from rd order by date desc limit ?, ?")
+        query = "select title, sub, date, code, stop, agree from rd order by date desc limit ?, ?"
     case "close":
-        query = tool.DB_change("select title, sub, date, code, stop, agree from rd where stop = 'O' order by date desc limit ?, ?")
+        query = "select title, sub, date, code, stop, agree from rd where stop = 'O' order by date desc limit ?, ?"
     default:
-        query = tool.DB_change("select title, sub, date, code, stop, agree from rd where stop != 'O' order by date desc limit ?, ?")
+        query = "select title, sub, date, code, stop, agree from rd where stop != 'O' order by date desc limit ?, ?"
     }
 
     rows := tool.Query_DB(
@@ -65,7 +65,7 @@ func Api_list_recent_discuss(config tool.Config) string {
         id := ""
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select ip, id from topic where code = ? order by id + 0 desc limit 1"),
+            "select ip, id from topic where code = ? order by id + 0 desc limit 1",
             []any{ &ip, &id },
             code,
         )

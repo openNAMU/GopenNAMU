@@ -38,7 +38,7 @@ func List_acl(func_type string) []string {
 func List_auth(db *sql.DB) []string {
     rows := Query_DB(
         db,
-        DB_change("select distinct name from alist"),
+        "select distinct name from alist",
     )
     defer rows.Close()
 
@@ -62,7 +62,7 @@ func Do_insert_auth_history(db *sql.DB, ip string, what string) {
     log_off := ""
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'auth_history_off'"),
+        "select data from other where name = 'auth_history_off'",
         []any{ &log_off },
     )
 
@@ -81,7 +81,7 @@ func Get_user_auth(db *sql.DB, ip string) string {
     auth := "ip"
     exist := QueryRow_DB(
         db,
-        DB_change("select data from user_set where id = ? and name = 'acl'"),
+        "select data from user_set where id = ? and name = 'acl'",
         []any{ &auth },
         ip,
     )
@@ -100,7 +100,7 @@ func Get_user_auth(db *sql.DB, ip string) string {
 func Get_auth_group_info(db *sql.DB, auth string) map[string]bool {
     rows := Query_DB(
         db,
-        DB_change("select acl from alist where name = ?"),
+        "select acl from alist where name = ?",
         auth,
     )
     defer rows.Close()
@@ -291,7 +291,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
             acl_data := ""
             QueryRow_DB(
                 db,
-                DB_change("select data from acl where title = ? and type = 'decu'"),
+                "select data from acl where title = ? and type = 'decu'",
                 []any{ &acl_data },
                 name,
             )
@@ -333,7 +333,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
             name = "test"
             QueryRow_DB(
                 db,
-                DB_change("select title from rd where code = ?"),
+                "select title from rd where code = ?",
                 []any{ &name },
                 topic_number,
             )
@@ -384,7 +384,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select data from acl where title = ? and type = 'decu'"),
+                    "select data from acl where title = ? and type = 'decu'",
                     []any{ &acl_data },
                     name,
                 )
@@ -404,7 +404,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select data from acl where title = ? and type = 'document_move_acl'"),
+                    "select data from acl where title = ? and type = 'document_move_acl'",
                     []any{ &acl_data },
                     name,
                 )
@@ -424,7 +424,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select data from acl where title = ? and type = 'document_edit_acl'"),
+                    "select data from acl where title = ? and type = 'document_edit_acl'",
                     []any{ &acl_data },
                     name,
                 )
@@ -444,7 +444,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select data from acl where title = ? and type = 'document_delete_acl'"),
+                    "select data from acl where title = ? and type = 'document_delete_acl'",
                     []any{ &acl_data },
                     name,
                 )
@@ -465,7 +465,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select acl from rd where code = ?"),
+                    "select acl from rd where code = ?",
                     []any{ &acl_data },
                     topic_number,
                 )
@@ -475,7 +475,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select data from acl where title = ? and type = 'dis'"),
+                    "select data from acl where title = ? and type = 'dis'",
                     []any{ &acl_data },
                     name,
                 )
@@ -495,7 +495,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select set_data from topic_set where thread_code = ? and set_name = 'thread_view_acl'"),
+                    "select set_data from topic_set where thread_code = ? and set_name = 'thread_view_acl'",
                     []any{ &acl_data },
                     topic_number,
                 )
@@ -532,7 +532,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                     acl_data = ""
                     QueryRow_DB(
                         db,
-                        DB_change("select acl from vote where id = ? and user = ''"),
+                        "select acl from vote where id = ? and user = ''",
                         []any{ &acl_data },
                         topic_number,
                     )
@@ -572,7 +572,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select set_data from bbs_set where set_name = 'bbs_edit_acl' and set_id = ?"),
+                    "select set_data from bbs_set where set_name = 'bbs_edit_acl' and set_id = ?",
                     []any{ &acl_data },
                     name,
                 )
@@ -582,7 +582,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select set_data from bbs_set where set_name = 'bbs_acl' and set_id = ?"),
+                    "select set_data from bbs_set where set_name = 'bbs_acl' and set_id = ?",
                     []any{ &acl_data },
                     name,
                 )
@@ -592,7 +592,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select set_data from bbs_set where set_name = 'bbs_edit_acl_all'"),
+                    "select set_data from bbs_set where set_name = 'bbs_edit_acl_all'",
                     []any{ &acl_data },
                 )
             default:
@@ -612,7 +612,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select set_data from bbs_set where set_name = 'bbs_comment_acl' and set_id = ?"),
+                    "select set_data from bbs_set where set_name = 'bbs_comment_acl' and set_id = ?",
                     []any{ &acl_data },
                     name,
                 )
@@ -622,7 +622,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select set_data from bbs_set where set_name = 'bbs_acl' and set_id = ?"),
+                    "select set_data from bbs_set where set_name = 'bbs_acl' and set_id = ?",
                     []any{ &acl_data },
                     name,
                 )
@@ -632,7 +632,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select set_data from bbs_set where set_name = 'bbs_comment_acl_all'"),
+                    "select set_data from bbs_set where set_name = 'bbs_comment_acl_all'",
                     []any{ &acl_data },
                 )
             default:
@@ -651,7 +651,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select set_data from bbs_set where set_name = 'bbs_view_acl' and set_id = ?"),
+                    "select set_data from bbs_set where set_name = 'bbs_view_acl' and set_id = ?",
                     []any{ &acl_data },
                     name,
                 )
@@ -735,7 +735,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select data from acl where title = ? and type = 'document_edit_request_acl'"),
+                    "select data from acl where title = ? and type = 'document_edit_request_acl'",
                     []any{ &acl_data },
                     name,
                 )
@@ -764,7 +764,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 acl_data = ""
                 QueryRow_DB(
                     db,
-                    DB_change("select data from acl where title = ? and type = 'view'"),
+                    "select data from acl where title = ? and type = 'view'",
                     []any{ &acl_data },
                     name,
                 )
@@ -813,7 +813,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                     count := 0
                     QueryRow_DB(
                         db,
-                        DB_change("select count(*) from history where ip = ?"),
+                        "select count(*) from history where ip = ?",
                         []any{ &count },
                         ip,
                     )
@@ -826,7 +826,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 exist := ""
                 QueryRow_DB(
                     db,
-                    DB_change("select ip from history where title = ? and ip = ? and type != 'edit_request'"),
+                    "select ip from history where title = ? and ip = ? and type != 'edit_request'",
                     []any{ &exist },
                     name, ip,
                 )
@@ -839,7 +839,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                     signup_date := Get_time()
                     QueryRow_DB(
                         db,
-                        DB_change("select data from user_set where id = ? and name = 'date'"),
+                        "select data from user_set where id = ? and name = 'date'",
                         []any{ &signup_date },
                         ip,
                     )
@@ -861,7 +861,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                     exist := ""
                     QueryRow_DB(
                         db,
-                        DB_change("select data from user_set where id = ? and name = 'email'"),
+                        "select data from user_set where id = ? and name = 'email'",
                         []any{ &exist },
                         ip,
                     )
@@ -896,7 +896,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                     signup_date := Get_time()
                     QueryRow_DB(
                         db,
-                        DB_change("select data from user_set where id = ? and name = 'date'"),
+                        "select data from user_set where id = ? and name = 'date'",
                         []any{ &signup_date },
                         ip,
                     )
@@ -909,7 +909,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                         count := 0
                         QueryRow_DB(
                             db,
-                            DB_change("select count(*) from history where ip = ?"),
+                            "select count(*) from history where ip = ?",
                             []any{ &count },
                             ip,
                         )
@@ -933,7 +933,7 @@ func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip str
                 topic_state := ""
                 QueryRow_DB(
                     db,
-                    DB_change("select title from rd where code = ? and stop != ''"),
+                    "select title from rd where code = ? and stop != ''",
                     []any{ &topic_state },
                     topic_number,
                 )

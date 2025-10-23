@@ -83,13 +83,13 @@ func Get_document_setting(db *sql.DB, doc_name string, set_name string, doc_rev 
     if doc_rev != "" {
         rows = Query_DB(
             db,
-            DB_change("select set_data, doc_rev from data_set where doc_name = ? and doc_rev = ? and set_name = ?"),
+            "select set_data, doc_rev from data_set where doc_name = ? and doc_rev = ? and set_name = ?",
             doc_name, doc_rev, set_name,
         )
     } else {
         rows = Query_DB(
             db,
-            DB_change("select set_data, doc_rev from data_set where doc_name = ? and set_name = ?"),
+            "select set_data, doc_rev from data_set where doc_name = ? and set_name = ?",
             doc_name, set_name,
         )
     }
@@ -117,13 +117,13 @@ func Get_setting(db *sql.DB, set_name string, data_coverage string) [][]string {
     if data_coverage != "" {
         rows = Query_DB(
             db,
-            DB_change("select data, coverage from other where name = ? and coverage = ?"),
+            "select data, coverage from other where name = ? and coverage = ?",
             set_name, data_coverage,
         )
     } else {
         rows = Query_DB(
             db,
-            DB_change("select data, coverage from other where name = ?"),
+            "select data, coverage from other where name = ?",
             set_name,
         )
     }
@@ -185,7 +185,7 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
     if IP_or_user(ip) {
         QueryRow_DB(
             db,
-            DB_change("select data from user_set where name = 'skin' and id = ?"),
+            "select data from user_set where name = 'skin' and id = ?",
             []any{ &user_skin_name },
             ip,
         )
@@ -198,7 +198,7 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
     if user_skin_name == "" {
         QueryRow_DB(
             db,
-            DB_change("select data from other where name = 'skin'"),
+            "select data from other where name = 'skin'",
             []any{ &user_skin_name },
         )
     }
@@ -222,7 +222,7 @@ func Get_domain(db *sql.DB, full_string bool) string {
         http_select := ""
         QueryRow_DB(
             db,
-            DB_change("select data from other where name = 'http_select'"),
+            "select data from other where name = 'http_select'",
             []any{ &http_select },
         )
         
@@ -235,7 +235,7 @@ func Get_domain(db *sql.DB, full_string bool) string {
         db_domain := ""
         QueryRow_DB(
             db,
-            DB_change("select data from other where name = 'domain'"),
+            "select data from other where name = 'domain'",
             []any{ &db_domain },
         )
 
@@ -248,7 +248,7 @@ func Get_domain(db *sql.DB, full_string bool) string {
         db_domain := ""
         QueryRow_DB(
             db,
-            DB_change("select data from other where name = 'domain'"),
+            "select data from other where name = 'domain'",
             []any{ &db_domain },
         )
 
@@ -282,7 +282,7 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
         user_head_main := ""
         QueryRow_DB(
             db,
-            DB_change("select data from user_set where id = ? and name = 'custom_css'"),
+            "select data from user_set where id = ? and name = 'custom_css'",
             []any{ &user_head_main },
             ip,
         )
@@ -290,7 +290,7 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
         user_head_skin := ""
         QueryRow_DB(
             db,
-            DB_change("select data from user_set where id = ? and name = ?"),
+            "select data from user_set where id = ? and name = ?",
             []any{ &user_head_main },
             ip,
             "custom_css" + skin_name,
@@ -300,7 +300,7 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
 
         QueryRow_DB(
             db,
-            DB_change("select data from user_set where name = 'email' and id = ?"),
+            "select data from user_set where name = 'email' and id = ?",
             []any{ &user_email },
             ip,
         )
@@ -311,14 +311,14 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
             acl_name := ""
             QueryRow_DB(
                 db,
-                DB_change("select data from user_set where id = ? and name = 'acl'"),
+                "select data from user_set where id = ? and name = 'acl'",
                 []any{ &acl_name },
                 ip,
             )
 
             rows := Query_DB(
                 db,
-                DB_change("select acl from alist where name = ?"),
+                "select acl from alist where name = ?",
                 acl_name,
             )
             defer rows.Close()
@@ -337,7 +337,7 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
 
         QueryRow_DB(
             db,
-            DB_change("select count(*) from user_notice where name = ? and readme = ''"),
+            "select count(*) from user_notice where name = ? and readme = ''",
             []any{ &user_notice_count },
             ip,
         )
@@ -359,7 +359,7 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
     user_topic := "0"
     user_topic_check := QueryRow_DB(
         db,
-        DB_change("select title from rd where title = ? and stop = '' limit 1"),
+        "select title from rd where title = ? and stop = '' limit 1",
         []any{},
         "user:" + ip,
     )
@@ -398,21 +398,21 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     set_wiki_name := "Wiki"
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'name'"),
+        "select data from other where name = 'name'",
         []any{ &set_wiki_name },
     )
 
     set_license := ""
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'license'"),
+        "select data from other where name = 'license'",
         []any{ &set_license },
     )
 
     set_logo := ""
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'logo' and coverage = ?"),
+        "select data from other where name = 'logo' and coverage = ?",
         []any{ &set_logo },
         skin_name,
     )
@@ -420,7 +420,7 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     if set_logo == "" {
         QueryRow_DB(
             db,
-            DB_change("select data from other where name = 'logo' and coverage = ''"),
+            "select data from other where name = 'logo' and coverage = ''",
             []any{ &set_logo },
         )
     }
@@ -432,14 +432,14 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     set_head := ""
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'head' and coverage = ''"),
+        "select data from other where name = 'head' and coverage = ''",
         []any{ &set_head },
     )
 
     set_head_skin := ""
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'head' and coverage = ?"),
+        "select data from other where name = 'head' and coverage = ?",
         []any{ &set_head_skin },
         skin_name,
     )
@@ -450,7 +450,7 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     if cookie_map["main_css_darkmode"] == "1" {
         QueryRow_DB(
             db,
-            DB_change("select data from other where name = 'head' and coverage = ?"),
+            "select data from other where name = 'head' and coverage = ?",
             []any{ &set_head_dark },
             skin_name + "-cssdark",
         )
@@ -459,14 +459,14 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
     set_top_menu := ""
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'top_menu'"),
+        "select data from other where name = 'top_menu'",
         []any{ &set_top_menu },
     )
 
     set_top_menu_user := ""
     QueryRow_DB(
         db,
-        DB_change("select data from user_set where name = 'top_menu' and id = ?"),
+        "select data from user_set where name = 'top_menu' and id = ?",
         []any{ &set_top_menu_user },
         ip,
     )
@@ -498,7 +498,7 @@ func Get_wiki_set(db *sql.DB, ip string, cookies string) []any {
         template_var_tmp := ""
         QueryRow_DB(
             db,
-            DB_change("select data from other where name = ?"),
+            "select data from other where name = ?",
             []any{ &template_var_tmp },
             "template_var_" + strconv.Itoa(for_a),
         )

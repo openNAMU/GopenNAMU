@@ -37,13 +37,13 @@ func Api_bbs_w_comment_one(config tool.Config, already_auth_check bool) string {
     if other_set["tool"] == "around" {
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ?"),
+            "select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ?",
             new_sub_code,
         )
     } else {
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ? and set_code = ?"),
+            "select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ? and set_code = ?",
             new_sub_code, sub_code_last,
         )
     }

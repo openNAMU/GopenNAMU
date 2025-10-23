@@ -21,7 +21,7 @@ func Api_func_llm(config tool.Config) string {
     api_key := ""
     tool.QueryRow_DB(
         db,
-        tool.DB_change("select data from user_set where name = 'llm_api_key' and id = ?"),
+        "select data from user_set where name = 'llm_api_key' and id = ?",
         []any{ &api_key },
         config.IP,
     )

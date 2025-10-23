@@ -27,7 +27,7 @@ func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
     if bbs_num == "" {
         rows := tool.Query_DB(
             db,
-            tool.DB_change("select set_code, set_id, '0' from bbs_data where set_name = 'date' order by set_data desc limit 50"),
+            "select set_code, set_id, '0' from bbs_data where set_name = 'date' order by set_data desc limit 50",
         )
 
         rows_arr = append(rows_arr, rows)
@@ -40,7 +40,7 @@ func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
 
         rows := tool.Query_DB(
             db,
-            tool.DB_change("select set_code, set_id, '1' from bbs_data where set_name = 'pinned' and set_id like ? order by set_data desc"),
+            "select set_code, set_id, '1' from bbs_data where set_name = 'pinned' and set_id like ? order by set_data desc",
             bbs_num,
         )
         
@@ -48,7 +48,7 @@ func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
 
         rows = tool.Query_DB(
             db,
-            tool.DB_change("select set_code, set_id, '0' from bbs_data where set_name = 'title' and set_id like ? order by set_code + 0 desc limit ?, 50"),
+            "select set_code, set_id, '0' from bbs_data where set_name = 'title' and set_id like ? order by set_code + 0 desc limit ?, 50",
             bbs_num, num,
         )
 
@@ -79,7 +79,7 @@ func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
 
             rows := tool.Query_DB(
                 db,
-                tool.DB_change("select set_name, set_data, set_code, set_id from bbs_data where set_code = ? and set_id = ?"),
+                "select set_name, set_data, set_code, set_id from bbs_data where set_code = ? and set_id = ?",
                 set_code, set_id,
             )
             defer rows.Close()

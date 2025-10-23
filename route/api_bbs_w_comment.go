@@ -56,7 +56,7 @@ func Api_bbs_w_comment(config tool.Config) string {
         comment_length := "0"
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc"),
+            "select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc",
             []any{ &comment_length },
             bbs_and_post_num,
         )
@@ -64,7 +64,7 @@ func Api_bbs_w_comment(config tool.Config) string {
         reply_length := "0"
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc"),
+            "select count(*) from bbs_data where set_name = 'comment_date' and set_id = ? order by set_code + 0 desc",
             []any{ &reply_length },
             bbs_and_post_num + "-%",
         )

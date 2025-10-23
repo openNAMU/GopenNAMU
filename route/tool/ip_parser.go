@@ -23,7 +23,7 @@ func Get_level(db *sql.DB, ip string) []string {
     level := "0"
     QueryRow_DB(
         db,
-        DB_change("select data from user_set where id = ? and name = 'level'"),
+        "select data from user_set where id = ? and name = 'level'",
         []any{ &level },
         ip,
     )
@@ -31,7 +31,7 @@ func Get_level(db *sql.DB, ip string) []string {
     exp := "0"
     QueryRow_DB(
         db,
-        DB_change("select data from user_set where id = ? and name = 'experience'"),
+        "select data from user_set where id = ? and name = 'experience'",
         []any{ &exp },
         ip,
     )
@@ -51,14 +51,14 @@ func IP_preprocess(db *sql.DB, ip string, my_ip string) []string {
     ip_view := ""
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'ip_view'"),
+        "select data from other where name = 'ip_view'",
         []any{ &ip_view },
     )
 
     user_name_view := ""
     QueryRow_DB(
         db,
-        DB_change("select data from other where name = 'user_name_view'"),
+        "select data from other where name = 'user_name_view'",
         []any{ &user_name_view },
     )
 
@@ -79,7 +79,7 @@ func IP_preprocess(db *sql.DB, ip string, my_ip string) []string {
             sub_user_name := ""
             QueryRow_DB(
                 db,
-                DB_change("select data from user_set where id = ? and name = 'sub_user_name'"),
+                "select data from user_set where id = ? and name = 'sub_user_name'",
                 []any{ &sub_user_name },
                 ip,
             )
@@ -94,7 +94,7 @@ func IP_preprocess(db *sql.DB, ip string, my_ip string) []string {
             user_name := ""
             QueryRow_DB(
                 db,
-                DB_change("select data from user_set where name = 'user_name' and id = ?"),
+                "select data from user_set where name = 'user_name' and id = ?",
                 []any{ &user_name },
                 ip,
             )
@@ -117,7 +117,7 @@ func IP_menu(db *sql.DB, ip string, my_ip string, option string) map[string][][]
         alarm_count := "0"
         QueryRow_DB(
             db,
-            DB_change("select count(*) from user_notice where name = ? and readme = ''"),
+            "select count(*) from user_notice where name = ? and readme = ''",
             []any{ &alarm_count },
             my_ip,
         )
@@ -186,7 +186,7 @@ func Get_user_ban_type(ban_type string) string {
 func Get_user_ban(db *sql.DB, ip string, tool string) []string {
     rows := Query_DB(
         db,
-        DB_change("select login, block from rb where band = 'regex' and ongoing = '1'"),
+        "select login, block from rb where band = 'regex' and ongoing = '1'",
     )
     defer rows.Close()
 
@@ -225,7 +225,7 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
     if IP_or_user(ip) {
         rows := Query_DB(
             db,
-            DB_change("select login, block from rb where band = 'cidr' and ongoing = '1'"),
+            "select login, block from rb where band = 'cidr' and ongoing = '1'",
         )
         defer rows.Close()
 
@@ -267,7 +267,7 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
     login := ""
     exist := QueryRow_DB(
         db,
-        DB_change("select login from rb where block = ? and (band = '' or band = 'private') and ongoing = '1'"),
+        "select login from rb where block = ? and (band = '' or band = 'private') and ongoing = '1'",
         []any{ &login },
         ip,
     )
@@ -296,7 +296,7 @@ func Get_user_ban(db *sql.DB, ip string, tool string) []string {
     data := ""
     exist = QueryRow_DB(
         db,
-        DB_change("select data from user_set where id = ? and name = 'acl'"),
+        "select data from user_set where id = ? and name = 'acl'",
         []any{ &data },
         ip,
     )
@@ -326,7 +326,7 @@ func IP_parser(db *sql.DB, ip string, my_ip string) string {
             user_name_level := ""
             QueryRow_DB(
                 db,
-                DB_change("select data from other where name = 'user_name_level'"),
+                "select data from other where name = 'user_name_level'",
                 []any{ &user_name_level },
             )
 
@@ -340,7 +340,7 @@ func IP_parser(db *sql.DB, ip string, my_ip string) string {
             user_title := ""
             QueryRow_DB(
                 db,
-                DB_change("select data from user_set where name = 'user_title' and id = ?"),
+                "select data from user_set where name = 'user_title' and id = ?",
                 []any{ &user_title },
                 raw_ip,
             )

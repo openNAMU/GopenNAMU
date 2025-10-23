@@ -44,7 +44,7 @@ func Api_bbs_w_set(config tool.Config) string {
 
         rows := tool.Query_DB(
             db,
-            tool.DB_change("select set_data, set_code from bbs_set where set_name = ? and set_id = ?"),
+            "select set_data, set_code from bbs_set where set_name = ? and set_id = ?",
             other_set["set_name"], other_set["set_id"],
         )
         defer rows.Close()

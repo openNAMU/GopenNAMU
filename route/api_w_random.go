@@ -15,7 +15,7 @@ func Api_w_random(config tool.Config) string {
     title := "Test"
     tool.QueryRow_DB(
         db,
-        tool.DB_change("select title from data where title not like 'user:%' and title not like 'category:%' and title not like 'file:%' order by random() limit 1"),
+        "select title from data where title not like 'user:%' and title not like 'category:%' and title not like 'file:%' order by random() limit 1",
         []any{ &title },
     )
 

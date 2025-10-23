@@ -114,7 +114,7 @@ func Markdown(db *sql.DB, data map[string]string) map[string]any {
             exist := ""
             tool.QueryRow_DB(
                 db,
-                tool.DB_change("select title from data where title = ?"),
+                "select title from data where title = ?",
                 []any{ &exist },
                 link,
             )

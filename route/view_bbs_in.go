@@ -19,7 +19,7 @@ func View_bbs_in(config tool.Config) string {
 
     tool.QueryRow_DB(
         db,
-        tool.DB_change("select set_data from bbs_set where set_id = ? and set_name = 'bbs_name'"),
+        "select set_data from bbs_set where set_id = ? and set_name = 'bbs_name'",
         []any{ &bbs_name },
         other_set["bbs_num"],
     )

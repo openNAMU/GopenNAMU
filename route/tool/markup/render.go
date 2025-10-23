@@ -22,24 +22,9 @@ func List_markup() []string {
 func Get_render(db *sql.DB, doc_name string, data string, render_type string) map[string]string {
     markup := ""
     if render_type == "api_view" || render_type == "api_from" || render_type == "api_include" || render_type == "backlink" {
-        tool.QueryRow_DB(
-            db,
-            tool.DB_change("select set_data from data_set where doc_name = ? and set_name = 'document_markup'"),
-            []any{ &markup },
-            doc_name,
-        )
-    }
-
-    if markup == "" {
-        tool.QueryRow_DB(
-            db,
-            tool.DB_change("select data from other where name = 'markup'"),
-            []any{ &markup },
-        )
-    }
-
-    if markup == "" || markup == "namumark_beta" {
-        markup = "namumark"
+        markup = tool.Get_document_markup(db, doc_name, "document")
+    } else {
+        markup = tool.Get_document_markup(db, doc_name, "")
     }
 
     now_time := time.Now().UnixNano()

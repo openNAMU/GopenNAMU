@@ -21,7 +21,7 @@ func Api_topic(config tool.Config) string {
         length := "0"
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select id from topic where code = ? order by id + 0 desc limit 1"),
+            "select id from topic where code = ? order by id + 0 desc limit 1",
             []any{ &length },
             other_set["topic_num"],
         )
@@ -37,20 +37,20 @@ func Api_topic(config tool.Config) string {
         if other_set["tool"] == "top" {
             rows = tool.Query_DB(
                 db,
-                tool.DB_change("select id, data, date, ip, block, top from topic where code = ? and top = 'O' order by id + 0 asc"),
+                "select id, data, date, ip, block, top from topic where code = ? and top = 'O' order by id + 0 asc",
                 other_set["topic_num"],
             )
         } else {
             if other_set["s_num"] != "" && other_set["e_num"] != "" {
                 rows = tool.Query_DB(
                     db,
-                    tool.DB_change("select id, data, date, ip, block, top from topic where code = ? and ? + 0 <= id + 0 and id + 0 <= ? + 0 order by id + 0 asc"),
+                    "select id, data, date, ip, block, top from topic where code = ? and ? + 0 <= id + 0 and id + 0 <= ? + 0 order by id + 0 asc",
                     other_set["topic_num"], other_set["s_num"], other_set["e_num"],
                 )
             } else {
                 rows = tool.Query_DB(
                     db,
-                    tool.DB_change("select id, data, date, ip, block, top from topic where code = ? order by id + 0 asc"),
+                    "select id, data, date, ip, block, top from topic where code = ? order by id + 0 asc",
                     other_set["topic_num"],
                 )
             }

@@ -30,9 +30,9 @@ func Api_user_watch_list(config tool.Config, name string, num_str string, do_typ
     } else {
         query := ""
         if do_type == "star_doc" {
-            query = tool.DB_change("select data from user_set where name = 'star_doc' and id = ? limit ?, 50")
+            query = "select data from user_set where name = 'star_doc' and id = ? limit ?, 50"
         } else {
-            query = tool.DB_change("select data from user_set where name = 'watchlist' and id = ? limit ?, 50")
+            query = "select data from user_set where name = 'watchlist' and id = ? limit ?, 50"
         }
 
         rows := tool.Query_DB(

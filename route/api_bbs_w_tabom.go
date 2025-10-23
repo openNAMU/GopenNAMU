@@ -36,7 +36,7 @@ func Api_bbs_w_tabom(config tool.Config) string {
         tabom_count := "0"
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?"),
+            "select set_data from bbs_data where set_name = 'tabom_count' and set_id = ? and set_code = ?",
             []any{ &tabom_count },
             bbs_num, post_num,
         )

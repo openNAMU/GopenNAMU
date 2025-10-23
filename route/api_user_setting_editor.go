@@ -19,7 +19,7 @@ func Api_user_setting_editor(config tool.Config) string {
     if !tool.IP_or_user(ip) {
         rows := tool.Query_DB(
             db,
-            tool.DB_change("select data from user_set where id = ? and name = 'user_editor_top'"),
+            "select data from user_set where id = ? and name = 'user_editor_top'",
             ip,
         )
         defer rows.Close()

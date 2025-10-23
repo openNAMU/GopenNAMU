@@ -17,7 +17,10 @@ func Api_bbs_list_exter(config tool.Config) string {
 }
 
 func bbs_list(db *sql.DB) map[string]string {
-    rows := tool.Query_DB(db, tool.DB_change("select set_data, set_id from bbs_set where set_name = 'bbs_name'"))
+    rows := tool.Query_DB(
+        db,
+        "select set_data, set_id from bbs_set where set_name = 'bbs_name'",
+    )
     defer rows.Close()
 
     data_list := map[string]string{}
@@ -48,7 +51,7 @@ func Api_bbs_list(config tool.Config) map[string]any {
         bbs_type := ""
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from bbs_set where set_name = 'bbs_type' and set_id = ?"),
+            "select set_data from bbs_set where set_name = 'bbs_type' and set_id = ?",
             []any{ &bbs_type },
             v,
         )
@@ -56,7 +59,7 @@ func Api_bbs_list(config tool.Config) map[string]any {
         bbs_date := ""
         tool.QueryRow_DB(
             db,
-            tool.DB_change("select set_data from bbs_data where set_id = ? and set_name = 'date' order by set_code + 0 desc limit 1"),
+            "select set_data from bbs_data where set_id = ? and set_name = 'date' order by set_code + 0 desc limit 1",
             []any{ &bbs_date },
             v,
         )
