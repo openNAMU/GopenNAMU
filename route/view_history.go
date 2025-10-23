@@ -21,9 +21,9 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
     return_data["data"] = tool.Get_template(
         db,
         config,
-        tool.Get_language(db, "recent_change", true),
+        doc_name,
         data_html,
-        "",
+        "(" + tool.Get_language(db, "history", true) + ")",
         [][]any{},
     )
 

@@ -344,6 +344,31 @@ func main() {
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
     })
 
+    r.GET("/edit/*doc_name", func(c *gin.Context) {
+        route_data := route.View_edit(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.POST("/edit/*doc_name", func(c *gin.Context) {
+        doc_name := strings.TrimPrefix(c.Param("doc_name"), "/")
+        data := c.PostForm("content")
+        send := c.PostForm("send")
+        agree := c.PostForm("copyright_agreement")
+
+        route_data := route.View_edit_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, doc_name, data, send, agree)
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
     r.POST("/upload", func(c *gin.Context) {
         form, err := c.MultipartForm()
         if err != nil || form == nil {

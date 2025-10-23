@@ -79,14 +79,14 @@ func Do_edit_slow_check(db *sql.DB, config Config, do_type string) bool {
         var check string
 
         if do_type == "edit" {
-            Query_DB(
+            QueryRow_DB(
                 db,
                 `select data from other where name = 'slow_edit'`,
                 []any{ &check },
             )
         } else {
             // do_type == "thread"
-            Query_DB(
+            QueryRow_DB(
                 db,
                 `select data from other where name = 'slow_thread'`,
                 []any{ &check },
@@ -99,14 +99,14 @@ func Do_edit_slow_check(db *sql.DB, config Config, do_type string) bool {
             var last_edit string
 
             if do_type == "edit" {
-                Query_DB(
+                QueryRow_DB(
                     db,
                     `select date from history where ip = ? order by date desc limit 1`,
                     []any{ &last_edit },
                     config.IP,
                 )
             } else {
-                Query_DB(
+                QueryRow_DB(
                     db,
                     `select date from topic where ip = ? order by date desc limit 1`,
                     []any{ &last_edit },
@@ -139,15 +139,17 @@ func Do_edit_slow_check(db *sql.DB, config Config, do_type string) bool {
 func Do_edit_max_length_check(db *sql.DB, config Config, data string) bool {
     var check string
 
-    QueryRow_DB(
+    exist := QueryRow_DB(
         db,
         "select data from other where name = 'document_content_max_length'",
         []any{ &check },
     )
 
-    check_int := Str_to_int(check)
+    if !exist {
+        return true
+    }
 
-    return len(data) <= check_int
+    return len(data) <= Str_to_int(check)
 }
 
 func Get_edit_length_diff(A string, B string) string {
@@ -270,7 +272,7 @@ func Do_add_history(db *sql.DB, doc_name string, data string, date string, ip st
 
         var document_count int
 
-        Query_DB(
+        QueryRow_DB(
             db, 
             `select count(*) from data`,
             []any{ &document_count },

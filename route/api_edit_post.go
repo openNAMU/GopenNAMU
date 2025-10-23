@@ -68,13 +68,26 @@ func Api_edit_post(config tool.Config, doc_name string, data string, send string
 
     var old_data string
 
-    tool.Query_DB(
+    tool.QueryRow_DB(
         db,
         `select data from data where title = ?`,
-        []any{ doc_name },
+        []any{ &old_data },
+        doc_name,
     )
 
     length := tool.Get_edit_length_diff(old_data, data)
+
+    tool.Exec_DB(
+        db,
+        `delete from data where title = ?`,
+        doc_name,
+    )
+    tool.Exec_DB(
+        db,
+        `insert into data (title, data) values (?, ?)`,
+        doc_name,
+        data,
+    )
 
     tool.Do_add_history(
         db,
