@@ -127,8 +127,6 @@ func (class *namumark) render_last() {
     r = regexp.MustCompile(`<back_br>\n?`)
     string_data = r.ReplaceAllString(string_data, "")
 
-    string_data = strings.ReplaceAll(string_data, "\n", "<br>")
-
     class.render_data = string_data
 }
 
@@ -142,7 +140,7 @@ func (class *namumark) main() map[string]any {
 
     class.data["data"] = class.render_data
 
-    render_data_class := Macromark_new(class.db, class.data)
+    render_data_class := Macromark_new(class.db, class.data, "html")
     render_data := render_data_class.main()
 
     return render_data
