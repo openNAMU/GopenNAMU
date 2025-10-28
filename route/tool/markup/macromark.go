@@ -3,6 +3,7 @@ package markup
 import (
 	"database/sql"
 	"html"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -22,6 +23,9 @@ type macromark struct {
     temp_data [][]string
     temp_data_raw [][]string
     temp_data_count int
+
+    toc_struct []int
+    toc_result map[string]string
 
     backlink [][]string
     link_count int
@@ -45,6 +49,9 @@ func Macromark_new(db *sql.DB, data map[string]string, result_markup string) *ma
         [][]string{},
         [][]string{},
         0,
+
+        []int{0, 0, 0, 0, 0, 0},
+        map[string]string{},
 
         [][]string{},
         0,
@@ -92,7 +99,40 @@ var heading_markdown = func(class *macromark, macro_name string, macro_data stri
 }
 
 var heading_html = func(class *macromark, macro_name string, macro_data string, m_string string) {
-    temp_name := class.func_temp_save("<" + macro_name + ">" + macro_data + "</" + macro_name + "><back_br>", m_string)
+    heading_n := macro_name[1:]
+    heading_n_int := tool.Str_to_int(heading_n)
+
+    class.toc_struct[heading_n_int - 1] += 1
+    for for_a := heading_n_int; for_a < 6; for_a++ {
+        class.toc_struct[for_a] = 0
+    }
+
+    toc_string := ""
+    temp_string := ""
+    for for_a := 0; for_a < 6; for_a++ {
+        heading_str := strconv.Itoa(class.toc_struct[for_a])
+        
+        if class.toc_struct[for_a] == 0 {
+            temp_string += "0."
+            continue
+        } 
+        
+        if toc_string == "" {
+            toc_string += heading_str + "."
+            temp_string = ""
+        } else {
+            toc_string += temp_string + heading_str + "."
+            temp_string = ""
+        }
+    }
+
+    if toc_string != "" {
+        toc_string = toc_string[:len(toc_string) - 1]
+    }
+
+    class.toc_result[toc_string] = macro_data
+
+    temp_name := class.func_temp_save("<" + macro_name + "><a href=\"#toc\">" + toc_string + ". </a>" + macro_data + "</" + macro_name + "><back_br>", m_string)
     class.render_data = strings.Replace(class.render_data, m_string, temp_name, 1)
 }
 var simple_html = func(class *macromark, macro_name string, macro_data string, m_string string) {
@@ -137,6 +177,42 @@ var macro_transform_map = map[string]macro_data{
                 a_data := class.func_temp_restore(macro_data, true)
                 a_data = strings.ReplaceAll(a_data, ",,", "<temp>")
 
+                part := strings.SplitN(a_data, ",", 3)
+
+                a_data_link := tool.HTML_unescape(part[0])
+                a_data_view := a_data_link
+                if len(part) > 1 {
+                    a_data_view = part[1]
+                }
+
+                a_data_hash := ""
+                if len(part) > 2 {
+                    a_data_hash = part[2]
+                }
+                
+                a_data_link = strings.ReplaceAll(a_data_link, "<temp>", ",")
+                a_data_view = strings.ReplaceAll(a_data_view, "<temp>", ",")
+                a_data_hash = strings.ReplaceAll(a_data_hash, "<temp>", ",")
+
+                exist := tool.QueryRow_DB(
+                    class.db,
+                    "select title from data where title = ?",
+                    []any{},
+                    a_data_link,
+                )
+
+                exist_link := ""
+                if !exist {
+                    exist_link = "class=\"opennamu_not_exist_link\""
+                }
+
+                temp_name := class.func_temp_save("<a " + exist_link + " href=\"/w/" + tool.Url_parser(a_data_link) + a_data_hash + "\">" + a_data_view + "</a>", m_string)
+                class.render_data = strings.Replace(class.render_data, m_string, temp_name, 1)
+            },
+            "ex" : func(class *macromark, macro_name string, macro_data string, m_string string) {
+                a_data := class.func_temp_restore(macro_data, true)
+                a_data = strings.ReplaceAll(a_data, ",,", "<temp>")
+
                 part := strings.SplitN(a_data, ",", 2)
 
                 a_data_link := tool.HTML_unescape(part[0])
@@ -144,11 +220,11 @@ var macro_transform_map = map[string]macro_data{
                 if len(part) > 1 {
                     a_data_view = part[1]
                 }
-                
+
                 a_data_link = strings.ReplaceAll(a_data_link, "<temp>", ",")
                 a_data_view = strings.ReplaceAll(a_data_view, "<temp>", ",")
-
-                temp_name := class.func_temp_save("<a href=\"/w/" + tool.Url_parser(a_data_link) + "\">" + a_data_view + "</a>", m_string)
+                
+                temp_name := class.func_temp_save("<a href=\"" + tool.HTML_escape(a_data_link) + "\">" + a_data_view + "</a>", m_string)
                 class.render_data = strings.Replace(class.render_data, m_string, temp_name, 1)
             },
             "b" : simple_html,
@@ -157,6 +233,10 @@ var macro_transform_map = map[string]macro_data{
             "s" : simple_html,
             "sup" : simple_html,
             "sub" : simple_html,
+            "toc" : func(class *macromark, macro_name string, macro_data string, m_string string) {
+                temp_name := class.func_temp_save("<toc_data>", m_string)
+                class.render_data = strings.Replace(class.render_data, m_string, temp_name, 1)
+            },
         },
     },
 }
@@ -170,7 +250,7 @@ func (class *macromark) render_text() {
 
             macro_name := gps[1].Captures[0].String()
             macro_data := ""
-            if len(gps) > 2 {
+            if len(gps) > 2 && gps[2].Captures != nil && len(gps[2].Captures) > 0 {
                 macro_data = gps[2].Captures[0].String()
             }
 
@@ -210,15 +290,33 @@ func (class *macromark) render_last() {
     r = regexp.MustCompile(`<back_br>\n?`)
     string_data = r.ReplaceAllString(string_data, "")
 
+    toc_data := ""
+    for k, v := range class.toc_result {
+        toc_data += "<br>"
+        
+        count_comma := strings.Count(k, ".")
+        toc_space := strings.Repeat("<span style=\"margin-left: 10px;\"></span>", count_comma)
+
+        toc_data += "<span class=\"opennamu_TOC_list\">" + toc_space + "<a href=\"#s-" + k + "\">" + k + ". </a>" + v + "</span>"
+    }
+
+    if toc_data != "" {
+        toc_data = "<div class=\"opennamu_TOC\" id=\"toc\"><span class=\"opennamu_TOC_title\">" + tool.Get_language(class.db, "toc", true) + "</span><br>" + toc_data + "</div>"
+    }
+
+    r = regexp.MustCompile(`<toc_data>`)
+    string_data = r.ReplaceAllString(string_data, toc_data)
+
     string_data = strings.Replace(string_data, "\n", "<br>", -1)
 
     class.render_data = string_data
-    class.render_data_js += "opennamu_do_toc();"
 }
 
 func (class macromark) main() map[string]any {
     class.render_text()
     class.render_last()
+
+    log.Default().Println(class.toc_result)
 
     end_data := make(map[string]any)
     end_data["data"] = class.render_data

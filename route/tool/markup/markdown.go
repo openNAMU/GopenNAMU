@@ -145,7 +145,7 @@ func Markdown(db *sql.DB, data map[string]string) map[string]any {
 
     end_data := make(map[string]any)
     end_data["data"] = string_data
-    end_data["js_data"] = "opennamu_do_toc();"
+    end_data["js_data"] = ""
     end_data["backlink"] = end_backlink
     end_data["link_count"] = link_count
 

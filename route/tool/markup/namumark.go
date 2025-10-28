@@ -89,6 +89,29 @@ func (class *namumark) render_heading() {
     class.render_data = string_data
 }
 
+func (class *namumark) render_macro() {
+    string_data := class.render_data
+
+    r := regexp2.MustCompile(`\[([^\[\]\(\)]+)\]`, 0)
+    
+    string_data, _ = r.ReplaceFunc(
+        string_data,
+        func(m regexp2.Match) string {
+            macro_name := m.GroupByNumber(1).String()
+
+            if macro_name == "toc" || macro_name == "목차" {
+                return "[toc()]"
+            } else {
+                return ""
+            }
+        },
+        -1,
+        -1,
+    )
+
+    class.render_data = string_data
+}
+
 func (class *namumark) render_link() {
     string_data := class.render_data
 
@@ -98,12 +121,17 @@ func (class *namumark) render_link() {
         string_data,
         func(m regexp2.Match) string {
             target := m.GroupByNumber(1).String()
-            label  := m.GroupByNumber(2).String()
+            label := m.GroupByNumber(2).String()
             if label == "" {
                 label = target
             }
 
-            return "[a(" + target + ", " + label + ")]"
+            tag_name := "a"
+            if strings.HasPrefix(target, "http://") || strings.HasPrefix(target, "https://") {
+                tag_name = "ex"
+            }
+
+            return "[" + tag_name + "(" + target + ", " + label + ")]"
         },
         -1,
         -1,
@@ -134,6 +162,7 @@ func (class *namumark) main() map[string]any {
     class.render_text()
     class.render_link()
     class.render_heading()
+    class.render_macro()
     class.render_last()
 
     log.Default().Println(class.render_data)
