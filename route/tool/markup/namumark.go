@@ -131,6 +131,8 @@ func (class *namumark) render_link() {
                 tag_name = "ex"
             }
 
+            log.Default().Println(tag_name, target)
+
             return "[" + tag_name + "(" + target + ", " + label + ")]"
         },
         -1,

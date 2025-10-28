@@ -194,10 +194,11 @@ var macro_transform_map = map[string]macro_data{
                 a_data_view = strings.ReplaceAll(a_data_view, "<temp>", ",")
                 a_data_hash = strings.ReplaceAll(a_data_hash, "<temp>", ",")
 
+                temp := ""
                 exist := tool.QueryRow_DB(
                     class.db,
                     "select title from data where title = ?",
-                    []any{},
+                    []any{ &temp },
                     a_data_link,
                 )
 
@@ -224,7 +225,7 @@ var macro_transform_map = map[string]macro_data{
                 a_data_link = strings.ReplaceAll(a_data_link, "<temp>", ",")
                 a_data_view = strings.ReplaceAll(a_data_view, "<temp>", ",")
                 
-                temp_name := class.func_temp_save("<a href=\"" + tool.HTML_escape(a_data_link) + "\">" + a_data_view + "</a>", m_string)
+                temp_name := class.func_temp_save("<a class=\"opennamu_link_out\" href=\"" + tool.HTML_escape(a_data_link) + "\">" + a_data_view + "</a>", m_string)
                 class.render_data = strings.Replace(class.render_data, m_string, temp_name, 1)
             },
             "b" : simple_html,
