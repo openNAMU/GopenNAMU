@@ -274,6 +274,36 @@ func main() {
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
+    r.GET("/other", func(c *gin.Context) {
+        route_data := route.View_main_other(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }).HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/user", func(c *gin.Context) {
+        route_data := route.View_user(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, tool.Get_IP(c)).HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/user/*user_name", func(c *gin.Context) {
+        route_data := route.View_user(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("user_name"), "/")).HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
     r.GET("/upload", func(c *gin.Context) {
         route_data := route.View_edit_file_upload(tool.Config{
             Other_set: "",

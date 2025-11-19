@@ -10,6 +10,7 @@ import (
 	"github.com/dlclark/regexp2"
 )
 
+// IP_or_user - IP is True
 func IP_or_user(ip string) bool {
     match, _ := regexp.MatchString("(\\.|:)", ip)
     if match {
@@ -400,4 +401,8 @@ func Do_ban_insert(db *sql.DB, user_name string, end_date string, reason string,
             login,
         )
     }
+}
+
+func Get_user_info(db *sql.DB, user_name string) string {
+    return ""
 }
