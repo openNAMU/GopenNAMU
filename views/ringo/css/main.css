@@ -1,0 +1,431 @@
+html {
+    background: #eee;
+}
+
+body {
+    font-family: 'SUIT', sans-serif;
+    font-size: 14px;
+    font-feature-settings: "ss18";
+    text-size-adjust: 100%;
+
+    margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    border-bottom: 1px solid gainsboro;
+    
+    padding-bottom: 10px;
+}
+
+select {
+    font-family: 'SUIT', sans-serif;
+    font-feature-settings: "ss18";
+}
+
+textarea {
+    font-family: 'SUIT', monospace;
+    font-feature-settings: "ss18";
+}
+
+h1.blank, h2.blank, h3.blank, h4.blank, h5.blank, h6.blank {
+    border-bottom: none;
+
+    padding-bottom: 0px;
+}
+
+header#main {
+    border-bottom: 0;
+    
+    line-height: 50px;
+    
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    background-color: #99ddff;
+}
+
+header#main a {
+    color: black;
+}
+
+header#main span#right {
+    float: right;
+}
+
+header#main form.not_mobile input.search {
+    display: inline-block;
+    
+    width: 200px;
+}
+
+header#main form.not_mobile {
+    display: inline-block;
+}
+
+header a#logo {
+    height: 52px;
+
+    display: inline-block;
+
+    padding-left: 20px;
+    padding-right: 20px;
+
+    margin-left: -20px;
+}
+
+header a#logo:hover {
+    background-color: #95c3df;
+}
+
+.top_cel {
+    display: inline-block;
+}
+
+.top_cel a {
+    display: inline-block;
+    
+    height: 52px;
+    
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.top_cel a:hover {
+    background-color: #95c3df;
+}
+
+.top_cel_in {
+    position: absolute;
+    
+    background: #efd8f7;
+    
+    line-height: initial;
+
+    z-index: 1;
+}
+
+.top_cel_in a {
+    padding: 10px;
+    
+    display: block;
+    
+    height: inherit;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.top_cel_in a:hover {
+    background-color: #e3baf1;
+}
+
+div#menu {
+    margin-top: 10px;
+
+    margin-left: 6px;
+}
+
+.menu_item_link {
+    border: 0;
+
+    color: black;
+    background-color: white;
+    
+    padding: 10px;
+    
+    display: inline-block;
+
+    margin-left: -6px;
+}
+
+.menu_item_link:hover {
+    background-color: #eee;
+}
+
+input.search {
+    height: 35px;
+    
+    vertical-align: middle;
+    
+    border: 0;
+    
+    padding: 10px;
+}
+
+input.only_mobile.search {
+    width: calc(100% - 70px);
+    
+    display: inline-block;
+}
+
+input.search:focus-visible {
+    outline: none;
+}
+
+button.search_button {
+    width: 35px;
+    height: 35px;
+    
+    vertical-align: middle;
+    
+    margin-left: -6px;
+    
+    border: 0;
+    
+    font-size: 20px;
+    
+    line-height: 0px;
+
+    cursor: pointer;
+}
+
+button.search_button#goto {
+    background-color: #ccffbb;
+}
+
+button.search_button#goto:hover {
+    background-color: #99bf8c;
+}
+
+button.search_button#search {
+    background-color: #ffeecc;
+}
+
+button.search_button#search:hover {
+    background-color: #bcb097;
+}
+
+aside {
+    width: 250px;
+    
+    display: block;
+    
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    
+    background-color: #ffeaee;
+    
+    min-height: calc(100vh - (50px + 12px));
+}
+
+.do_fixed {
+    float: left;
+}
+
+aside button {
+    width: 33.33%;
+}
+
+aside .side_button {
+    border: 0;
+    background-color: white;
+    
+    padding: 10px;
+
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+aside .side_button:hover {
+    background-color: #eee;
+
+    cursor: pointer;
+}
+
+#side_button_2 {
+    border-left: 0;
+    border-right: 0;
+}
+
+#side_content {
+    margin-top: 20px;
+}
+
+section {
+    width: calc(100% - (250px + 40px));
+    
+    display: inline-block;
+    
+    border-left: 0px solid;
+    
+    background-color: white;
+}
+
+header#section {
+    padding-top: 11px;
+    padding-bottom: 11px;
+    
+    border-bottom: 0px solid;
+    
+    background-color: #cceeff;
+}
+
+article.main {
+    max-width: 1000px;
+    
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    margin: auto;
+}
+
+article.main#main_data {
+    padding-top: 20px;
+    
+    min-height: 400px;
+}
+
+article.main#title h1 {
+    margin: 0;
+
+    font-size: 32px;
+}
+
+.only_mobile, header#main form.only_mobile {
+    display: none;
+}
+
+@media screen and (max-width: 1000px) {    
+    aside {        
+        float: none;
+        
+        border-top: 0px solid;
+        
+        width: calc(100vw - 40px);
+        height: 100%;
+        
+        padding: 20px;
+    }
+    
+    section {
+        width: 100vw;
+        
+        padding-bottom: 20px;
+        
+        border-left: 0;
+    }
+    
+    .not_mobile, header#main form.not_mobile {
+        display: none;
+    }
+    
+    .only_mobile, header#main form.only_mobile {
+        display: block;
+    }
+
+    .top_cel_in {
+        left: 0;
+
+        width: 100%;
+    }
+
+    .do_fixed {
+        position: inherit;
+
+        margin-bottom: 20px;
+    }
+}
+
+footer {
+    border-top: 0px solid;
+    
+    margin-top: 20px;
+    background: #eee;
+    
+    padding: 20px;
+}
+
+footer.only_mobile {
+    margin-top: 0px;
+}
+
+#b_logo {
+    width: 100px;
+}
+
+input, textarea, button, select {
+    border: 1px solid #aaa;
+    
+    padding: 10px;
+    
+    background-color: white;
+}
+
+.opennamu_main input,
+.opennamu_main textarea {
+    width: calc(100% - 22px);
+}
+
+#main_data button:hover {
+    background-color: #eee;
+
+    cursor: pointer;
+}
+
+#opennamu_save_button {
+    background: antiquewhite;
+}
+
+/* nav_bar */
+#nav_bar {
+    z-index: 100;
+    
+    font-size: 25px;
+    
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    
+    background: #f7dfff;
+    
+    text-align: center;
+}
+
+#go_toc {
+    display: inline-block;
+
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+    width: 25px;
+}
+
+#go_top {
+    display: inline-block;
+    
+    padding-right: 10px;
+    padding-left: 10px;
+    
+    width: 25px;
+}
+
+#go_bottom {
+    display: inline-block;
+
+    padding-right: 10px;
+    padding-left: 10px;
+    
+    width: 25px;
+}
+
+#nav_bar a {
+    color: black;
+}
+
+pre#syntax, pre#syntax code {
+    border: 0;
+}
+
+a {
+    text-decoration: none;
+
+    color: dodgerblue;
+}
+
+a:hover {
+    color: #105292;
+}

@@ -1,0 +1,507 @@
+/* 기본 전체 옵션 */
+.opennamu_main video, 
+.opennamu_main table, 
+.opennamu_main iframe, 
+.opennamu_main input, 
+.opennamu_main textarea, 
+.opennamu_main img, 
+.opennamu_main hr, 
+.opennamu_main blockquote, 
+.opennamu_main pre, 
+.opennamu_main iframe, 
+.opennamu_main .table_safe {
+    max-width: 100%;
+}
+
+.opennamu_main {
+    word-break: break-all;
+    overflow: auto;
+    font-size: 14px;
+}
+
+/* 텍스트 필드 */
+.opennamu_main textarea,
+.opennamu_main input {
+    width: 100%;
+
+    font-family: Consolas, Monaco, "Courier New", Courier, "Lucida Console", monospace;
+}
+
+.opennamu_main input {
+    box-sizing: border-box;
+}
+
+.opennamu_main input[type="checkbox"], 
+.opennamu_main input[type="radio"] {
+    width: auto;
+}
+
+/* 테이블 */
+.opennamu_main table {
+    overflow-x: scroll;
+
+    border-collapse: collapse;
+}
+
+.opennamu_main td {
+    border: 0.5px solid gainsboro;
+    border-width: 0.5px;
+
+    padding: 8px 10px;
+}
+
+@supports (-webkit-touch-callout: none) {
+    .opennamu_main td {
+        border: 1px solid gainsboro;
+        border-width: 1px;
+    }
+}
+
+/* 폴딩 */
+.opennamu_main details summary {
+    cursor: pointer;
+    user-select: none;
+    
+    display: list-item;
+}
+
+/* diff */
+.opennamu_main .opennamu_diff_green {
+    background: #eaf2c2;
+}
+
+.opennamu_main .opennamu_diff_red {
+    background: #fadad7;
+}
+
+/* list */
+.opennamu_main ul {
+    padding-left: 20px;
+}
+
+.opennamu_main ul li {
+    margin-left: 20px;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* thread */
+.opennamu_main .opennamu_comment {
+    display: inline-table;
+    width: 100%;
+}
+
+.opennamu_main .opennamu_comment_color_green {
+    background: palegreen;
+}
+
+.opennamu_main .opennamu_comment_color_blue {
+    background: paleturquoise;
+}
+
+.opennamu_main .opennamu_comment_color_red {
+    background: pink;
+}
+
+.opennamu_main .opennamu_comment_color_default {
+    background: palegoldenrod;
+}
+
+.opennamu_main .opennamu_comment_color_gray {
+    background: gainsboro;
+}
+
+.opennamu_main .opennamu_comment_blind {
+    display: none;
+}
+
+.opennamu_main .opennamu_comment_blind_admin {
+    background: gainsboro;
+}
+
+.opennamu_main .opennamu_comment_scroll {
+    max-height: 500px;
+
+    white-space: pre-wrap;
+    
+    overflow: scroll;
+    -ms-overflow-style: none;
+
+    scrollbar-width: none;
+}
+
+.opennamu_main .opennamu_comment_scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* render */
+/* - link */
+.opennamu_main .opennamu_not_exist_link {
+    color: red;
+}
+
+.opennamu_main .opennamu_not_exist_link:hover {
+    color: darkred;
+}
+
+.opennamu_main .opennamu_same_link {
+    font-weight: bold;
+}
+
+.opennamu_main .opennamu_link_out,
+.opennamu_main .opennamu_link_inter {
+    color: green;
+}
+
+.opennamu_main .opennamu_link_out:hover,
+.opennamu_main .opennamu_link_inter:hover {
+    color: darkgreen;
+}
+
+.opennamu_main .opennamu_link_out::before {
+    content: '🅴';
+    
+    font-weight: lighter;
+    
+    background: transparent;
+}
+
+/* - toc */
+.opennamu_main .opennamu_TOC {
+    border: 1px solid gainsboro;
+    padding: 20px;
+    
+    width: fit-content;
+    width: -moz-fit-content;
+
+    display: inline-block;
+    
+    clear: both;
+    
+    margin-top: 10px;
+}
+
+.opennamu_main .opennamu_TOC_title {
+    font-size: 18px;
+}
+
+/* - category */
+.opennamu_main .opennamu_category,
+.opennamu_main .opennamu_trace {
+    border: 1px solid gainsboro;
+    
+    padding: 10px;
+    
+    white-space: pre;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.opennamu_main .opennamu_category_button,
+.opennamu_main .opennamu_trace_button {
+    float: right;
+    z-index: 100;
+    position: relative;
+}
+
+.opennamu_main .opennamu_category_blur {
+    filter: blur(5px);
+}
+
+.opennamu_main .opennamu_category_blur:hover {
+    filter: none;
+}
+
+/* - footnote */
+.opennamu_main .opennamu_footnote {
+    border-top: 1px solid gainsboro;
+
+    padding-top: 10px;
+
+    margin-top: 10px;
+}
+
+.opennamu_main pre,
+.opennamu_main .opennamu_redirect {
+    border: 1px solid gainsboro;
+    
+    padding: 10px;
+}
+
+.opennamu_main pre {    
+    white-space: pre-wrap;
+
+    margin: 0;
+}
+
+.opennamu_main code,
+.opennamu_main pre {
+    font-family: Consolas, Monaco, "Courier New", Courier, "Lucida Console", monospace;
+}
+
+.opennamu_main #syntax {
+    padding: 0;
+}
+
+.opennamu_main .opennamu_textarea_500 {
+    height: 500px;
+}
+
+.opennamu_main .opennamu_textarea_100 {
+    height: 100px;
+}
+
+.opennamu_main .opennamu_spead_footnote {
+    color: #555;
+    background-color: #efefef;
+    
+    border: 1px solid #cecece;
+
+    font-size: small;
+    font-weight: initial;
+}
+
+.opennamu_main .opennamu_popup_footnote {
+    position: absolute;
+
+    z-index: 10000;
+
+    max-width: 50%;
+
+    padding: 10px;
+
+    background-color: white;
+    color: initial;
+    
+    border: 1px solid #cecece;
+    border-radius: 5px;
+
+    font-size: small;
+    font-weight: initial;
+}
+
+@media(max-width: 768px) {
+    .opennamu_main .opennamu_popup_footnote {
+        max-width: 100%;
+    }
+}
+
+@media(max-width: 420px) {
+    .opennamu_main .table_safe {
+        float: none !important;
+    }
+}
+
+.opennamu_main hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    border: 0;
+    border-top: 1px solid gainsboro;
+}
+
+.opennamu_main .opennamu_render_complete {
+    white-space: pre-wrap;
+    
+    line-break: anywhere;
+
+    display: inline;
+}
+
+.opennamu_main .opennamu_render_complete img {
+    vertical-align: middle;
+}
+
+.opennamu_main blockquote {
+    padding: 15px;
+    
+    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    display: inline-block;
+
+    border: 2px solid #ccc;
+    border-left: 5px solid black;
+}
+
+/* math */
+.katex {
+    line-height: 0;
+}
+
+/* 취소선 */
+.opennamu_main s,
+.opennamu_main strike,
+.opennamu_main del {
+    color: gray;
+}
+
+.opennamu_main s:hover,
+.opennamu_main strike:hover,
+.opennamu_main del:hover {
+    text-decoration: none;
+}
+
+/* 최근 변경 관련 테이블 */
+.opennamu_main #main_table_set {
+    width: 100%;
+    
+    text-align: center;
+}
+
+.opennamu_main #main_table_width {
+    width: 33.3%;
+}
+
+.opennamu_main #main_table_width_half {
+    width: 50%;
+}
+
+.opennamu_main #main_table_width_quarter {
+    width: 25%;
+}
+
+.opennamu_main #main_table_top_tr {
+    background: gainsboro;
+}
+
+.opennamu_main .opennamu_history_blind {
+    background: gainsboro;
+}
+
+/* 기타 */
+.opennamu_main .main_hr {
+    border: none;
+    
+    padding-top: 6px;
+    padding-bottom: 6px;
+    
+    margin: 0;
+}
+
+.opennamu_main .mini_hr {
+    border: none;
+    
+    padding-top: 0px;
+    padding-bottom: 0px;
+    
+    margin: 0;
+}
+
+.change_space {
+    white-space: pre-line;
+}
+
+.opennamu_main .katex .base {
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.opennamu_main .opennamu_width_200 {
+    width: 200px;
+}
+
+.opennamu_main .opennamu_list_1 {
+    list-style: disc;
+}
+
+.opennamu_main .opennamu_list_2 {
+    list-style: circle;
+}
+
+.opennamu_main .opennamu_list_3 {
+    list-style: square;
+}
+
+.opennamu_main .opennamu_list_4 {
+    list-style: none;
+}
+
+.opennamu_main .opennamu_list_4::before {
+    display: inline-block;
+    content: "⬦";
+    width: 1.2em;
+    margin-left: -1.2em;
+}
+
+.opennamu_main .opennamu_list_5 {
+    list-style: none;
+}
+
+.opennamu_main .opennamu_list_5::before {
+    display: inline-block;
+    content: "⬥";
+    width: 1.2em;
+    margin-left: -1.2em;
+}
+
+.opennamu_main .opennamu_list_none {
+    list-style: none;
+}
+
+.opennamu_main .opennamu_folding {
+    margin-top: 10px;
+}
+
+.opennamu_main .opennamu_recent_change {
+    padding-bottom: 10px;
+
+    border-bottom: 2px solid gainsboro;
+}
+
+/* 이 부분 이하로는 레거시 */
+.opennamu_main #topic_color {
+    background: #bbeabb;
+}
+
+/* 외부 확장 기능 연관 */
+.opennamu_main td.hljs-ln-line.hljs-ln-code,
+.opennamu_main td.hljs-ln-line.hljs-ln-numbers {
+    padding: 0px !important;
+    padding-right: 10px !important;
+    
+    border: 0;
+    
+    vertical-align: baseline;
+}
+
+.opennamu_main .hljs-ln-n:before {
+    white-space: nowrap;
+}
+
+/* SVG */
+.opennamu_main .opennamu_svg {
+    width: 14px;
+    display: inline-block;
+
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+}
+
+.opennamu_main .opennamu_svg_tool {
+    background-image: url(/views/main_css/file/icon/tool.svg);
+}
+
+.opennamu_main .opennamu_svg_tabom {
+    background-image: url(/views/main_css/file/icon/thumbs-up.svg);
+}
+
+#opennamu_bbs_w_post_tabom {
+    text-align: center;
+}
+
+.opennamu_main .opennamu_bbs_w_post_tabom {
+    width: 75px;
+    height: 75px;
+
+    padding: 15px;
+    
+    border: 2px solid gray;
+
+    background-size: 100% 100%;
+    background-origin: content-box;
+}

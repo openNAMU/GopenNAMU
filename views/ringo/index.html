@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="{{'language_tag'|load_lang}}">
+    <head>
+        <style id="ringo_add_style"></style>
+        <script src="/views/ringo/js/skin_set_do.js.cache_v4"></script>
+        <meta charset="utf-8">
+        {% if imp[3][0] != 0 %}
+            <title>{{imp[0]}} {{imp[3][0]}} - {{imp[1][0]}}</title>
+        {% else %}
+            <title>{{imp[0]}} - {{imp[1][0]}}</title>
+        {% endif %}
+        {{imp[3][3]|safe}}
+        <link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
+        <script defer src="https://code.iconify.design/1/1.0.3/iconify.min.js"></script>
+        <script defer src="/views/ringo/js/main.js.cache_v3"></script>
+        <script defer src="/views/ringo/js/sidebar.js.cache_v7"></script>
+        <script defer src="/views/ringo/js/skin_set.js.cache_v9"></script>
+        <link rel="stylesheet" href="/views/ringo/css/main.css.cache_v13">
+        {% if request.cookies.get('main_css_darkmode', '') == '1' %}
+            {{imp[3][5]|safe}}
+            <link rel="stylesheet" href="/views/ringo/css/dark.css.cache_v3">
+        {% endif %}
+        <link rel="shortcut icon" href="/views/main_css/file/favicon.ico.cache_v1">
+        {{imp[1][5]|safe}}
+        {{imp[2][3]|safe}}
+        {% if imp[3][0] != 0 %}
+            <meta name="title" content="{{imp[0]}}{{imp[3][0]}} - {{imp[1][0]}}">
+        {% else %}
+            <meta name="title" content="{{imp[0]}} - {{imp[1][0]}}">
+        {% endif %}
+        <meta name="keywords" content="{{imp[0]}}">
+        <meta name="description" content="{{imp[3][6]}}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <header id="main">
+            <span id="left">
+                <a id="logo" href="/">{{imp[1][4]|safe}}</a>
+            </span>
+            <span id="right">
+                <div class="top_cel" id="recent_cel">
+                    <a href="javascript:ringo_opening('recent_cel_in');">
+                        <span class="iconify" data-icon="ic:baseline-access-time" data-inline="true"></span>
+                        <span class="not_mobile">{{'list'|load_lang}}</span>
+                        <span class="iconify" data-icon="ic:baseline-arrow-drop-down" data-inline="true"></span>
+                    </a>
+                    <div class="top_cel_in" id="recent_cel_in" style="display: none;">
+                        <a href="/recent_changes">
+                            <span class="iconify" data-icon="ic:baseline-autorenew" data-inline="true"></span>
+                            {{'recent_change'|load_lang}}
+                        </a>
+                        <a href="/recent_discuss">
+                            <span class="iconify" data-icon="ic:baseline-add-comment" data-inline="true"></span>
+                            {{'recent_discussion'|load_lang}}
+                        </a>
+                        <a href="/vote">
+                            <span class="iconify" data-icon="ic:baseline-how-to-vote" data-inline="true"></span>
+                            {{'vote_list'|load_lang}}
+                        </a>
+                        <a href="/bbs/main">
+                            <span class="iconify" data-icon="ic:outline-developer-board" data-inline="true"></span>
+                            {{'bbs_main'|load_lang}}
+                        </a>
+                    </div>
+                </div>
+                <div class="top_cel" id="other_cel">
+                    <a href="javascript:ringo_opening('other_cel_in');">
+                        <span class="iconify" data-icon="ic:baseline-archive" data-inline="true"></span>
+                        <span class="not_mobile">{{'tool'|load_lang}}</span>
+                        <span class="iconify" data-icon="ic:baseline-arrow-drop-down" data-inline="true"></span>
+                    </a>
+                    <div class="top_cel_in" id="other_cel_in" style="display: none;">
+                        <a href="/random">
+                            <span class="iconify" data-icon="ic:baseline-shuffle" data-inline="true"></span>
+                            {{'random'|load_lang}}
+                        </a>
+                        <a href="/other">
+                            <span class="iconify" data-icon="ic:baseline-build" data-inline="true"></span>
+                            {{'other_tool'|load_lang}}
+                        </a>
+                        {% if imp[2][9] != '0' %}
+                            <a href="/manager">
+                                <span class="iconify" data-icon="ic:baseline-how-to-reg" data-inline="true"></span>
+                                {{'admin_tool'|load_lang}}
+                            </a>
+                        {% endif %}
+                        <a href="/upload">
+                            <span class="iconify" data-icon="ic:baseline-cloud-upload" data-inline="true"></span>
+                            {{'upload'|load_lang}}
+                        </a>
+                        <a href="/change/skin_set">
+                            <span class="iconify" data-icon="ic:baseline-settings" data-inline="true"></span>
+                            {{'skin_setting'|load_lang}}
+                        </a>
+                    </div>
+                </div>
+                <div class="top_cel" id="user_cel">
+                    <a href="javascript:ringo_opening('user_cel_in');">
+                        {% if imp[2][2] == 1 %}
+                            {% if imp[2][8] != '0' %}
+                                <span class="iconify" data-icon="ic:baseline-add-alert" data-inline="true"></span>
+                            {% else %}
+                                <span class="iconify" data-icon="ic:baseline-person-add" data-inline="true"></span>
+                            {% endif %}
+                        {% else %}
+                            <span class="iconify" data-icon="ic:round-person-search" data-inline="true"></span>
+                        {% endif %}
+                        <span class="not_mobile">{{imp[2][5]}}</span>
+                        <span class="iconify" data-icon="ic:baseline-arrow-drop-down" data-inline="true"></span>
+                    </a>
+                    <div class="top_cel_in" id="user_cel_in" style="display: none;">
+                        <a href="/user">
+                            <span class="iconify" data-icon="ic:baseline-account-box" data-inline="true"></span>
+                            {{'user_tool'|load_lang}}
+                        </a>
+                        <a href="/change">
+                            <span class="iconify" data-icon="ic:baseline-manage-accounts" data-inline="true"></span>
+                            {{'user_setting'|load_lang}}
+                        </a>
+                        {% if imp[2][2] == 1 %}
+                            <a href="/alarm">
+                                <span class="iconify" data-icon="ic:baseline-contact-mail" data-inline="true"></span>
+                                {{'alarm'|load_lang}} ({{imp[2][8]}})
+                            </a>
+                            <a href="/watch_list">
+                                <span class="iconify" data-icon="ic:round-preview" data-inline="true"></span>
+                                {{'watchlist'|load_lang}}
+                            </a>
+                            <a href="/star_doc">
+                                <span class="iconify" data-icon="ic:twotone-stars" data-inline="true"></span>
+                                {{'star_doc'|load_lang}}
+                            </a>
+                            <a href="/logout">
+                                <span class="iconify" data-icon="ic:baseline-logout" data-inline="true"></span>
+                                {{'logout'|load_lang}}
+                            </a>
+                        {% else %}
+                            <a href="/login">
+                                <span class="iconify" data-icon="ic:baseline-login" data-inline="true"></span>
+                                {{'login'|load_lang}}
+                            </a>
+                            <a href="/register">
+                                <span class="iconify" data-icon="ic:baseline-person-add-alt-1" data-inline="true"></span>
+                                {{'register'|load_lang}}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if imp[1][6] != '' %}
+                    <div class="top_cel" id="add_cel">
+                        <a href="javascript:ringo_opening('add_cel_in');">
+                            <span class="iconify" data-icon="ic:baseline-playlist-add" data-inline="true"></span>
+                            <span class="not_mobile">{{'added_menu'|load_lang}}</span>
+                            <span class="iconify" data-icon="ic:baseline-arrow-drop-down" data-inline="true"></span>
+                        </a>
+                        <div class="top_cel_in" id="add_cel_in" style="display: none;">
+                            {% for added_top_menu in imp[1][6] %}
+                                <a href="{{added_top_menu[1]}}">
+                                    <span class="iconify" data-icon="ic:baseline-plus" data-inline="true"></span>
+                                    {{added_top_menu[0]}}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                <form class="not_mobile" method="post" action="/search" role="search" id="search">
+                    <input class="not_mobile search" name="search" placeholder="{{'search'|load_lang}}" autocomplete="off" type="search">
+                    <button type="submit" id="goto" formaction="/goto" class="search_button">
+                        <span class="iconify" data-icon="ic:round-find-in-page" data-inline="true"></span>
+                    </button>
+                    <button type="submit" id="search" formaction="/search" class="search_button">
+                        <span class="iconify" data-icon="ic:baseline-search" data-inline="true"></span>
+                    </button>
+                </form>
+            </span>
+            <form class="only_mobile" method="post" action="/search" role="search">
+                <input class="only_mobile search" name="search" placeholder="{{'search'|load_lang}}" autocomplete="off" type="search">
+                <button type="submit" id="goto" formaction="/goto" class="search_button">
+                    <span class="iconify" data-icon="ic:round-find-in-page" data-inline="true"></span>
+                </button>
+                <button type="submit" id="search" formaction="/search" class="search_button">
+                    <span class="iconify" data-icon="ic:baseline-search" data-inline="true"></span>
+                </button>
+            </form>
+        </header>
+        <section>
+            <header id="section">
+                <article class="main" id="title">
+                    <h1 class="blank">
+                        <span class="change_space">{{imp[0]}}</span>
+                        {% if imp[3][0] != 0 %}
+                            <sub>{{imp[3][0]}}</sub>
+                        {% endif %}
+                    </h1>
+                    {% if imp[3][1] != 0 %}
+                        {{'last_edit_time'|load_lang}} : {{imp[3][1]}}
+                        {% if imp[3][7] != 0 %}
+                            | {{'page_view'|load_lang}} : {{imp[3][7]}}
+                        {% endif %}
+                    {% endif %}
+                    {% if menu != 0 %}
+                        <div id="menu">
+                            {% for menu_data in menu %}
+                                {% if menu[0] == 1 %}
+                                    {% set menu_data_2 = menu_data[0] %}
+                                {% else %}
+                                    {% set menu_data_2 = '/' + menu_data[0] %}
+                                {% endif %}
+                                
+                                {% if menu_data|length > 2 and menu_data[2] == 1 %}
+                                    {% set menu_topic = 'topic_color' %}
+                                {% else %}
+                                    {% set menu_topic = '' %}
+                                {% endif %}
+                                
+                                <a class="menu_item_link" href="{{menu_data_2}}" id="{{menu_topic}}">
+                                    {{menu_data[1]}}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </article>
+            </header>
+            <article class="main" id="main_data">
+                {{imp[1][7][0]|safe}}
+                {{data|safe}}
+                {{imp[1][7][2]|safe}}
+            </article>
+            <footer class="not_mobile">
+                <article class="main" id="footer">
+                    {{imp[1][1]|safe}}
+                    <br>
+                    <br>
+                    <a href="https://github.com/openNAMU/openNAMU"><img alt="b_logo" id="b_logo" src="/views/main_css/file/s_logo.png"></a>
+                </article>
+            </footer>
+        </section>
+        <aside class="do_fixed">
+            {% if imp[1][7][1] == '' %}
+                <button id="side_button_1" class="side_button selected">{{'edit'|load_lang}}</button><!--
+             --><button id="side_button_2" class="side_button">{{'discussion'|load_lang}}</button><!--
+             --><button id="side_button_3" class="side_button">{{'bbs'|load_lang}}</button>
+                <div id="side_content">
+                    Loading...
+                </div>
+            {% else %}
+                {{imp[1][7][1]|safe}}
+            {% endif %}
+        </aside>
+        <div id="nav_bar">
+            <div id="go_top">
+                <a href="#main">
+                    <span class="iconify" data-icon="ic:baseline-arrow-upward" data-inline="true"></span>
+                </a>
+            </div>
+            <div id="go_bottom">
+                <a href="#footer">
+                    <span class="iconify" data-icon="ic:baseline-arrow-downward" data-inline="true"></span>
+                </a>
+            </div>
+            <div id="go_toc">
+                <a href="#toc">
+                    <span class="iconify" data-icon="ic:baseline-list" data-inline="true"></span>
+                </a>
+            </div>
+        </div>
+        <footer class="only_mobile" id="footer">
+            {{imp[1][1]|safe}}
+            <br>
+            <br>
+            <a href="https://github.com/openNAMU/openNAMU"><img alt="b_logo" id="b_logo" src="/views/main_css/file/logo.svg"></a>
+        </footer>
+    </body>
+</html>

@@ -4,7 +4,3 @@ go.sum
 !/bin/test
 
 *.db
-
-data
-lang
-views
