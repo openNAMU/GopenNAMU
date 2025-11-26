@@ -1,5 +1,25 @@
 package tool
 
+import (
+	"os"
+	"path/filepath"
+)
+
 func Main_init() {
+	version_file_path := filepath.Join("..", "data", "version.json")
+	if _, err := os.Stat(version_file_path); err == nil {
+		// 파일 있음
+	} else {
+		First_init()
+	}
+
 	DB_init_standalone()
+}
+
+func First_init() {
+
+}
+
+func Make_set_json() {
+
 }
