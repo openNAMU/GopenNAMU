@@ -1,10 +1,7 @@
 package route
 
 import (
-	"encoding/json"
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_w_page_view_exter(config tool.Config) string {
@@ -17,8 +14,6 @@ func Api_w_page_view_exter(config tool.Config) string {
 func Api_w_page_view(config tool.Config) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)

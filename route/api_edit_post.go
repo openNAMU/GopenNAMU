@@ -3,13 +3,9 @@ package route
 import (
 	"opennamu/route/tool"
 	"strings"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_edit_post_exter(config tool.Config) string {
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
 	other_set := map[string]string{}
 	json.Unmarshal([]byte(config.Other_set), &other_set)
 

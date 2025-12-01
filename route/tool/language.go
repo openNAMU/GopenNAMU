@@ -5,15 +5,11 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 var global_lang_data = map[string]string{}
 
 func Get_language(db *sql.DB, data string, safe bool) string {
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
     language := "ko-KR"
     QueryRow_DB(
         db,

@@ -2,8 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func BBS_w_set_list() map[string]string {
@@ -23,8 +21,6 @@ func BBS_w_set_list() map[string]string {
 func Api_bbs_w_set(config tool.Config) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)

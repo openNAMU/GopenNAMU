@@ -3,13 +3,9 @@ package route
 import (
 	"database/sql"
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_bbs_w_comment_make(db *sql.DB, doc_name string) string {
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
     inter_other_set := map[string]string{}
     inter_other_set["set_id"] = "0"
     inter_other_set["title"] = doc_name
@@ -33,8 +29,6 @@ func Api_bbs_w_comment_make(db *sql.DB, doc_name string) string {
 func Api_w_comment(config tool.Config) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)

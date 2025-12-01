@@ -3,15 +3,11 @@ package route
 import (
 	"log"
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func View_edit(config tool.Config, doc_name string) tool.View_result {
 	db := tool.DB_connect()
 	defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     raw_data := Api_w_raw(config, doc_name, "", "")
     raw_data_get := ""

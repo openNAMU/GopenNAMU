@@ -9,8 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_file_upload_make_document(db *sql.DB) {
@@ -20,8 +18,6 @@ func Api_file_upload_make_document(db *sql.DB) {
 func Api_file_upload_post(config tool.Config) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
     
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)

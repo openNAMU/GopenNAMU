@@ -2,15 +2,11 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func View_list_random(config tool.Config) tool.View_result {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     data_list := Api_list_random(config, 50)
 

@@ -5,8 +5,6 @@ import (
 	"opennamu/route/tool"
 	"strconv"
 	"strings"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func Get_safe_send_data(data string) string {
@@ -142,8 +140,6 @@ func Get_ui_history(db *sql.DB, config tool.Config, data_all [][]string) string 
 func View_list_recent_change(config tool.Config, set_type string, limit string, num string) tool.View_result {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)

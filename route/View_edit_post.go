@@ -2,13 +2,9 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func View_edit_post(config tool.Config, doc_name string, data string, send string, agree string) tool.View_result {   
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
     return_data := Api_edit_post(config, doc_name, data, send, agree)
 
     result_html := ""

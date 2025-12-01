@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	jsoniter "github.com/json-iterator/go"
 )
 
 var standalone_mode = false
@@ -263,8 +262,6 @@ func Get_domain(db *sql.DB, full_string bool) string {
 }
 
 func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) []any {
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-    
     session := map[string]string{}
     json.Unmarshal([]byte(session_str), &session)
 

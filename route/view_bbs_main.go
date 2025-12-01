@@ -4,15 +4,11 @@ import (
 	"log"
 	"opennamu/route/tool"
 	"strconv"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func View_bbs_main(config tool.Config, page string) tool.View_result {
 	db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     return_data := make(map[string]any)
     return_data["response"] = "ok" 

@@ -2,15 +2,11 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func View_edit_file_upload(config tool.Config) tool.View_result {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     data_html := `<form method="post" enctype="multipart/form-data" accept-charset="utf8">`
     data_html += `<input multiple="multiple" type="file" name="f_data[]" id="file_input">`

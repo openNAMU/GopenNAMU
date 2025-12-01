@@ -2,8 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_w_watch_list(config tool.Config, name string, num_str string, do_type string) map[string]any {
@@ -76,8 +74,6 @@ func Api_w_watch_list(config tool.Config, name string, num_str string, do_type s
 }
 
 func Api_w_watch_list_exter(config tool.Config) string {
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 

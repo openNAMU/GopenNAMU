@@ -2,15 +2,11 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func View_history(config tool.Config, doc_name string, set_type string, num string) tool.View_result {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     return_data := make(map[string]any)
     return_data["response"] = "ok" 

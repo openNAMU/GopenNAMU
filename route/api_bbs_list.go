@@ -3,13 +3,9 @@ package route
 import (
 	"database/sql"
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_bbs_list_exter(config tool.Config) string {
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
     return_data := Api_bbs_list(config)
 
     json_data, _ := json.Marshal(return_data)

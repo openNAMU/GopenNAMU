@@ -2,13 +2,9 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func Api_user_setting_editor(config tool.Config) string {
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
     db := tool.DB_connect()
     defer tool.DB_close(db)
 

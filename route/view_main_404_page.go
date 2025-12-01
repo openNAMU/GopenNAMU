@@ -3,15 +3,11 @@ package route
 import (
 	"opennamu/route/tool"
 	"path/filepath"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func View_main_404_page(config tool.Config, url string) tool.View_result {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)

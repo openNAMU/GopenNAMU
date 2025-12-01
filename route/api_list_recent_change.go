@@ -2,8 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 type Api_list_recent_change_T struct {
@@ -12,8 +10,6 @@ type Api_list_recent_change_T struct {
 }
 
 func Api_list_recent_change_exter(config tool.Config) string {
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 

@@ -2,7 +2,6 @@ package tool
 
 import (
 	"database/sql"
-	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"

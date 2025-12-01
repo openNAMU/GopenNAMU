@@ -5,15 +5,12 @@ import (
 	"opennamu/route/tool"
 
 	"github.com/google/generative-ai-go/genai"
-	jsoniter "github.com/json-iterator/go"
 	"google.golang.org/api/option"
 )
 
 func Api_func_llm(config tool.Config) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-    
-    var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)

@@ -1,7 +1,6 @@
 package route
 
 import (
-	"encoding/json"
 	"opennamu/route/tool"
 )
 
