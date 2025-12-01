@@ -4,3 +4,7 @@ go.sum
 !/bin/test
 
 *.db
+
+views/liberty
+
+data/*.json
