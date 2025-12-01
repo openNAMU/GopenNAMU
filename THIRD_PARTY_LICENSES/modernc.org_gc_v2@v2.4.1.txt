@@ -34,9 +34,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Code in this repository contains or may contain
 
-    - copied original code from
-    - code based on original code from
-    - code inspired by original code in
+	- copied original code from
+	- code based on original code from
+	- code inspired by original code in
 
     "The Go Programming Language" project at https://go.googlesource.com/go/.
 
@@ -106,9 +106,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Code in this repository contains or may contain
 
-    - copied original code from
-    - code based on original code from
-    - code inspired by original code in
+	- copied original code from
+	- code based on original code from
+	- code inspired by original code in
 
     "The Go Programming Language" project at https://go.googlesource.com/go/.
 
