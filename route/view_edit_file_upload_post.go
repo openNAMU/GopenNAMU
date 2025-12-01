@@ -2,8 +2,6 @@ package route
 
 import (
 	"opennamu/route/tool"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 func View_edit_file_upload_post(config tool.Config) tool.View_result {
@@ -17,17 +15,17 @@ func View_edit_file_upload_post(config tool.Config) tool.View_result {
     for _, v := range other_set {
         var config_sub tool.Config
 
-        b, err := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(config)
+        b, err := json.Marshal(config)
         if err != nil {
             continue
         }
 
-        err = jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(b, &config_sub)
+        err = json.Unmarshal(b, &config_sub)
         if err != nil {
             continue
         }
 
-        v_str, _ := jsoniter.ConfigCompatibleWithStandardLibrary.MarshalToString(v)
+        v_str, _ := json.MarshalToString(v)
         config_sub.Other_set = v_str
 
         data := Api_file_upload_post(config_sub)

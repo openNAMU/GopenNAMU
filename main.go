@@ -22,6 +22,8 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
+
 func error_handler() gin.HandlerFunc {
     return func(c *gin.Context) {
         defer func() {
@@ -447,7 +449,7 @@ func main() {
             count += 1
         }
 
-        other_set_arr_str, _ := jsoniter.ConfigCompatibleWithStandardLibrary.MarshalToString(other_set_arr)
+        other_set_arr_str, _ := json.MarshalToString(other_set_arr)
 
         route_data := route.View_edit_file_upload_post(tool.Config{
             IP: tool.Get_IP(c),
