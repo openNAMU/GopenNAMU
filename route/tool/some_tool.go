@@ -273,7 +273,7 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
     user_email := ""
     user_admin := "0"
     user_acl_list := []string{}
-    user_notice_count := 0
+    user_notice_count := "0"
 
     if !IP_or_user(ip) {
         user_head_main := ""
@@ -332,18 +332,22 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
             }
         }
 
+        var user_notice_count_int int
+
         QueryRow_DB(
             db,
             "select count(*) from user_notice where name = ? and readme = ''",
-            []any{ &user_notice_count },
+            []any{ &user_notice_count_int },
             ip,
         )
+
+        user_notice_count = strconv.Itoa(user_notice_count_int)
     } else {
         user_icon = 0
         user_name = Get_language(db, "user", true)
         user_email = ""
         user_acl_list = []string{}
-        user_notice_count = 0
+        user_notice_count = "0"
         user_head = ""
     }
 

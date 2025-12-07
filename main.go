@@ -111,22 +111,14 @@ func main() {
         main_set := map[string]string{}
         main_set["data"] = body_string
 
-        if standalone_mode {
-            main_set["ip"] = tool.Get_IP(c)
-            main_set["cookies"] = tool.Get_Cookies(c)
-            main_set["session"] = ""
-        }        
-
-        url_param := c.Param("url")
-
         config := tool.Config{
             Other_set: main_set["data"],
-            IP: main_set["ip"],
-            Cookies: main_set["cookies"],
-            Session: main_set["session"],
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
         }
         
-        switch url_param {
+        switch c.Param("url") {
         case "test":
             route_data = "ok"
         case "api_w_raw":
