@@ -73,7 +73,7 @@ func DB_init_standalone() {
         if err == nil {
             tmp := map[string]string{}
             if err := json.Unmarshal(raw, &tmp); err == nil {
-                if v, ok := tmp["db_name"]; ok {
+                if v, ok := tmp["db"]; ok {
                     db_set["db_name"] = v
                 } else {
                     db_set["db_name"] = "data"
@@ -90,7 +90,7 @@ func DB_init_standalone() {
         }
     }
 
-	db_set["db_name"] = "data"
+	db_set["db_name"] = "unknown"
 	db_set["db_type"] = "sqlite"
     
     return
