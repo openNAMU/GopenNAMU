@@ -3,6 +3,7 @@ package route
 import (
 	"database/sql"
 	"opennamu/route/tool"
+	"sort"
 )
 
 func Api_bbs_list_exter(config tool.Config) string {
@@ -36,12 +37,19 @@ func bbs_list(db *sql.DB) map[string]string {
     return data_list
 }
 
+type BBS_item struct {
+    Id string
+    Name string
+    Type string
+    Date string
+}
+
 func Api_bbs_list(config tool.Config) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
     data_list := bbs_list(db)
-    data_list_sub := map[string][]string{}
+    items := make([]BBS_item, 0, len(data_list))
 
     for k, v := range data_list {
         bbs_type := ""
@@ -60,7 +68,21 @@ func Api_bbs_list(config tool.Config) map[string]any {
             v,
         )
 
-        data_list_sub[k] = []string{v, bbs_type, bbs_date}
+        items = append(items, BBS_item{
+            Id: v,
+            Name: k,
+            Type: bbs_type,
+            Date: bbs_date,
+        })
+    }
+
+    sort.Slice(items, func(i, j int) bool {
+        return items[i].Date > items[j].Date
+    })
+
+    data_list_sub := make([][]string, 0, len(items))
+    for _, item := range items {
+        data_list_sub = append(data_list_sub, []string{ item.Name, item.Id, item.Type, item.Date })
     }
 
     return_data := make(map[string]any)

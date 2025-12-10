@@ -28,7 +28,7 @@ func Sha224(data string) string {
 }
 
 func Url_parser(data string) string {
-    return url.QueryEscape(data)
+    return url.PathEscape(data)
 }
 
 func HTML_escape(data string) string {
