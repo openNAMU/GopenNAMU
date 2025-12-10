@@ -13,6 +13,7 @@ build() {
     export GOOS=$os
     export GOARCH=$arch
     export CGO_ENABLED=0
+    export GOFLAGS="-trimpath"
     
     if [[ "$os" != "darwin" ]]; then
         go build -o "bin/$file_name.$arch$ext" "$file_name.go"
