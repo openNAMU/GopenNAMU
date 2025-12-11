@@ -79,7 +79,10 @@ func View_bbs_main(config tool.Config, page string) tool.View_result {
         tool.Get_language(db, "bbs_main", true),
         data_html,
         "",
-        [][]any{},
+        [][]any{
+            { "other", tool.Get_language(db, "other_tool", false) },
+            { "bbs/make", tool.Get_language(db, "add", false) },
+        },
     )
 
     json_data, _ := json.Marshal(return_data)
