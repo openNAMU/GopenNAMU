@@ -357,11 +357,13 @@ func Get_wiki_custom(db *sql.DB, ip string, session_str string, cookies string) 
         user_ban = "1"
     }
 
+    var title string
+
     user_topic := "0"
     user_topic_check := QueryRow_DB(
         db,
         "select title from rd where title = ? and stop = '' limit 1",
-        []any{},
+        []any{ &title },
         "user:" + ip,
     )
     if user_topic_check {
