@@ -17,10 +17,6 @@ func Api_user_watch_list(config tool.Config, name string, num_str string, do_typ
     ip := config.IP
 
     return_data := make(map[string]any)
-    return_data["language"] = map[string]string{
-        "watchlist": tool.Get_language(db, "watchlist", false),
-        "star_doc":  tool.Get_language(db, "star_doc", false),
-    }
 
     if ip != name && !tool.Check_acl(db, "", "", "view_user_watchlist", ip) {
         return_data["response"] = "require auth"

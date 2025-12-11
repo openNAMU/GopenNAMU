@@ -47,26 +47,25 @@ func Get_template(db *sql.DB, config Config, name string, data string, sub strin
 }
 
 func Get_redirect(target string) string {
-    attr_url := html.EscapeString(target)
-    js_url := strconv.Quote(target)
+    attrURL := html.EscapeString(target)
+    jsURL := strconv.Quote(target)
 
     return fmt.Sprintf(`<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <title>Redirecting…</title>
-<meta http-equiv="refresh" content="%d; url=%s">
 <script>
-;(function(){
-  try { location.replace(%s); }
-  catch(e) { location.href = %s; }
-})();
+location.replace(%s);
 </script>
+<noscript>
+<meta http-equiv="refresh" content="0; url=%s">
+</noscript>
 </head>
 <body>
 <p>Redirecting… <a href="%s">continue</a></p>
 </body>
-</html>`, 0, attr_url, js_url, js_url, attr_url)
+</html>`, jsURL, attrURL, attrURL)
 }
 
 type View_result struct {
@@ -171,4 +170,23 @@ func Get_list_ui(left string, right string, bottom string, class_name string) st
     data_html += "</span>"
 
     return data_html
+}
+
+func Get_error_page(db *sql.DB, config Config, error_name string) string {
+    data := ""
+    if error_name == "auth" {
+        data = Get_language(db, "authority_error", true)
+    }
+
+    return Get_template(
+        db,
+        config,
+        Get_language(db, "error", true),
+        `<h2>` + Get_language(db, "error", true) + `</h2>` +
+        `<ul>` +
+            `<li>` + data + `</li>` +
+        `</ul>`,
+        "",
+        [][]any{},
+    )
 }

@@ -237,15 +237,91 @@ func main() {
             route_data = route.Api_list_random_exter(config)
         case "view_list_random":
             route_data = route.View_list_random(config).JSON
-        case "view_w_watch_list":
-            route_data = route.View_w_watch_list(config).JSON
-        case "view_user_watch_list":
-            route_data = route.View_user_watch_list(config).JSON
         default:
             route_data = "{ \"response\" : \"404\" }"
         }
     
         c.Data(http.StatusOK, "application/json", []byte(route_data))
+    })
+
+    r.GET("/watch_list", func(c *gin.Context) {
+        route_data := route.View_user_watch_list(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "watchlist").HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/star_doc", func(c *gin.Context) {
+        route_data := route.View_user_watch_list(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "star_doc").HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/doc_watch_list/:count/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), strings.TrimPrefix(c.Param("count"), "/"), "watchlist").HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/doc_star_doc/:count/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), strings.TrimPrefix(c.Param("count"), "/"), "star_doc").HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/star_doc_from/*name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list_add(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("name"), "/"), "star_doc_from").HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/star_doc/*name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list_add(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("name"), "/"), "star_doc").HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/watch_list_from/*name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list_add(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("name"), "/"), "watch_list_from").HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/watch_list/*name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list_add(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("name"), "/"), "watchlist").HTML
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/list/random", func(c *gin.Context) {

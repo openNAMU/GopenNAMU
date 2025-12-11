@@ -1,6 +1,7 @@
 package route
 
 import (
+	"log"
 	"opennamu/route/tool"
 )
 
@@ -15,10 +16,6 @@ func Api_w_watch_list(config tool.Config, name string, num_str string, do_type s
     }
 
     return_data := make(map[string]any)
-    return_data["language"] = map[string]string{
-        "watchlist": tool.Get_language(db, "watchlist", false),
-        "star_doc":  tool.Get_language(db, "star_doc", false),
-    }
 
     if !tool.Check_acl(db, "", "", "doc_watch_list_view", config.IP) {
         return_data["response"] = "require auth"
@@ -30,6 +27,8 @@ func Api_w_watch_list(config tool.Config, name string, num_str string, do_type s
         } else {
             query = "select id from user_set where name = 'watchlist' and data = ? limit ?, 50"
         }
+
+        log.Default().Println(name, num)
 
         rows := tool.Query_DB(
             db,
