@@ -147,6 +147,10 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
     return_data := make(map[string]any)
     return_data["response"] = "ok" 
 
+    if set_type == "" {
+        set_type = "normal"
+    }
+
     api_data := Api_list_recent_change(config, set_type, limit, num)    
     data_html := Get_ui_history(db, config, api_data["data"].([][]string))
 

@@ -11,6 +11,10 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
     return_data := make(map[string]any)
     return_data["response"] = "ok" 
 
+    if set_type == "" {
+        set_type = "normal"
+    }
+
     api_data := Api_list_history(config, doc_name, set_type, num)
     data_html := Get_ui_history(db, config, api_data["data"].([][]string))
 
