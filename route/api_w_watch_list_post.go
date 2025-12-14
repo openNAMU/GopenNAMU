@@ -1,7 +1,6 @@
 package route
 
 import (
-	"log"
 	"opennamu/route/tool"
 )
 
@@ -23,7 +22,6 @@ func Api_w_watch_list_post(config tool.Config, name string, do_type string) map[
         config.IP,
         name,
     )
-    log.Default().Println(exist)
     if exist {
         tool.Exec_DB(
             db,

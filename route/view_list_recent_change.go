@@ -151,8 +151,25 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
         set_type = "normal"
     }
 
-    api_data := Api_list_recent_change(config, set_type, limit, num)    
-    data_html := Get_ui_history(db, config, api_data["data"].([][]string))
+    data_html := ""
+
+    menu_option := []string{ "normal", "edit", "move", "delete", "revert", "r1", "edit_request", "user", "file", "category" }
+    for _, option := range menu_option {
+        label := tool.Get_language(db, option, true)
+        data_html += `<a href="/recent_change/1/` + option + `">(` + label + `)</a> `
+    }
+
+    api_data := Api_list_recent_change(config, set_type, limit, num)
+    api_data_list := api_data["data"].([][]string)
+
+    data_html += Get_ui_history(db, config, api_data_list)
+    data_html += tool.Get_page_control(
+        db,
+        tool.Str_to_int(num),
+        len(api_data_list),
+        tool.Str_to_int(limit),
+        "/recent_change/{}/" + set_type,
+    )
 
     return_data["data"] = tool.Get_template(
         db,

@@ -1,7 +1,6 @@
 package route
 
 import (
-	"log"
 	"opennamu/route/tool"
 )
 
@@ -15,9 +14,6 @@ func View_w_watch_list(config tool.Config, doc_name string, num string, do_type 
     if do_type != "watchlist" {
         do_type = "star_doc"
     }
-
-    log.Default().Println(api_data)
-    log.Default().Println(doc_name, num, do_type)
 
     if api_data["response"] != "ok" {
         return_data := make(map[string]any)

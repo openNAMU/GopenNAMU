@@ -15,8 +15,25 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
         set_type = "normal"
     }
 
+    data_html := ""
+
+    menu_option := []string{ "normal", "edit", "move", "delete", "revert", "r1", "setting" }
+    for _, option := range menu_option {
+        label := tool.Get_language(db, option, true)
+        data_html += `<a href="/recent_change/1/` + option + `">(` + label + `)</a> `
+    }
+
     api_data := Api_list_history(config, doc_name, set_type, num)
-    data_html := Get_ui_history(db, config, api_data["data"].([][]string))
+    api_data_list := api_data["data"].([][]string)
+
+    data_html += Get_ui_history(db, config, api_data_list)
+    data_html += tool.Get_page_control(
+        db,
+        tool.Str_to_int(num),
+        len(api_data_list),
+        50,
+        "/history_page/{}/" + set_type + "/" + tool.Url_parser(doc_name),
+    )
 
     return_data["data"] = tool.Get_template(
         db,
