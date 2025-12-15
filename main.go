@@ -284,43 +284,83 @@ func main() {
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
-    r.GET("/star_doc_from/*name", func(c *gin.Context) {
+    r.POST("/star_doc_from/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list_add_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc_from")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/star_doc_from/*doc_name", func(c *gin.Context) {
         route_data := route.View_w_watch_list_add(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("name"), "/"), "star_doc_from").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc_from").HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
-    r.GET("/star_doc/*name", func(c *gin.Context) {
+    r.POST("/star_doc/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list_add_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/star_doc/*doc_name", func(c *gin.Context) {
         route_data := route.View_w_watch_list_add(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("name"), "/"), "star_doc").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc").HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
-    r.GET("/watch_list_from/*name", func(c *gin.Context) {
+    r.POST("/watch_list_from/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list_add_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist_from")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/watch_list_from/*doc_name", func(c *gin.Context) {
         route_data := route.View_w_watch_list_add(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("name"), "/"), "watch_list_from").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist_from").HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
-    r.GET("/watch_list/*name", func(c *gin.Context) {
+    r.POST("/watch_list/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_watch_list_add_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/watch_list/*doc_name", func(c *gin.Context) {
         route_data := route.View_w_watch_list_add(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("name"), "/"), "watchlist").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist").HTML
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
