@@ -1,7 +1,6 @@
 package route
 
 import (
-	"log"
 	"opennamu/route/tool"
 )
 
@@ -14,8 +13,6 @@ func View_edit(config tool.Config, doc_name string) tool.View_result {
     if raw_data["response"].(string) == "ok" {
         raw_data_get = raw_data["data"].(string)
     }
-
-    log.Default().Println(raw_data)
 
     form_data := `<form action="/edit/` + tool.Url_parser(doc_name) + `" method="post">
         <input type="text" name="send" placeholder="` + tool.Get_language(db, "why", true) + `">

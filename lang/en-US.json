@@ -63,6 +63,8 @@
     "revert_bottom_text" : "Revert textarea bottom notice",
     "warning_restart" : "Restarting... Press Refresh (F5)",
     "random_list" : "Random document(s) list",
+    "test" : "Test",
+    "email_test" : "Send test email",
 
     "_comment_": "Common",
     "data": "Data",

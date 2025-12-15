@@ -336,7 +336,7 @@ func IP_parser(db *sql.DB, ip string, my_ip string) string {
                 ip += "<sup>" + level_data[0] + "</sup>"
             }
 
-            ip = "<a href=\"/w/" + Url_parser("user:"+raw_ip) + "\">" + ip + "</a>"
+            ip = "<a href=\"/w/" + Url_parser("user:" + raw_ip) + "\">" + ip + "</a>"
 
             user_title := ""
             QueryRow_DB(

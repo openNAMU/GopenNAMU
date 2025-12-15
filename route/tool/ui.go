@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html"
 	"strconv"
+	"strings"
 
 	"github.com/flosch/pongo2/v6"
 )
@@ -189,4 +190,22 @@ func Get_error_page(db *sql.DB, config Config, error_name string) string {
         "",
         [][]any{},
     )
+}
+
+func Get_page_control(db *sql.DB, page int, count int, max_count int, url string) string {
+    data_html := "<hr class=\"main_hr\">"
+
+    if page > 1 {
+        prev_page := page - 1
+        before_url := strings.ReplaceAll(url, "{}", strconv.Itoa(prev_page))
+
+        data_html += `<a href="` + before_url + `">(` + Get_language(db, "previous", true) + `)</a> `
+    } else if count == max_count {
+        prev_page := page + 1
+        after_url := strings.ReplaceAll(url, "{}", strconv.Itoa(prev_page))
+
+        data_html += `<a href="` + after_url + `">(` + Get_language(db, "next", true) + `)</a> `
+    }
+
+    return data_html
 }

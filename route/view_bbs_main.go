@@ -1,7 +1,6 @@
 package route
 
 import (
-	"log"
 	"opennamu/route/tool"
 	"strconv"
 )
@@ -14,7 +13,6 @@ func View_bbs_main(config tool.Config, page string) tool.View_result {
     return_data["response"] = "ok" 
 
     bbs_list_api_data := Api_bbs_list(config)
-    log.Default().Println(bbs_list_api_data)
 
     bbs_id_to_name := map[string]string{}
 

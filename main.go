@@ -444,6 +444,16 @@ func main() {
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
     })
 
+    r.GET("/history_page/:num/:set_type/*doc_name", func(c *gin.Context) {
+        route_data := route.View_history(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), strings.TrimPrefix(c.Param("set_type"), "/"), strings.TrimPrefix(c.Param("num"), "/"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
     r.GET("/edit/*doc_name", func(c *gin.Context) {
         route_data := route.View_edit(tool.Config{
             Other_set: "",

@@ -4,11 +4,6 @@ import (
 	"opennamu/route/tool"
 )
 
-type Api_list_recent_change_T struct {
-    full map[string]any
-    legacy [][]string
-}
-
 func Api_list_recent_change_exter(config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
@@ -18,19 +13,19 @@ func Api_list_recent_change_exter(config tool.Config) string {
     var json_data []byte
 
     if other_set["legacy"] != "" {
-        json_data, _ = json.Marshal(return_data.legacy)
+        json_data, _ = json.Marshal(return_data["data"].([][]string))
     } else {
-        json_data, _ = json.Marshal(return_data.full)
+        json_data, _ = json.Marshal(return_data)
     }
     
     return string(json_data)
 }
 
 func Api_list_recent_change(config tool.Config, set_type string, limit string, num string) map[string]any {
-    return Api_list_recent_change_call(config, set_type, limit, num).full
+    return Api_list_recent_change_call(config, set_type, limit, num)
 }
 
-func Api_list_recent_change_call(config tool.Config, set_type string, limit string, num string) Api_list_recent_change_T {
+func Api_list_recent_change_call(config tool.Config, set_type string, limit string, num string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -114,15 +109,9 @@ func Api_list_recent_change_call(config tool.Config, set_type string, limit stri
         }
     }
 
-    EOL_data := Api_list_recent_change_T{}
-
-    EOL_data.legacy = data_list
-
     return_data := make(map[string]any)
     return_data["response"] = "ok"
     return_data["data"] = data_list
 
-    EOL_data.full = return_data
-
-    return EOL_data
+    return return_data
 }
