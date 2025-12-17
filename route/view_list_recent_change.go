@@ -2,13 +2,30 @@ package route
 
 import (
 	"database/sql"
+	"html"
+	"net/url"
 	"opennamu/route/tool"
+	"regexp"
 	"strconv"
 	"strings"
 )
 
-func Get_safe_send_data(data string) string {
-    return tool.HTML_escape(data)
+var re_esc_a = regexp.MustCompile(`&lt;a&gt;\s*([^\r\n]*?)\s*&lt;/a&gt;`)
+
+func Get_safe_send_data(data string) string {    
+    escaped_data := tool.HTML_escape(data)
+
+	return re_esc_a.ReplaceAllStringFunc(escaped_data, func(match string) string {
+		inner_esc := re_esc_a.FindStringSubmatch(match)[1]
+		inner_text := strings.TrimSpace(html.UnescapeString(inner_esc))
+
+		if inner_text == "" || strings.ContainsAny(inner_text, "<>") {
+			return match
+		}
+
+		href_path := "/w/" + url.PathEscape(inner_text)
+		return `<a href="` + tool.HTML_escape(href_path) + `">` + strings.TrimSpace(inner_esc) + `</a>`
+	})
 }
 
 func Get_ui_history(db *sql.DB, config tool.Config, data_all [][]string) string {
