@@ -3,7 +3,6 @@ package route
 import (
 	"database/sql"
 	"html"
-	"net/url"
 	"opennamu/route/tool"
 	"regexp"
 	"strconv"
@@ -22,9 +21,8 @@ func Get_safe_send_data(data string) string {
 		if inner_text == "" || strings.ContainsAny(inner_text, "<>") {
 			return match
 		}
-
-		href_path := "/w/" + url.PathEscape(inner_text)
-		return `<a href="` + tool.HTML_escape(href_path) + `">` + strings.TrimSpace(inner_esc) + `</a>`
+        
+        return `<a href="/w/` + tool.Url_parser(inner_text) + `">` + strings.TrimSpace(inner_esc) + `</a>`
 	})
 }
 
