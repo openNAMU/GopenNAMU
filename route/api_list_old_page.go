@@ -20,9 +20,9 @@ func Api_list_old_page(config tool.Config) string {
 
     query := ""
     if other_set["set_type"] == "old" {
-        query = "select doc_name, set_data from data_set where set_name = 'last_edit' and doc_rev = '' and not (doc_name) in (select doc_name from data_set where set_name = 'doc_type' and set_data != '') order by set_data asc limit ?, 50"
+        query = "select doc_name, set_data from data_set where set_name = 'last_edit' and doc_rev = '' and " + tool.Get_except_document_name_SQL("doc_name") + " and not (doc_name) in (select doc_name from data_set where set_name = 'doc_type' and set_data != '') order by set_data asc limit ?, 50"
     } else {
-        query = "select doc_name, set_data from data_set where set_name = 'last_edit' and doc_rev = '' and not (doc_name) in (select doc_name from data_set where set_name = 'doc_type' and set_data != '') order by set_data desc limit ?, 50"
+        query = "select doc_name, set_data from data_set where set_name = 'last_edit' and doc_rev = '' and " + tool.Get_except_document_name_SQL("doc_name") + " and not (doc_name) in (select doc_name from data_set where set_name = 'doc_type' and set_data != '') order by set_data desc limit ?, 50"
     }
 
     rows := tool.Query_DB(

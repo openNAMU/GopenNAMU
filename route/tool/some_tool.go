@@ -595,3 +595,7 @@ func Str_to_int(data string) int {
     num, _ := strconv.Atoi(data)
     return num
 }
+
+func Get_except_document_name_SQL(col_title string) string {
+    return col_title + ` not like 'file:%' and ` + col_title + ` not like 'category:%' and ` + col_title + ` not like 'user:%'`
+}
