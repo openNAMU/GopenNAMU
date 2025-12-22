@@ -15,11 +15,11 @@ func View_edit(config tool.Config, doc_name string) tool.View_result {
     }
 
     form_data := `<form action="/edit/` + tool.Url_parser(doc_name) + `" method="post">
-        <input type="text" name="send" placeholder="` + tool.Get_language(db, "why", true) + `">
+        <input class="__ON_INPUT__" type="text" name="send" placeholder="` + tool.Get_language(db, "why", true) + `">
         <hr class="main_hr">
         <textarea class="opennamu_textarea_500" id="opennamu_edit_textarea" name="content">` + tool.HTML_escape(raw_data_get) + `</textarea>
         <hr class="main_hr">
-        <input type="checkbox" name="copyright_agreement">
+        <input class="__ON_INPUT__" type="checkbox" name="copyright_agreement">
         <hr class="main_hr">
         <button id="opennamu_save_button" type="submit">` + tool.Get_language(db, "save", true) + `</button>
     </form>`
