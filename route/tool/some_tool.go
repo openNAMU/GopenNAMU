@@ -209,10 +209,6 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
     return skin
 }
 
-func Get_skin_route(db *sql.DB, ip string) string {
-    return filepath.Join("..", "views", Get_use_skin_name(db, ip), "index.html")
-}
-
 func Get_domain(db *sql.DB, full_string bool) string {
     domain := ""
     sys_host := ""
