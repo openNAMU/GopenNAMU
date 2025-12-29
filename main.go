@@ -99,25 +99,20 @@ func main() {
     tool.DB_init()
 
     r.POST("/compatible_api/:url", func(c *gin.Context) {
-        route_data := ""
-        
         body, err := io.ReadAll(c.Request.Body)
         if err != nil {
             panic(err)
         }
-        
-        body_string := string(body)
-
-        main_set := map[string]string{}
-        main_set["data"] = body_string
 
         config := tool.Config{
-            Other_set: main_set["data"],
+            Other_set: string(body),
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }
         
+        route_data := ""
+
         switch c.Param("url") {
         case "test":
             route_data = "ok"
@@ -242,6 +237,23 @@ func main() {
         }
     
         c.Data(http.StatusOK, "application/json", []byte(route_data))
+    })
+
+    r.POST("/api/template", func(c *gin.Context) {
+        body, err := io.ReadAll(c.Request.Body)
+        if err != nil {
+            panic(err)
+        }
+
+        config := tool.Config{
+            Other_set: string(body),
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }
+
+        route_data := route.Api_func_template(config)
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/watch_list", func(c *gin.Context) {

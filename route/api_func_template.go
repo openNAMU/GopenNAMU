@@ -1,6 +1,8 @@
 package route
 
-import "opennamu/route/tool"
+import (
+	"opennamu/route/tool"
+)
 
 func Api_func_template(config tool.Config) string {
     db := tool.DB_connect()
@@ -9,12 +11,37 @@ func Api_func_template(config tool.Config) string {
     other_set := map[string]any{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
+    sub := ""
+    if v, ok := other_set["sub"]; ok {
+        switch x := v.(type) {
+        case string:
+            sub = x
+        default:
+        }
+    }
+
+    var menu [][]any
+	if v, ok := other_set["menu"]; ok {
+		switch x := v.(type) {
+		case [][]any:
+			menu = x
+		case []any:
+			menu = make([][]any, 0, len(x))
+			for _, row := range x {
+				if r, ok := row.([]any); ok {
+					menu = append(menu, r)
+				}
+			}
+		default:
+		}
+	}
+
     return tool.Get_template(
         db,
         config,
         other_set["name"].(string),
         other_set["data"].(string),
-        other_set["sub"].(string),
-        other_set["menu"].([][]any),
+        sub,
+        menu,
     )
 }
