@@ -20,13 +20,12 @@ func Api_func_template(config tool.Config) string {
         }
     }
 
-    var menu [][]any
+    menu := [][]any{}
 	if v, ok := other_set["menu"]; ok {
 		switch x := v.(type) {
 		case [][]any:
 			menu = x
 		case []any:
-			menu = make([][]any, 0, len(x))
 			for _, row := range x {
 				if r, ok := row.([]any); ok {
 					menu = append(menu, r)

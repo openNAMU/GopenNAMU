@@ -41,7 +41,9 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
         doc_name,
         data_html,
         "(" + tool.Get_language(db, "history", true) + ")",
-        [][]any{},
+        [][]any{
+            { "w/" + tool.Url_parser(doc_name), tool.Get_language(db, "return", true) },
+        },
     )
 
     json_data, _ := json.Marshal(return_data)

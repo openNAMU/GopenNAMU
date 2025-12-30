@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"html"
-	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -19,7 +18,6 @@ func Get_skin_route(skin_name string, route string) string {
 
 func Get_template_set(skin_name string) map[string]string {
     set_file_path := Get_skin_route(skin_name, "set.json")
-    log.Default().Println(set_file_path)
 	if _, err := os.Stat(set_file_path); err == nil {
 		data, err := os.ReadFile(set_file_path)
 		if err != nil {
@@ -28,7 +26,6 @@ func Get_template_set(skin_name string) map[string]string {
 
 		set_json := map[string]string{}
     	json.Unmarshal([]byte(data), &set_json)
-        log.Default().Println(set_json)
 
 		return set_json
 	}
@@ -40,7 +37,6 @@ func Get_template(db *sql.DB, config Config, name string, data string, sub strin
     skin_name := Get_use_skin_name(db, config.IP)
     
     template_set := Get_template_set(skin_name)
-    log.Default().Println(template_set)
     for k, v := range template_set {
         data = strings.ReplaceAll(data, k, v)
     }
