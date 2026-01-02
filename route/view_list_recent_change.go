@@ -109,7 +109,7 @@ func Get_ui_history(db *sql.DB, config tool.Config, data_all [][]string) string 
         right += `<span style="display: none;" id="opennamu_history_tool_` + for_count_str + `">`
 
         right += `<a href="/render/` + rev_str + `/` + doc_name_url + `">` + tool.Get_language(db, "view", true) + `</a>`
-        right += ` | <a href="/raw/` + rev_str + `/` + doc_name_url + `">` + tool.Get_language(db, "raw", true) + `</a>`
+        right += ` | <a href="/raw_rev/` + rev_str + `/` + doc_name_url + `">` + tool.Get_language(db, "raw", true) + `</a>`
         right += ` | <a href="/revert/` + rev_str + `/` + doc_name_url + `">` + tool.Get_language(db, "revert", true) + ` (r` + rev_str + `)</a>`
 
         if rev_int > 1 {
