@@ -111,7 +111,11 @@ func Api_bbs_w_comment_one(config tool.Config, already_auth_check bool) string {
         if other_set["tool"] == "around" {
             json_data, _ = json.Marshal(data_list)
         } else {
-            json_data, _ = json.Marshal(data_list[0])
+            if len(data_list) > 0 {
+                json_data, _ = json.Marshal(data_list[0])
+            } else {
+                json_data, _ = json.Marshal(map[string]string{})
+            }
         }
 
         return string(json_data)
