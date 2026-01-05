@@ -33,7 +33,7 @@ func Get_template_set(skin_name string) map[string]string {
     return map[string]string{}
 }
 
-func Get_template(db *sql.DB, config Config, name string, data string, sub string, menu [][]any) string {
+func Get_template(db *sql.DB, config Config, name string, data string, other []any, menu [][]any) string {
     skin_name := Get_use_skin_name(db, config.IP)
     
     template_set := Get_template_set(skin_name)
@@ -41,27 +41,52 @@ func Get_template(db *sql.DB, config Config, name string, data string, sub strin
         data = strings.ReplaceAll(data, k, v)
     }
 
+    menu_func := func(menu [][]any) any {
+        if len(menu) == 0 {
+            return 0
+        } else {
+            return menu
+        }
+    }
+    menu_func_result := menu_func(menu)
+
+    if len(other) < 1 {
+        other = append(other, 0)
+    }
+
+    if len(other) < 2 {
+        other = append(other, 0)
+    }
+
+    switch v := other[0].(type) {
+        case nil:
+            other[0] = 0
+        case float64:
+            other[0] = int(v)
+        case int64:
+            other[0] = int(v)
+        case int:
+            other[0] = v
+        case string:
+            if v == "" {
+                other[0] = 0
+            } else {
+                other[0] = v
+            }
+        default:
+            other[0] = 0
+    }
+
 	context := pongo2.Context{
-		"imp": []any{
+		"imp" : []any{
 			name,
 			Get_wiki_set(db, config.IP, config.Cookies),
 			Get_wiki_custom(db, config.IP, config.Session, config.Cookies),
-			Get_wiki_css([]any{func(sub string) any {
-				if sub == "" {
-					return 0
-				} else {
-					return sub
-				}
-			}(sub), 0}, config.Cookies),
+			Get_wiki_css(other, config.Cookies),
 		},
-		"data": `<div class="opennamu_main">` + data + `</div>`,
-		"menu": func(menu [][]any) any {
-			if len(menu) == 0 {
-				return 0
-			} else {
-				return menu
-			}
-		}(menu),
+		"data" : `<div class="opennamu_main">` + data + `</div>`,
+		"menu" : menu_func_result,
+
 	}
 
 	tpl, err := pongo2.FromFile(Get_skin_route(skin_name, "index.html"))
@@ -217,7 +242,7 @@ func Get_error_page(db *sql.DB, config Config, error_name string) string {
         `<ul>` +
             `<li>` + data + `</li>` +
         `</ul>`,
-        "",
+        []any{},
         [][]any{},
     )
 }

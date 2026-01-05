@@ -11,8 +11,11 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
     return_data := make(map[string]any)
     return_data["response"] = "ok" 
 
+    sub := ""
     if set_type == "" {
         set_type = "normal"
+    } else {
+        sub = " (" + tool.Get_language(db, set_type, true) + ")"
     }
 
     data_html := ""
@@ -40,7 +43,7 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
         config,
         doc_name,
         data_html,
-        "(" + tool.Get_language(db, "history", true) + ")",
+        []any{ "(" + tool.Get_language(db, "history", true) + ")" + sub },
         [][]any{
             { "w/" + tool.Url_parser(doc_name), tool.Get_language(db, "return", true) },
         },

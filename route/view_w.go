@@ -50,7 +50,7 @@ func View_w(config tool.Config, doc_name string) tool.View_result {
 		config,
 		doc_name,
 		render_data,
-        "",
+        []any{},
         [][]any{
 			{ "edit/" + tool.Url_parser(doc_name), tool.Get_language(db, "edit", true) },
 			{ "topic/" + tool.Url_parser(doc_name), tool.Get_language(db, "discussion", true) },

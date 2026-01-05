@@ -45,7 +45,7 @@ func View_user_watch_list(config tool.Config, num string, do_type string) tool.V
         config,
         title,
         data_html,
-        "",
+        []any{},
         [][]any{
             { "user/" + tool.Url_parser(config.IP), tool.Get_language(db, "return", false) },
             { "watch_list", tool.Get_language(db, "watchlist", false) },

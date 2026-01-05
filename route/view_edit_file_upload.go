@@ -21,7 +21,7 @@ func View_edit_file_upload(config tool.Config) tool.View_result {
         config,
         tool.Get_language(db, "upload", true),
         data_html,
-        "",
+        []any{},
         [][]any{},
     )
 

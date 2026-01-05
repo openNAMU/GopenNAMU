@@ -25,7 +25,7 @@ func View_bbs_in(config tool.Config) string {
         config,
         bbs_name,
         "",
-        "",
+        []any{},
         [][]any{},
     )
 

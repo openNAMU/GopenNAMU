@@ -60,7 +60,7 @@ func View_main_other(config tool.Config) tool.View_result {
         <ul>
             <li><a href="/manager/1">` + tool.Get_language(db, "admin_tool", true) + `</a></li>
         </ul>`,
-        "",
+        []any{},
         [][]any{},
     )
 

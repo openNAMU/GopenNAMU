@@ -29,7 +29,7 @@ func View_edit(config tool.Config, doc_name string) tool.View_result {
         config,
         doc_name,
         form_data,
-        "(" + tool.Get_language(db, "edit", true) + ")",
+        []any{ "(" + tool.Get_language(db, "edit", true) + ")" },
         [][]any{},
     )
 

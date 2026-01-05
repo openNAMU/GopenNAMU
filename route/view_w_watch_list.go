@@ -47,7 +47,7 @@ func View_w_watch_list(config tool.Config, doc_name string, num string, do_type 
         config,
         title,
         data_html,
-        "(" + doc_name + ")",
+        []any{ "(" + doc_name + ")" },
         [][]any{
             { "w/" + tool.Url_parser(doc_name), tool.Get_language(db, "return", false) },
             { "doc_watch_list/1/" + tool.Url_parser(doc_name), tool.Get_language(db, "watchlist", false) },

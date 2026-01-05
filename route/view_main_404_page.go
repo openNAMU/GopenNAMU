@@ -62,7 +62,7 @@ func View_main_404_page(config tool.Config, url string) tool.View_result {
                 config,
                 "404",
                 db_data,
-                "",
+                []any{},
                 [][]any{},
             )
         } else {
@@ -71,7 +71,7 @@ func View_main_404_page(config tool.Config, url string) tool.View_result {
                 config,
                 "404",
                 tool.Get_language(db, "func_404_error", true),
-                "",
+                []any{},
                 [][]any{},
             )
         }

@@ -162,8 +162,11 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
     return_data := make(map[string]any)
     return_data["response"] = "ok" 
 
+    sub := ""
     if set_type == "" {
         set_type = "normal"
+    } else {
+        sub = "(" + tool.Get_language(db, set_type, true) + ")"
     }
 
     data_html := ""
@@ -191,7 +194,7 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
         config,
         tool.Get_language(db, "recent_change", true),
         data_html,
-        "",
+        []any{ sub },
         [][]any{},
     )
 

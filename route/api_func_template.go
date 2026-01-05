@@ -11,11 +11,11 @@ func Api_func_template(config tool.Config) string {
     other_set := map[string]any{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    sub := ""
+    sub_menu := []any{}
     if v, ok := other_set["sub"]; ok {
         switch x := v.(type) {
-        case string:
-            sub = x
+        case []any:
+            sub_menu = x
         default:
         }
     }
@@ -40,7 +40,7 @@ func Api_func_template(config tool.Config) string {
         config,
         other_set["name"].(string),
         other_set["data"].(string),
-        sub,
+        sub_menu,
         menu,
     )
 }

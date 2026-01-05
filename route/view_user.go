@@ -69,7 +69,7 @@ func View_user(config tool.Config, user_name string) tool.View_result {
             <li><a href="/count/` + tool.Url_parser(config.IP) + `">` + tool.Get_language(db, `count`, true) + `</a></li>
         </ul>
         ` + admin_menu,
-        "",
+        []any{},
         [][]any{},
     )
 

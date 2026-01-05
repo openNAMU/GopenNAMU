@@ -25,7 +25,7 @@ func View_w_watch_list_add(config tool.Config, doc_name string, do_type string) 
         `<form method="post">
             <button id="opennamu_save_button" type="submit">` + tool.Get_language(db, "send", true) + `</button>
         </form>`,
-        "(" + tool.Get_language(db, do_type, true) + ")",
+        []any{ "(" + tool.Get_language(db, do_type, true) + ")" },
         [][]any{
             { "w/" + tool.Url_parser(doc_name), tool.Get_language(db, "return", true) },
         },

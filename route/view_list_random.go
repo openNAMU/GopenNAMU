@@ -22,7 +22,7 @@ func View_list_random(config tool.Config) tool.View_result {
         config,
         tool.Get_language(db, "random_list", true),
         data_html,
-        "",
+        []any{},
         [][]any{},
     )
 
