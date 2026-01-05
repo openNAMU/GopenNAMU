@@ -58,23 +58,25 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
         other = append(other, 0)
     }
 
-    switch v := other[0].(type) {
-        case nil:
-            other[0] = 0
-        case float64:
-            other[0] = int(v)
-        case int64:
-            other[0] = int(v)
-        case int:
-            other[0] = v
-        case string:
-            if v == "" {
-                other[0] = 0
-            } else {
-                other[0] = v
-            }
-        default:
-            other[0] = 0
+    for k := range other {
+        switch v := other[k].(type) {
+            case nil:
+                other[k] = 0
+            case float64:
+                other[k] = int(v)
+            case int64:
+                other[k] = int(v)
+            case int:
+                other[k] = v
+            case string:
+                if v == "" {
+                    other[k] = 0
+                } else {
+                    other[k] = v
+                }
+            default:
+                other[k] = 0
+        }   
     }
 
 	context := pongo2.Context{
