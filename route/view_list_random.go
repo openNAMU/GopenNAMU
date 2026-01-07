@@ -23,7 +23,9 @@ func View_list_random(config tool.Config) tool.View_result {
         tool.Get_language(db, "random_list", true),
         data_html,
         []any{},
-        [][]any{},
+        [][]any{
+            { "other", tool.Get_language(db, "return", true) },
+        },
     )
 
     return_data := make(map[string]any)
