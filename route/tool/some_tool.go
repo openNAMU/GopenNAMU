@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/gin-gonic/gin"
 )
@@ -594,4 +595,14 @@ func Str_to_int(data string) int {
 
 func Get_except_document_name_SQL(col_title string) string {
     return col_title + ` not like 'file:%' and ` + col_title + ` not like 'category:%' and ` + col_title + ` not like 'user:%'`
+}
+
+func Do_remove_spaces(s string) string {
+    return strings.Map(func(r rune) rune {
+        if unicode.IsSpace(r) {
+            return -1
+        }
+
+        return r
+    }, s)
 }

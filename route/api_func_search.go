@@ -17,9 +17,13 @@ func Api_func_search(config tool.Config) string {
         num = page * 50 - 50
     }
 
+    
+    name := other_set["name"]
     query := ""
+    
     if other_set["search_type"] == "title" {
-        query = "select title from data where title collate nocase like ? order by title limit ?, 50"
+        name = tool.Do_remove_spaces(name)
+        query = "select title from data where replace(title, ' ', '') collate nocase like ? order by title limit ?, 50"
     } else {
         query = "select title from data where data collate nocase like ? order by title limit ?, 50"
     }
@@ -29,7 +33,7 @@ func Api_func_search(config tool.Config) string {
     rows := tool.Query_DB(
         db,
         query,
-        "%" + other_set["name"] + "%", num,
+        "%" + name + "%", num,
     )
     defer rows.Close()
 
