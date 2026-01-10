@@ -414,3 +414,16 @@ func Get_document_markup(db *sql.DB, doc_name string, do_type string) string {
 
     return markup
 }
+
+func Get_document_is_redirect(db *sql.DB, doc_name string) bool {
+    var is_redirect string
+
+    exist := QueryRow_DB(
+        db,
+        "select distinct type from back where link = ? and type = 'redirect'",
+        []any{ &is_redirect },
+        doc_name,
+    )
+
+    return exist
+}

@@ -12,7 +12,14 @@ func View_list_random(config tool.Config) tool.View_result {
 
     data_html := "<ul>"
     for _, title := range data_list["data"].([]string) {
-        data_html += "<li><a href=\"/w/" + tool.Url_parser(title) + "\">" + tool.HTML_escape(title) + "</a></li>"
+        data_html += "<li>" 
+        data_html += "<a href=\"/w/" + tool.Url_parser(title) + "\">" + tool.HTML_escape(title) + "</a>"
+
+        if tool.Get_document_is_redirect(db, title) {
+            data_html += " (" + tool.Get_language(db, "redirect", false) + ")"
+        }
+
+        data_html += "</li>"
     }
     
     data_html += "</ul>"
