@@ -79,16 +79,55 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
         }   
     }
 
+    imp_1 := Get_wiki_set(db, config.IP, config.Cookies)
+    imp_2 := Get_wiki_custom(db, config.IP, config.Session, config.Cookies)
+    imp_3 := Get_wiki_css(other, config.Cookies)
+
+    if len(imp_3) < 8 {
+        imp_3 = append(imp_3, 0)
+    }
+
 	context := pongo2.Context{
 		"imp" : []any{
 			name,
-			Get_wiki_set(db, config.IP, config.Cookies),
-			Get_wiki_custom(db, config.IP, config.Session, config.Cookies),
-			Get_wiki_css(other, config.Cookies),
+			imp_1,
+			imp_2,
+			imp_3,
 		},
 		"data" : `<div class="opennamu_main">` + data + `</div>`,
 		"menu" : menu_func_result,
 
+        "title" : name,
+        
+        "wiki_name" : imp_1[0],
+        "license" : imp_1[1],
+        "wiki_logo" : imp_1[2],
+        "global_head" : imp_1[3],
+        "add_menu" : imp_1[4],
+        "template_var_1" : imp_1[5],
+        "template_var_2" : imp_1[6],
+        "template_var_3" : imp_1[7],
+
+        "user_login" : imp_2[2],
+        "user_head" : imp_2[3],
+        "user_email" : imp_2[4],
+        "user_name" : imp_2[5],
+        "user_is_admin" : imp_2[6],
+        "user_is_ban" : imp_2[7],
+        "user_alarm_count" : imp_2[8],
+        "user_auth" : imp_2[9],
+        "user_ip" : imp_2[10],
+        "user_discuss" : imp_2[11],
+        "user_path" : imp_2[12],
+        "user_level" : imp_2[13],
+
+        "sub_title" : imp_3[0],
+        "last_edit" : imp_3[1],
+        "main_head" : imp_3[3],
+        "star_doc" : imp_3[4],
+        "main_head_dark" : imp_3[5],
+        "description_doc" : imp_3[6],
+        "view_count" : imp_3[7],
 	}
 
 	tpl, err := pongo2.FromFile(Get_skin_route(skin_name, "index.html"))
@@ -155,6 +194,7 @@ func Get_wiki_css(data []any, cookies string) []any {
     data_css += `<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/x86asm.min.js" integrity="sha512-HeAchnWb+wLjUb2njWKqEXNTDlcd1QcyOVxb+Mc9X0bWY0U5yNHiY5hTRUt/0twG8NEZn60P3jttqBvla/i2gA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>`
     data_css += `<script defer src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.48.0/min/vs/loader.min.js" integrity="sha512-ZG31AN9z/CQD1YDDAK4RUAvogwbJHv6bHrumrnMLzdCrVu4HeAqrUX7Jsal/cbUwXGfaMUNmQU04tQ8XXl5Znw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>`
     data_css += `<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>`
+    data_css += `<script defer src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
 
     // Func JS
     data_css += `<script defer src="/views/main_css/js/func/func.js` + data_css_ver + `"></script>`
