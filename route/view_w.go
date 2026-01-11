@@ -12,7 +12,7 @@ func View_w(config tool.Config, doc_name string) tool.View_result {
 	return_data := make(map[string]any)
     return_data["response"] = "ok"
 
-	Api_w_page_view(config)
+	Api_w_page_view(doc_name)
 
 	var render_data string
 	var status int

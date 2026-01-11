@@ -87,6 +87,22 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
         imp_3 = append(imp_3, 0)
     }
 
+    added_menu := []string{}
+    switch imp_1[7].(type) {
+        case []string:
+            added_menu = imp_1[7].([]string)
+        default:
+            added_menu = []string{"", "", ""}
+    }
+
+    if len(added_menu) < 3 {
+        for i := len(added_menu); i < 3; i++ {
+            added_menu = append(added_menu, "")
+        }
+    }
+    
+    imp_1[7] = added_menu
+
 	context := pongo2.Context{
 		"imp" : []any{
 			name,
@@ -101,12 +117,12 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
         
         "wiki_name" : imp_1[0],
         "license" : imp_1[1],
-        "wiki_logo" : imp_1[2],
-        "global_head" : imp_1[3],
-        "add_menu" : imp_1[4],
-        "template_var_1" : imp_1[5],
-        "template_var_2" : imp_1[6],
-        "template_var_3" : imp_1[7],
+        "wiki_logo" : imp_1[4],
+        "global_head" : imp_1[5],
+        "add_menu" : imp_1[6],
+        "template_var_1" : added_menu[0],
+        "template_var_2" : added_menu[1],
+        "template_var_3" : added_menu[2],
 
         "user_login" : imp_2[2],
         "user_head" : imp_2[3],
