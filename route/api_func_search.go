@@ -17,7 +17,6 @@ func Api_func_search(config tool.Config) string {
         num = page * 50 - 50
     }
 
-    
     name := other_set["name"]
     query := ""
     

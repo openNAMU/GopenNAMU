@@ -57,13 +57,18 @@ func Markdown(db *sql.DB, data map[string]string) map[string]any {
     code_stack_idx := 0
     code_stack_end := map[string]string{}
 
-    r = regexp.MustCompile(`(<code>|<\/code>)`)
+    r = regexp.MustCompile(`(<code\b[^>]*>|<\/code>)`)
     for idx := r.FindStringIndex(string_data); len(idx) != 0; idx = r.FindStringIndex(string_data) {
-        if string_data[idx[0]:idx[1]] == "<code>" {
+        if string_data[idx[0]:idx[0] + 5] == "<code" {
             code_stack = []int{idx[0], idx[1]}
-            string_data = strings.Replace(string_data, "<code>", "<0001>", 1)
+            string_data = string_data[:idx[0]] + "<0001>" + string_data[idx[1]:]
         } else {
-            string_data = strings.Replace(string_data, "<0001>", "<code>", -1)
+            if len(code_stack) == 0 {
+                string_data = strings.Replace(string_data, "</code>", "&lt;/code&gt;", 1)
+                continue
+            }
+
+            string_data = strings.Replace(string_data, "<0001>", "<code>", 1)
 
             code_stack_idx_str := strconv.Itoa(code_stack_idx)
             code_stack_end["code_"+code_stack_idx_str] = string_data[code_stack[0]:idx[1]]
