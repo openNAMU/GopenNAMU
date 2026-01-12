@@ -71,7 +71,7 @@ func Markdown(db *sql.DB, data map[string]string) map[string]any {
             string_data = strings.Replace(string_data, "<0001>", "<code>", 1)
 
             code_stack_idx_str := strconv.Itoa(code_stack_idx)
-            code_stack_end["code_"+code_stack_idx_str] = string_data[code_stack[0]:idx[1]]
+            code_stack_end["code_" + code_stack_idx_str] = string_data[code_stack[0]:idx[1]]
             code_stack_idx++
 
             string_data = string_data[:code_stack[0]] + "<code_" + code_stack_idx_str + ">" + string_data[idx[1]:]

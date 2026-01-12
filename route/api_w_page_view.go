@@ -1,105 +1,41 @@
 package route
 
-import (
-	"opennamu/route/tool"
-)
+import "opennamu/route/tool"
 
 func Api_w_page_view_exter(config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    return_data := Api_w_page_view(other_set["doc_name"])
+    return_data := Api_w_page_view(config, other_set["doc_name"])
 
     json_data, _ := json.Marshal(return_data)
     return string(json_data)
 }
 
-func Api_w_page_view(doc_name string) map[string]any {
-    db := tool.DB_connect()
-    defer tool.DB_close(db)
+func Api_w_page_view(config tool.Config, doc_name string) map[string]any {
+	db := tool.DB_connect()
+	defer tool.DB_close(db)
+
+	return_data := make(map[string]any)
+	return_data["response"] = "ok"
+
+    page_view := 0
 
     pv_continue := tool.Get_setting(db, "not_use_view_count", "")
     if len(pv_continue) == 0 || pv_continue[0][0] == "" {
-        // 전체 조회수
-        view_count := "0"
+        page_view_str := ""
+
         tool.QueryRow_DB(
             db,
             "select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ''",
-            []any{ &view_count },
+            []any{ &page_view_str },
             doc_name,
         )
 
-        if view_count == "0" {
-            tool.Exec_DB(
-                db,
-                "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, '', 'view_count', '1')",
-                doc_name,
-            )
-        } else {
-            view_count_int := tool.Str_to_int(view_count)
-
-            tool.Exec_DB(
-                db,
-                "update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ''",
-                view_count_int + 1, doc_name,
-            )
-        }
-
-        // 월간 조회수
-        now_date := tool.Get_month()
-        view_count = "0"
-        tool.QueryRow_DB(
-            db,
-            "select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?",
-            []any{ &view_count },
-            doc_name, now_date,
-        )
-
-        if view_count == "0" {
-            tool.Exec_DB(
-                db,
-                "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, ?, 'view_count', '1')",
-                doc_name, now_date,
-            )
-        } else {
-            view_count_int := tool.Str_to_int(view_count)
-
-            tool.Exec_DB(
-                db,
-                "update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ?",
-                view_count_int + 1, doc_name, now_date,
-            )
-        }
-
-        // 하루 조회수
-        now_date = tool.Get_date()
-        view_count = "0"
-        tool.QueryRow_DB(
-            db,
-            "select set_data from data_set where doc_name = ? and set_name = 'view_count' and doc_rev = ?",
-            []any{ &view_count },
-            doc_name, now_date,
-        )
-
-        if view_count == "0" {
-            tool.Exec_DB(
-                db,
-                "insert into data_set (doc_name, doc_rev, set_name, set_data) values (?, ?, 'view_count', '1')",
-                doc_name, now_date,
-            )
-        } else {
-            view_count_int := tool.Str_to_int(view_count)
-
-            tool.Exec_DB(
-                db,
-                "update data_set set set_data = ? where doc_name = ? and set_name = 'view_count' and doc_rev = ?",
-                view_count_int + 1, doc_name, now_date,
-            )
-        }
+        page_view = tool.Str_to_int(page_view_str)        
     }
 
-    return_data := make(map[string]any)
-    return_data["response"] = "ok"
+    return_data["data"] = page_view
 
-    return return_data
+	return return_data
 }

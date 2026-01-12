@@ -192,8 +192,6 @@ func main() {
             route_data = route.Api_give_auth_patch(config)
         case "api_list_auth":
             route_data = route.Api_list_auth(config)
-        case "api_w_page_view":
-            route_data = route.Api_w_page_view_exter(config)
         case "api_bbs_w_comment_one":
             route_data = route.Api_bbs_w_comment_one(config, false)
         case "api_bbs_w_comment":
@@ -254,6 +252,46 @@ func main() {
 
         route_data := route.Api_func_template(config)
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/api/v2/page_view/:doc_name", func(c *gin.Context) {
+        route_data := route.Api_w_page_view(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"))
+        c.JSON(http.StatusOK, route_data)
+    })
+
+    r.GET("/api/v2/page_view_post/:doc_name", func(c *gin.Context) {
+        route_data := route.Api_w_page_view_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"))
+        c.JSON(http.StatusOK, route_data)
+    })
+
+    r.GET("/api/v2/bbs/w/page_view_post/:set_id/:set_code", func(c *gin.Context) {
+        route_data := route.Api_bbs_w_page_view_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("set_id") , "/"), strings.TrimPrefix(c.Param("set_code"), "/"))
+        c.JSON(http.StatusOK, route_data)
+    })
+
+    r.GET("/api/v2/bbs/w/page_view/:set_id/:set_code", func(c *gin.Context) {
+        route_data := route.Api_bbs_w_page_view(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("set_id") , "/"), strings.TrimPrefix(c.Param("set_code"), "/"))
+        c.JSON(http.StatusOK, route_data)
     })
 
     r.GET("/watch_list", func(c *gin.Context) {
