@@ -33,6 +33,39 @@ func Get_template_set(skin_name string) map[string]string {
     return map[string]string{}
 }
 
+func Get_use_skin_name(db *sql.DB, ip string) string {
+    skin_list := Get_skin_list("ringo", true)
+    skin := skin_list[0]
+
+    user_skin_name := ""
+    if !IP_or_user(ip) {
+        QueryRow_DB(
+            db,
+            "select data from user_set where name = 'skin' and id = ?",
+            []any{ &user_skin_name },
+            ip,
+        )
+    }
+
+    if user_skin_name == "default" {
+        user_skin_name = ""
+    }
+
+    if user_skin_name == "" {
+        QueryRow_DB(
+            db,
+            "select data from other where name = 'skin'",
+            []any{ &user_skin_name },
+        )
+    }
+
+    if user_skin_name != "" && Arr_in_str(skin_list, user_skin_name) {
+        skin = user_skin_name
+    }
+
+    return skin
+}
+
 func Get_template(db *sql.DB, config Config, name string, data string, other []any, menu [][]any) string {
     skin_name := Get_use_skin_name(db, config.IP)
     
