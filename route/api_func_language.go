@@ -14,12 +14,17 @@ func Api_func_language(config tool.Config) string {
 
     temp_list := strings.Split(other_set["data"], " ")
 
+    safe := false
+    if other_set["safe"] != "" {
+        safe = true
+    }
+
     if other_set["legacy"] != "" {
         data_list := map[string][]string{}
         data_list["data"] = []string{}
 
         for for_a := 0; for_a < len(temp_list); for_a++ {
-            data_list["data"] = append(data_list["data"], tool.Get_language(db, temp_list[for_a], false))
+            data_list["data"] = append(data_list["data"], tool.Get_language(db, temp_list[for_a], safe))
         }
 
         json_data, _ := json.Marshal(data_list)
@@ -31,7 +36,7 @@ func Api_func_language(config tool.Config) string {
         data_list := map[string]string{}
 
         for for_a := 0; for_a < len(temp_list); for_a++ {
-            data_list[temp_list[for_a]] = tool.Get_language(db, temp_list[for_a], false)
+            data_list[temp_list[for_a]] = tool.Get_language(db, temp_list[for_a], safe)
         }
 
         new_data["data"] = data_list

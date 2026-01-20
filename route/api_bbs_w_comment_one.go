@@ -6,31 +6,27 @@ import (
 	"strings"
 )
 
-func Api_bbs_w_comment_one(config tool.Config, already_auth_check bool) string {
+func Api_bbs_w_comment_one(config tool.Config, already_auth_check bool, do_type string, sub_code string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    sub_code := other_set["sub_code"]
     sub_code_parts := strings.Split(sub_code, "-")
     sub_code_last := ""
     new_sub_code := ""
 
-    if other_set["tool"] == "around" {
-        new_sub_code = other_set["sub_code"]
+    if do_type == "around" {
+        new_sub_code = sub_code
     } else {
         if len(sub_code_parts) > 2 {
-            sub_code_last = sub_code_parts[len(sub_code_parts)-1]
-            sub_code_parts = sub_code_parts[:len(sub_code_parts)-1]
+            sub_code_last = sub_code_parts[len(sub_code_parts) - 1]
+            sub_code_parts = sub_code_parts[:len(sub_code_parts) - 1]
 
             new_sub_code = strings.Join(sub_code_parts, "-")
         }
     }
 
     var rows *sql.Rows
-    if other_set["tool"] == "around" {
+    if do_type == "around" {
         rows = tool.Query_DB(
             db,
             "select set_name, set_data, set_code, set_id from bbs_data where (set_name = 'comment' or set_name like 'comment%') and set_id = ?",
@@ -102,27 +98,20 @@ func Api_bbs_w_comment_one(config tool.Config, already_auth_check bool) string {
     if !already_auth_check {
         if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
             data_list = []map[string]string{}
+
             return_data["response"] = "require auth"
         }
     }
 
-    if other_set["legacy"] != "" {
-        var json_data []byte
-        if other_set["tool"] == "around" {
-            json_data, _ = json.Marshal(data_list)
-        } else {
-            if len(data_list) > 0 {
-                json_data, _ = json.Marshal(data_list[0])
-            } else {
-                json_data, _ = json.Marshal(map[string]string{})
-            }
-        }
-
-        return string(json_data)
-    } else {
+    if do_type == "around" {
         return_data["data"] = data_list
-
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
+    } else {
+        if len(data_list) > 0 {
+            return_data["data"] = []map[string]string{ data_list[0] }
+        } else {
+            return_data["data"] = []map[string]string{}
+        }
     }
+
+    return return_data
 }

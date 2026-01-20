@@ -6,24 +6,7 @@ import (
 )
 
 func Api_bbs_w_comment_make(db *sql.DB, doc_name string) string {
-    inter_other_set := map[string]string{}
-    inter_other_set["set_id"] = "0"
-    inter_other_set["title"] = doc_name
-    inter_other_set["data"] = ""
-
-    json_data, _ := json.Marshal(inter_other_set)
-
-    send_request := tool.Config{
-        Other_set: string(json_data),
-        IP: "tool:system",
-    }
-
-    return_data := Api_bbs_w_comment_one(send_request, false)
-
-    return_data_api := map[string]string{}
-    json.Unmarshal([]byte(return_data), &return_data_api)
-
-    return return_data_api["data"]
+    return ""
 }
 
 func Api_w_comment(config tool.Config) string {

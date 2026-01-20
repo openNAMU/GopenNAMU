@@ -192,10 +192,6 @@ func main() {
             route_data = route.Api_give_auth_patch(config)
         case "api_list_auth":
             route_data = route.Api_list_auth(config)
-        case "api_bbs_w_comment_one":
-            route_data = route.Api_bbs_w_comment_one(config, false)
-        case "api_bbs_w_comment":
-            route_data = route.Api_bbs_w_comment(config)
         case "api_list_history":
             route_data = route.Api_list_history_exter(config)
         case "api_list_markup":
@@ -522,6 +518,26 @@ func main() {
             Session: "",
         }, "1")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/bbs/in/:set_id", func(c *gin.Context) {
+        route_data := route.View_bbs_in(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("set_id"), "1")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/bbs/in/:set_id/:page_num", func(c *gin.Context) {
+        route_data := route.View_bbs_in(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("set_id"), c.Param("page_num"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/history/*doc_name", func(c *gin.Context) {
