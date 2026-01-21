@@ -158,8 +158,6 @@ func main() {
             route_data = route.Api_bbs_w(config)
         case "api_w_set_reset":
             route_data = route.Api_w_set_reset(config)
-        case "api_list_recent_block":
-            route_data = route.Api_list_recent_block(config)
         case "api_list_title_index":
             route_data = route.Api_list_title_index(config)
         case "api_user_setting_editor_post":
@@ -476,6 +474,166 @@ func main() {
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"))
         c.Data(route_data.ST, "text/html; charset=utf-8", []byte(route_data.HTML))
+    })
+
+    r.GET("/recent_block", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/all", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/all/:num", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/all/:num/*why", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "", strings.TrimPrefix(c.Param("why"), "/"), "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/user/:user_name", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "user", "", c.Param("user_name"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/user/:user_name/:num", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "user", "", c.Param("user_name"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/admin/:user_name", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "admin", "", c.Param("user_name"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/admin/:user_name/:num", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "admin", "", c.Param("user_name"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/regex", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "regex", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/regex/:num", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "regex", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/cidr", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "cidr", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/cidr/:num", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "cidr", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/private", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "private", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/private/:num", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "private", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/ongoing", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "ongoing", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_block/ongoing/:num", func(c *gin.Context) {
+        route_data := route.View_list_recent_block(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "ongoing", "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/recent_change", func(c *gin.Context) {
