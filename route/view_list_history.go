@@ -4,12 +4,9 @@ import (
 	"opennamu/route/tool"
 )
 
-func View_history(config tool.Config, doc_name string, set_type string, num string) tool.View_result {
+func View_list_history(config tool.Config, doc_name string, set_type string, num string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    return_data := make(map[string]any)
-    return_data["response"] = "ok" 
 
     sub := ""
     if set_type == "" {
@@ -29,7 +26,9 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
     api_data := Api_list_history(config, doc_name, set_type, num)
     api_data_list := api_data["data"].([][]string)
 
-    data_html += Get_ui_history(db, config, api_data_list)
+    history_ui, select_ui := Get_ui_history(db, config, api_data_list)
+
+    data_html += history_ui
     data_html += tool.Get_page_control(
         db,
         tool.Str_to_int(num),
@@ -38,7 +37,16 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
         "/history_page/{}/" + set_type + "/" + tool.Url_parser(doc_name),
     )
 
-    return_data["data"] = tool.Get_template(
+    data_html = `
+        <form method="post">
+            <select name="a">` + select_ui + `</select> 
+            <select name="b">` + select_ui + `</select> 
+            <button type="submit">` + tool.Get_language(db, "compare", true) + `</button>
+        </form>
+        <hr class="main_hr">
+    ` + data_html
+
+    out := tool.Get_template(
         db,
         config,
         doc_name,
@@ -49,12 +57,5 @@ func View_history(config tool.Config, doc_name string, set_type string, num stri
         },
     )
 
-    json_data, _ := json.Marshal(return_data)
-
-    result_data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-
-    return result_data
+    return out
 }

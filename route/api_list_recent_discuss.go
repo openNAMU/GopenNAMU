@@ -4,26 +4,25 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_list_recent_discuss(config tool.Config) string {
+func Api_list_recent_discuss(config tool.Config, limit string, num string, set_type string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    limit_int := tool.Str_to_int(other_set["limit"])
+    limit_int := tool.Str_to_int(limit)
     if limit_int > 50 || limit_int < 0 {
         limit_int = 50
     }
 
-    page_int := tool.Str_to_int(other_set["num"])
+    page_int := tool.Str_to_int(num)
     if page_int > 0 {
         page_int = (page_int * limit_int) - limit_int
     } else {
         page_int = 0
     }
 
-    set_type := other_set["set_type"]
     query := ""
     switch set_type {
     case "normal":
@@ -92,28 +91,9 @@ func Api_list_recent_discuss(config tool.Config) string {
         })
     }
 
-    if other_set["legacy"] != "" {
-        json_data, _ := json.Marshal(data_list)
-        return string(json_data)
-    } else {
-        auth_name := tool.Get_user_auth(db, config.IP)
-        auth_info := tool.Get_auth_group_info(db, auth_name)
+    return_data := make(map[string]any)
+    return_data["response"] = "ok"
+    return_data["data"] = data_list
 
-        return_data := make(map[string]any)
-        return_data["language"] = map[string]string{
-            "tool":              tool.Get_language(db, "tool", false),
-            "normal":            tool.Get_language(db, "normal", false),
-            "close_discussion":  tool.Get_language(db, "close_discussion", false),
-            "open_discussion":   tool.Get_language(db, "open_discussion", false),
-            "closed":            tool.Get_language(db, "closed", false),
-            "agreed_discussion": tool.Get_language(db, "agreed_discussion", false),
-            "stop":              tool.Get_language(db, "stop", false),
-            "admin_tool":        tool.Get_language(db, "admin_tool", false),
-        }
-        return_data["auth"] = auth_info
-        return_data["data"] = data_list
-
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
-    }
+    return return_data
 }

@@ -5,14 +5,11 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_list_recent_block(config tool.Config) string {
+func Api_list_recent_block(config tool.Config, num string, set_type string, why string, user_name string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    page_int := tool.Str_to_int(other_set["num"])
+    page_int := tool.Str_to_int(num)
     if page_int > 0 {
         page_int = (page_int * 50) - 50
     } else {
@@ -21,20 +18,21 @@ func Api_list_recent_block(config tool.Config) string {
 
     // private 공개 안되도록 조심할 것
     var rows *sql.Rows
-    switch other_set["set_type"] {
+    
+    switch set_type {
     case "all":
         query := ""
-        if other_set["why"] != "" {
+        if why != "" {
             query = "select why, block, blocker, end, today, band, ongoing from rb where band != 'private' and why like ? order by today desc limit ?, 50"
         } else {
             query = "select why, block, blocker, end, today, band, ongoing from rb where band != 'private' order by today desc limit ?, 50"
         }
 
-        if other_set["why"] != "" {
+        if why != "" {
             rows = tool.Query_DB(
                 db,
                 query,
-                other_set["why"] + "%", page_int,
+                why + "%", page_int,
             )
         } else {
             rows = tool.Query_DB(
@@ -65,7 +63,7 @@ func Api_list_recent_block(config tool.Config) string {
         rows = tool.Query_DB(
             db,
             "select why, block, blocker, end, today, band, ongoing from rb where block = ? and band != 'private' order by today desc limit ?, 50",
-            other_set["user_name"], page_int,
+            user_name, page_int,
         )
     case "cidr":
         rows = tool.Query_DB(
@@ -77,7 +75,7 @@ func Api_list_recent_block(config tool.Config) string {
         rows = tool.Query_DB(
             db,
             "select why, block, blocker, end, today, band, ongoing from rb where blocker = ? and band != 'private' order by today desc limit ?, 50",
-            other_set["user_name"], page_int,
+            user_name, page_int,
         )
     }
     defer rows.Close()
@@ -143,35 +141,15 @@ func Api_list_recent_block(config tool.Config) string {
         })
     }
 
-    if other_set["set_type"] == "private" {
+    if set_type == "private" {
         if !tool.Check_acl(db, "", "", "owner_auth", config.IP) {
             data_list = [][]string{}
         }
     }
 
     return_data := make(map[string]any)
-    return_data["language"] = map[string]string{
-        "all":         tool.Get_language(db, "all", false),
-        "regex":       tool.Get_language(db, "regex", false),
-        "cidr":        tool.Get_language(db, "cidr", false),
-        "private":     tool.Get_language(db, "private", false),
-        "in_progress": tool.Get_language(db, "in_progress", false),
-        "admin":       tool.Get_language(db, "admin", false),
-        "blocked":     tool.Get_language(db, "blocked", false),
-        "limitless":   tool.Get_language(db, "limitless", false),
-        "release":     tool.Get_language(db, "release", false),
-        "start":       tool.Get_language(db, "start", false),
-        "end":         tool.Get_language(db, "end", false),
-        "ban":         tool.Get_language(db, "ban", false),
-        "why":         tool.Get_language(db, "why", false),
-    }
+    return_data["response"] = "ok"
     return_data["data"] = data_list
 
-    auth_name := tool.Get_user_auth(db, config.IP)
-    auth_info := tool.Get_auth_group_info(db, auth_name)
-
-    return_data["auth"] = auth_info
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+    return return_data
 }

@@ -26,17 +26,20 @@ func Get_safe_send_data(data string) string {
 	})
 }
 
-func Get_ui_history(db *sql.DB, config tool.Config, data_all [][]string) string {
+func Get_ui_history(db *sql.DB, config tool.Config, data_all [][]string) (string, string) {
     auth_name := tool.Get_user_auth(db, config.IP)
     auth_info := tool.Get_auth_group_info(db, auth_name)
 
     date_heading := ""
     data_html := ""
+    data_select := ""
 
-    for_count := 0
+    for_count := 1
     for _, in_data := range data_all {
         for_count_str := strconv.Itoa(for_count)
         for_count += 1
+
+        data_select = `<option value="` + for_count_str + `">` + for_count_str + `</option>` + data_select
 
         if in_data[6] != "" && in_data[1] == "" {
             if date_heading != "----" {
@@ -149,18 +152,12 @@ func Get_ui_history(db *sql.DB, config tool.Config, data_all [][]string) string 
         </script>`
     }
 
-    return data_html
+    return data_html, data_select
 }
 
-func View_list_recent_change(config tool.Config, set_type string, limit string, num string) tool.View_result {
+func View_list_recent_change(config tool.Config, set_type string, limit string, num string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := make(map[string]any)
-    return_data["response"] = "ok" 
 
     sub := ""
     if set_type == "" {
@@ -180,7 +177,9 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
     api_data := Api_list_recent_change(config, set_type, limit, num)
     api_data_list := api_data["data"].([][]string)
 
-    data_html += Get_ui_history(db, config, api_data_list)
+    history_ui, _ := Get_ui_history(db, config, api_data_list)
+
+    data_html += history_ui
     data_html += tool.Get_page_control(
         db,
         tool.Str_to_int(num),
@@ -189,7 +188,7 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
         "/recent_change/{}/" + set_type,
     )
 
-    return_data["data"] = tool.Get_template(
+    out := tool.Get_template(
         db,
         config,
         tool.Get_language(db, "recent_change", true),
@@ -198,12 +197,5 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
         [][]any{},
     )
 
-    json_data, _ := json.Marshal(return_data)
-
-    result_data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-
-    return result_data
+    return out
 }

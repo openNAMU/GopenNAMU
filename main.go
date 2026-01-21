@@ -148,8 +148,6 @@ func main() {
             route_data = route.Api_func_language(config)
         case "api_func_auth":
             route_data = route.Api_func_auth(config)
-        case "api_list_recent_discuss":
-            route_data = route.Api_list_recent_discuss(config)
         case "api_bbs_list":
             route_data = route.Api_bbs_list_exter(config)
         case "api_list_old_page":
@@ -487,7 +485,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, "", "50", "1")
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/recent_changes", func(c *gin.Context) {
@@ -497,7 +495,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, "", "50", "1")
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/recent_change/:num/:set_type", func(c *gin.Context) {
@@ -507,7 +505,27 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, c.Param("set_type"), "50", c.Param("num"))
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_discuss", func(c *gin.Context) {
+        route_data := route.View_list_recent_discuss(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "50", "1", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/recent_discuss/:num/:set_type", func(c *gin.Context) {
+        route_data := route.View_list_recent_discuss(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "50", c.Param("num"), c.Param("set_type"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/bbs/main", func(c *gin.Context) {
@@ -541,23 +559,51 @@ func main() {
     })
 
     r.GET("/history/*doc_name", func(c *gin.Context) {
-        route_data := route.View_history(tool.Config{
+        route_data := route.View_list_history(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"), "", "1")
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.POST("/history/*doc_name", func(c *gin.Context) {
+        doc_name := strings.TrimPrefix(c.Param("doc_name"), "/")
+        a := c.PostForm("a")
+        b := c.PostForm("b")
+
+        route_data := route.View_list_history_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, doc_name, a, b)
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/history_page/:num/:set_type/*doc_name", func(c *gin.Context) {
-        route_data := route.View_history(tool.Config{
+        route_data := route.View_list_history(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"), strings.TrimPrefix(c.Param("set_type"), "/"), strings.TrimPrefix(c.Param("num"), "/"))
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.POST("/history_page/:num/:set_type/*doc_name", func(c *gin.Context) {
+        doc_name := strings.TrimPrefix(c.Param("doc_name"), "/")
+        a := c.PostForm("a")
+        b := c.PostForm("b")
+
+        route_data := route.View_list_history_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, doc_name, a, b)
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/edit/*doc_name", func(c *gin.Context) {
