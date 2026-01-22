@@ -233,6 +233,7 @@ func Check_auth(auth_info map[string]bool) map[string]bool {
     return auth_info
 }
 
+// PASS is TRUE
 func Check_acl(db *sql.DB, name string, topic_number string, tool string, ip string) bool {
     auth_name := Get_user_auth(db, ip)
     auth_info := Get_auth_group_info(db, auth_name)

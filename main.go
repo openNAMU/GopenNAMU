@@ -154,8 +154,6 @@ func main() {
             route_data = route.Api_list_old_page(config)
         case "api_topic_list":
             route_data = route.Api_topic_list(config)
-        case "api_bbs_w_n":
-            route_data = route.Api_bbs_w(config)
         case "api_w_set_reset":
             route_data = route.Api_w_set_reset(config)
         case "api_list_title_index":
@@ -198,8 +196,6 @@ func main() {
             route_data = route.Api_bbs_w_set_put(config)
         case "api_func_alarm_post":
             route_data = route.Api_func_alarm_post(config)
-        case "api_bbs_w":
-            route_data = route.Api_bbs_w(config)
         case "api_bbs_w_post":
             route_data = route.Api_bbs_w_post(config)
         case "api_w_comment":

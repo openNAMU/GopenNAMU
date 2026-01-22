@@ -5,14 +5,10 @@ import (
 	"strings"
 )
 
-func Api_bbs_w(config tool.Config) string {
+func Api_bbs_w(config tool.Config, sub_code string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    sub_code := other_set["sub_code"]
     sub_code_parts := strings.Split(sub_code, "-")
 
     bbs_num := ""
@@ -58,18 +54,12 @@ func Api_bbs_w(config tool.Config) string {
     return_data := make(map[string]any)
 
     if !tool.Check_acl(db, "", "", "bbs_view", config.IP) {
-        data_list = map[string]string{}
         return_data["response"] = "require auth"
-    }
-
-    if other_set["legacy"] != "" {
-        json_data, _ := json.Marshal(data_list)
-        return string(json_data)
+        return_data["data"] = map[string]string{}
     } else {
-        return_data["language"] = map[string]string{}
+        return_data["response"] = "ok"
         return_data["data"] = data_list
-
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
     }
+
+    return return_data
 }

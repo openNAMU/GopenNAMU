@@ -10,7 +10,7 @@ import (
 	"github.com/dlclark/regexp2"
 )
 
-// IP_or_user - IP is True
+// IP is TRUE
 func IP_or_user(ip string) bool {
     match, _ := regexp.MatchString("(\\.|:)", ip)
     if match {

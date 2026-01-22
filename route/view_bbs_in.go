@@ -8,9 +8,6 @@ func View_bbs_in(config tool.Config, bbs_num string, page_num string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
     bbs_name := ""
 
     tool.QueryRow_DB(
