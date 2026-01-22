@@ -5,6 +5,16 @@ import (
 	"strings"
 )
 
+func Api_bbs_w_exter(config tool.Config) string {
+    other_set := map[string]string{}
+    json.Unmarshal([]byte(config.Other_set), &other_set)
+
+    return_data := Api_bbs_w(config, other_set["sub_code"])
+
+    json_data, _ := json.Marshal(return_data)
+    return string(json_data)
+}
+
 func Api_bbs_w(config tool.Config, sub_code string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)

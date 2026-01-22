@@ -406,3 +406,32 @@ func Do_ban_insert(db *sql.DB, user_name string, end_date string, reason string,
 func Get_user_info(db *sql.DB, user_name string) string {
     return ""
 }
+
+func Get_main_skin_set(db *sql.DB, config Config, set_name string) string {
+    set_data := ""
+
+    if !IP_or_user(config.IP) {
+        QueryRow_DB(
+            db,
+            "select data from user_set where name = ? and id = ?",
+            []any{ &set_data },
+            set_name,
+            config.IP,
+        )
+    }
+
+    if set_data == "default" || set_data == "" {
+        QueryRow_DB(
+            db,
+            "select data from other where name = ?",
+            []any{ &set_data },
+            set_name,
+        )
+    }
+
+    if set_data == "" {
+        set_data = "default"
+    }
+
+    return set_data
+}

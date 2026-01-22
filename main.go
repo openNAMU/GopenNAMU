@@ -216,8 +216,10 @@ func main() {
             route_data = route.Api_func_wiki_custom(config)
         case "api_list_random":
             route_data = route.Api_list_random_exter(config)
-        case "view_list_random":
-            route_data = route.View_list_random(config).JSON
+        case "api_bbs_w":
+            route_data = route.Api_bbs_w_exter(config)
+        case "api_bbs_w_comment":
+            route_data = route.Api_bbs_w_comment_exter(config)
         default:
             route_data = "{ \"response\" : \"404\" }"
         }
@@ -709,6 +711,16 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, c.Param("set_id"), c.Param("page_num"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/bbs/w/:set_id/:set_code", func(c *gin.Context) {
+        route_data := route.View_bbs_in_w(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("set_id"), c.Param("set_code"))
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 

@@ -24,7 +24,17 @@ func Api_bbs_w_comment_all(config tool.Config, sub_code string, already_auth_che
     return end_data
 }
 
-func Api_bbs_w_comment(config tool.Config, do_type string, sub_code string, legacy string) map[string]any {
+func Api_bbs_w_comment_exter(config tool.Config) string {
+    other_set := map[string]string{}
+    json.Unmarshal([]byte(config.Other_set), &other_set)
+
+    return_data := Api_bbs_w_comment(config, other_set["tool"], other_set["sub_code"])
+
+    json_data, _ := json.Marshal(return_data)
+    return string(json_data)
+}
+
+func Api_bbs_w_comment(config tool.Config, do_type string, sub_code string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 

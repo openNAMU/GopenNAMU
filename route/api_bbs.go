@@ -15,6 +15,19 @@ func Api_bbs_exter(config tool.Config) string {
     return string(json_data)
 }
 
+func Api_bbs_num_to_name(db *sql.DB, set_id string) string {
+    bbs_name := ""
+
+    tool.QueryRow_DB(
+        db,
+        "select set_data from bbs_set where set_id = ? and set_name = 'bbs_name'",
+        []any{ &bbs_name },
+        set_id,
+    )
+
+    return bbs_name
+}
+
 func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
@@ -45,7 +58,8 @@ func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
         rows = tool.Query_DB(
             db,
             "select set_code, set_id, '0' from bbs_data where set_name = 'title' and set_id like ? order by set_code + 0 desc limit ?, 50",
-            bbs_num, num,
+            bbs_num,
+            num,
         )
 
         rows_arr = append(rows_arr, rows)
@@ -76,7 +90,8 @@ func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
             rows := tool.Query_DB(
                 db,
                 "select set_name, set_data, set_code, set_id from bbs_data where set_code = ? and set_id = ?",
-                set_code, set_id,
+                set_code,
+                set_id,
             )
             defer rows.Close()
 

@@ -573,3 +573,65 @@ func Do_remove_spaces(s string) string {
         return r
     }, s)
 }
+
+func Get_init_set_list(need string) map[string]map[string]any {
+	init_set_list := map[string]map[string]any{
+		"host": {
+			"display" : "Host",
+			"require" : "conv",
+			"default" : "0.0.0.0",
+		},
+		"port": {
+			"display" : "Port",
+			"require" : "conv",
+			"default" : "3000",
+		},
+		"golang_port": {
+			"display" : "Golang port",
+			"require" : "conv",
+			"default" : "3001",
+		},
+		"language": {
+			"display" : "Language",
+			"require" : "select",
+			"default" : "ko-KR",
+			"list" : []string{ "ko-KR", "en-US" },
+		},
+		"markup": {
+			"display" : "Markup",
+			"require" : "select",
+			"default" : "namumark",
+			"list" : []string{ "namumark", "namumark_beta", "macromark", "markdown", "custom", "raw" },
+		},
+		"encode": {
+			"display" : "Encryption method",
+			"require" : "select",
+			"default" : "sha3",
+			"list" : []string{ "sha3", "sha3-salt", "sha3-512", "sha3-512-salt" },
+		},
+	}
+
+	if need == "" || need == "all" {
+		return init_set_list
+	}
+
+	return map[string]map[string]any{
+		need : init_set_list[need],
+	}
+}
+
+func JS_escape(data string) string {
+    data = strings.ReplaceAll(data, `\`, `\\`)
+
+    data = strings.ReplaceAll(data, "\r", `\r`)
+    data = strings.ReplaceAll(data, "\n", `\n`)
+    data = strings.ReplaceAll(data, "\t", `\t`)
+
+    data = strings.ReplaceAll(data, `'`, `\'`)
+    data = strings.ReplaceAll(data, `"`, `\"`)
+
+    data = strings.ReplaceAll(data, "\u2028", `\u2028`)
+    data = strings.ReplaceAll(data, "\u2029", `\u2029`)
+
+    return data
+}

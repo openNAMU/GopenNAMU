@@ -355,3 +355,312 @@ func Get_page_control(db *sql.DB, page int, count int, max_count int, url string
 
     return data_html
 }
+
+func Get_editor_ui(db *sql.DB, config Config, data string, do_type string, add_on string, doc_name string) string {
+    monaco_editor_top := ""
+    help_text := ""
+    document_top := ""
+
+    switch do_type {
+    case "edit":
+        QueryRow_DB(
+            db,
+            `select data from other where name = "edit_help"`,
+            []any{ &help_text },
+        )
+        
+        QueryRow_DB(
+            db,
+            `select set_data from data_set where doc_name = ? and set_name = 'document_top'`,
+            []any{ &document_top },
+            doc_name,
+        )
+    case "bbs":
+        QueryRow_DB(
+            db,
+            `select data from other where name = "bbs_help"`,
+            []any{ &help_text },
+        )
+    case "bbs_comment":
+        QueryRow_DB(
+            db,
+            `select data from other where name = "bbs_comment_help"`,
+            []any{ &help_text },
+        )
+    default:
+        QueryRow_DB(
+            db,
+            `select data from other where name = "topic_text"`,
+            []any{ &help_text },
+        )
+    }
+
+    if help_text == "" {
+        help_text = Get_language(db, "default_edit_help", true)
+    } else {
+        help_text = HTML_escape(help_text)
+    }
+
+    editor_type := "edit"
+    if do_type == "bbs_comment" || do_type == "thread" {
+        editor_type = "thread"
+    }
+
+    monaco_editor_top += `
+        <a href="javascript:opennamu_do_editor_temp_save();">(` + Get_language(db, "load_temp_save", true) + `)</a> <a href="javascript:opennamu_do_editor_temp_save_load();">(` + Get_language(db, "load_temp_save_load", true) + `)</a>
+        <hr class="main_hr">
+    `
+
+    dark_mode := false
+
+    cookie_map := Get_cookie_header(config.Cookies)
+    if cookie_map["main_css_darkmode"] == "1" {
+        dark_mode = true
+    }
+
+    monaco_theme := ""
+    if dark_mode {
+        monaco_theme = "vs-dark"
+    }
+
+    monaco_on := false
+    if Get_main_skin_set(db, config, "main_css_monaco") == "use" {
+        monaco_on = true
+    }
+
+    editor_display := []string{}
+    for for_a := 0; for_a < 3; for_a++ {
+        editor_display = append(editor_display, `style="display: none;"`)
+    }
+
+    select_A := ""
+    select_B := ""
+
+    if monaco_on {
+        editor_display[1] = ""
+        select_B = "selected"
+    } else {
+        editor_display[0] = ""
+        select_A = "selected"
+    }
+
+    monaco_editor_top += `
+        <span class="__ON_SELECT_DIV__">
+            <select class="__ON_SELECT__" onclick="do_sync_monaco_and_textarea();" id="opennamu_select_editor" onchange="opennamu_edit_turn_off_monaco();">
+                <option value="default" ` + select_A + `>` + Get_language(db, "default", true) + `</option>
+                <option value="default" ` + select_B + `>` + Get_language(db, "monaco_editor", true) + `</option>
+            </select>
+        </span>
+    `
+
+    if editor_type == "edit" {
+        monaco_editor_top += Get_markup_select_ui(db, config, doc_name, "", `id="opennamu_editor_markup" onclick="opennamu_do_sync_monaco_markup();"`, "")
+    } else {
+        monaco_editor_top += Get_markup_select_ui(db, config, doc_name, "", `id="opennamu_editor_markup" onclick="opennamu_do_sync_monaco_markup();"`, "disabled")
+    }
+
+    textarea_size := "opennamu_textarea_500"
+    if editor_type != "edit" {
+        textarea_size = "opennamu_textarea_100"
+    }
+
+    out_field := Get_captcha_ui(db, config) + Get_IP_warning_ui(db, config) + add_on
+    if out_field != "" {
+        out_field += `<hr class="main_hr">`
+    }
+
+    return `
+        <textarea class="__ON_TEXTAREA__" style="display: none;" id="opennamu_edit_origin" name="doc_data_org">` + HTML_escape(data) + `</textarea>
+        <div>
+            ` + monaco_editor_top + `
+            <hr class="main_hr">
+            ` + Get_editor_button_ui(db) + `
+            <div id="opennamu_editor_user_button"></div>
+        </div>
+
+        ` + document_top + `
+
+        <div id="opennamu_monaco_editor" class="` + textarea_size + `" ` + editor_display[1] + `></div>
+        <textarea id="opennamu_edit_textarea" class="` + textarea_size + ` __ON_TEXTAREA__" ` + editor_display[0] + ` name="content" placeholder="` + help_text + `">` + HTML_escape(data) + `</textarea>
+        <hr class="main_hr">
+        ` + out_field + `
+
+        <script>
+            window.addEventListener('DOMContentLoaded', function() {
+                do_stop_exit();
+                do_paste_image();
+                do_monaco_init("` + monaco_theme + `");
+                opennnamu_do_user_editor();
+            });
+        </script>
+
+        <button class="__ON_BUTTON__" id="opennamu_save_button" type="submit" onclick="do_stop_exit_release();">` + Get_language(db, "send", true) + `</button>
+        <button class="__ON_BUTTON__" id="opennamu_preview_button" type="button" onclick="opennamu_do_editor_preview();">` + Get_language(db, "preview", true) + `</button>
+        <hr class="main_hr">
+
+        <div id="opennamu_preview_area"></div>
+    `
+}
+
+func Get_markup_select_ui(db *sql.DB, config Config, doc_name string, markup string, add_on string, disable string) string {
+    default_markup := ""
+    QueryRow_DB(
+        db,
+        `select data from other where name = "markup"`, 
+        []any{ &default_markup },
+    )
+
+    markup_load := markup
+    if markup == "" {
+        QueryRow_DB(
+            db,
+            `select set_data from data_set where doc_name = ? and set_name = 'document_markup'`,
+            []any{ &markup_load },
+            doc_name,
+        )
+    }
+
+    markup_list := []string{ "normal" }
+    markup_list = append(markup_list, Get_init_set_list("markup")["markup"]["list"].([]string)...)
+
+    markup_html := ""
+    for _, v := range markup_list {
+        selected := ""
+        if markup_load == v {
+            selected = "selected"
+        }
+
+        value := v
+        if v == "normal" {
+            value = default_markup
+        }
+
+        markup_html += `<option value="` + value + `" ` + selected + `>` + v + `</option>`
+    }
+
+    markup_html = `
+        <span class="__ON_SELECT_DIV__">
+            <select class="__ON_SELECT__" name="document_markup" ` + disable + ` ` + add_on + `>` + markup_html + `</select>
+        </span>
+    `
+
+    return markup_html
+}
+
+func Get_captcha_ui(db *sql.DB, config Config) string {
+    data := ""
+
+    if !Check_acl(db, "", "", "recaptcha", config.IP) {
+        pub_key := ""
+        QueryRow_DB(
+            db,
+            `select data from other where name = "recaptcha"`, 
+            []any{ &pub_key },
+        )
+
+        sec_key := ""
+        QueryRow_DB(
+            db,
+            `select data from other where name = "sec_re"`, 
+            []any{ &sec_key },
+        )
+
+        if pub_key != "" && sec_key != "" {
+            rec_ver := ""
+            QueryRow_DB(
+                db,
+                `select data from other where name = "recaptcha_ver"`, 
+                []any{ &rec_ver },
+            )
+
+            switch rec_ver {
+            case "":
+                data += `
+                    <script defer src="https://www.google.com/recaptcha/api.js"></script>
+                    <div class="g-recaptcha" data-sitekey="` + pub_key + `"></div>
+                    <hr class="main_hr">
+                `
+            case "v3":
+                data += `
+                    <script defer src="https://www.google.com/recaptcha/api.js?render=` + pub_key + `"></script>
+                    <input class="__ON_INPUT__" type="hidden" id="g-recaptcha" name="g-recaptcha">
+                    <script type="text/javascript">
+                        document.addEventListener('DOMContentLoaded', function () {
+                            grecaptcha.ready(function() {
+                                grecaptcha.execute('` + pub_key + `', {action: 'homepage'}).then(function(token) {
+                                    document.getElementById('g-recaptcha').value = token;
+                                });
+                            });
+                        });
+                    </script>
+                `
+            case "cf":
+                data += `
+                    <script defer src="https://challenges.cloudflare.com/turnstile/v0/api.js?compat=recaptcha"></script>
+                    <div class="g-recaptcha" data-sitekey="` + pub_key + `"></div>
+                    <hr class="main_hr">
+                `
+            default:
+                data += `
+                    <script defer src="https://js.hcaptcha.com/1/api.js"></script>
+                    <div class="h-captcha" data-sitekey="` + pub_key + `"></div>
+                    <hr class="main_hr">
+                `
+            }
+        }
+    }
+
+    return data
+}
+
+func Get_IP_warning_ui(db *sql.DB, config Config) string {
+    text_data := ""
+
+    if IP_or_user(config.IP) {
+        text_db := ""
+
+        QueryRow_DB(
+            db,
+            `select data from other where name = "no_login_warning"`,
+            []any{ &text_db },
+        )
+
+        if text_db == "" {
+            text_db = Get_language(db, "no_login_warning", true)
+        }
+        
+        text_data = `<span>` + text_db + `</span><hr class="main_hr">`
+    }
+
+    return text_data
+}
+
+func Get_editor_button_ui(db *sql.DB) string {
+    data_html := ""
+
+    rows := Query_DB(
+        db,
+        `select html, plus from html_filter where kind = 'edit_top'`,
+    )
+    defer rows.Close()
+
+    for rows.Next() {
+        var html string
+        var plus string
+
+        err := rows.Scan(&html, &plus)
+        if err != nil {
+            panic(err)
+        }
+
+        data_html += `<a href="javascript:do_insert_data('` + JS_escape(plus) + `');">` + HTML_escape(html) + `</a>`
+    }
+
+    if data_html != "" {
+        data_html += " "
+    }
+
+    data_html += `<a href="/filter/edit_top">(` + Get_language(db, "add", true) + `)</a><hr class="main_hr">`
+
+    return data_html
+}
