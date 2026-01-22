@@ -254,7 +254,7 @@ func main() {
         c.JSON(http.StatusOK, route_data)
     })
 
-    r.GET("/api/v2/page_view_post/:doc_name", func(c *gin.Context) {
+    r.GET("/api/v2/page_view_post/*doc_name", func(c *gin.Context) {
         route_data := route.Api_w_page_view_post(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
@@ -871,7 +871,7 @@ func main() {
     })
 
     if standalone_mode {
-        log.Default().Println("Run in http://localhost:" + port)
+        log.Default().Println("Run in http://127.0.0.1:" + port)
         r.Run("0.0.0.0:" + port)
     } else {
         r.Run("127.0.0.1:" + port)

@@ -93,7 +93,7 @@ func View_bbs_main(config tool.Config, page string) tool.View_result {
         data_html += "</li>"
     }
 
-    data_html += "</ul>"
+    data_html += "</ul><hr class=\"main_hr\">"
 
     bbs_api_data := Api_bbs(config, "", page)
     data_html += Get_bbs_list_ui(config, bbs_api_data["data"].([]map[string]string), bbs_id_to_name)

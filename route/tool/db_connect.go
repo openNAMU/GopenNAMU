@@ -115,7 +115,7 @@ func DB_init_standalone_MySQL() {
 	if host, ok := tmp["host"]; ok && host != "" {
 		db_set["db_mysql_host"] = host
 	} else {
-		db_set["db_mysql_host"] = "localhost"
+		db_set["db_mysql_host"] = "127.0.0.1"
 	}
 
 	if port, ok := tmp["port"]; ok && port != "" {
