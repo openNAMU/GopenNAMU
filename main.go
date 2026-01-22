@@ -244,7 +244,7 @@ func main() {
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
-    r.GET("/api/v2/page_view/:doc_name", func(c *gin.Context) {
+    r.GET("/api/v2/page_view/*doc_name", func(c *gin.Context) {
         route_data := route.Api_w_page_view(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
