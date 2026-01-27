@@ -5,19 +5,25 @@ import (
 	"strconv"
 )
 
-func Api_bbs_w_post(config tool.Config) string {
-    db := tool.DB_connect()
-    defer tool.DB_close(db)
-
+func Api_bbs_w_post_exter(config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
+    return_data := Api_bbs_w_post(config, other_set["set_id"], other_set["title"], other_set["data"])
+
+    json_data, _ := json.Marshal(return_data)
+    return string(json_data)
+}
+
+func Api_bbs_w_post(config tool.Config, set_id string, title string, data string) map[string]string {
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
+
     if !tool.Check_acl(db, "", "", "bbs_comment", config.IP) {
-        return_data := make(map[string]any)
+        return_data := make(map[string]string)
         return_data["response"] = "require auth"
 
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
+        return return_data
     }
 
     set_code := ""
@@ -25,7 +31,7 @@ func Api_bbs_w_post(config tool.Config) string {
         db,
         "select set_code from bbs_data where set_name = 'title' and set_id = ? order by set_code + 0 desc",
         []any{ &set_code },
-        other_set["set_id"],
+        set_id,
     )
 
     set_code_int := tool.Str_to_int(set_code)
@@ -36,8 +42,8 @@ func Api_bbs_w_post(config tool.Config) string {
     date_now := tool.Get_time()
 
     insert_db := [][]string{
-        { "title", other_set["title"] },
-        { "data", other_set["data"] },
+        { "title", title },
+        { "data", data },
         { "date", date_now },
         { "user_id", config.IP },
     }
@@ -45,14 +51,16 @@ func Api_bbs_w_post(config tool.Config) string {
         tool.Exec_DB(
             db,
             "insert into bbs_data (set_name, set_code, set_id, set_data) values (?, ?, ?, ?)",
-            v[0], set_code_str, other_set["set_id"], v[1],
+            v[0],
+            set_code_str,
+            set_id,
+            v[1],
         )
     }
 
-    return_data := make(map[string]any)
+    return_data := make(map[string]string)
     return_data["response"] = "ok"
     return_data["data"] = set_code_str
 
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+    return return_data
 }

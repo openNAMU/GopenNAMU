@@ -664,3 +664,51 @@ func Get_editor_button_ui(db *sql.DB) string {
 
     return data_html
 }
+
+func Get_thread_ui(user_name string, date string, data string, code string, color string, blind string, add_style string, topic_num string) string {
+    color_b := ""
+    class_b := ""
+
+    if blind == "O" {
+        if data == "" {
+            color_b = "opennamu_comment_blind"
+        } else {
+            color_b = "opennamu_comment_blind_admin"
+        }
+
+        class_b = "opennamu_comment_blind_js opennamu_list_hidden"
+    } else {
+        color_b = "opennamu_comment_blind_not"
+    }
+
+    admin_check_box := ""
+    if topic_num != "" {
+        admin_check_box = `<input type="checkbox" class="opennamu_blind_button" id="opennamu_blind_` + topic_num + `_` + code + `">`
+    }
+
+    return `
+        <span class="` + class_b + `">
+            <table class="opennamu_comment" style="` + add_style + `">
+                <tr>
+                    <td class="opennamu_comment_color_` + color + `">
+                        ` + admin_check_box + `
+                        <a href="#thread_shortcut" id="` + code + `">#` + code + `</a>
+                        ` + user_name + `
+                        <span style="float: right;">` + date + `</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="` + color_b + ` opennamu_comment_data_main" id="thread_` + code + `">
+                        <div class="opennamu_comment_scroll" id="opennamu_thread_render_` + code + `">` + HTML_escape(data) + `</div>
+                    </td>
+                    <script>
+                        window.addEventListener('DOMContentLoaded', function() {
+                            opennamu_do_render_with_dom("opennamu_thread_render_` + code + `", "opennamu_thread_render_` + code + `", "", "thread");
+                        })
+                    </script>
+                </tr>
+            </table>
+            <hr class="main_hr">
+        </span>
+    `
+}

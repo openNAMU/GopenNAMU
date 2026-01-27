@@ -197,11 +197,11 @@ func main() {
         case "api_func_alarm_post":
             route_data = route.Api_func_alarm_post(config)
         case "api_bbs_w_post":
-            route_data = route.Api_bbs_w_post(config)
+            route_data = route.Api_bbs_w_post_exter(config)
         case "api_w_comment":
-            route_data = route.Api_w_comment(config)
+            route_data = route.Api_w_comment_ui(config)
         case "api_bbs_w_tabom":
-            route_data = route.Api_bbs_w_tabom(config)
+            route_data = route.Api_bbs_w_tabom_exter(config)
         case "api_bbs_w_tabom_post":
             route_data = route.Api_bbs_w_tabom_post(config)
         case "api_func_email_post":

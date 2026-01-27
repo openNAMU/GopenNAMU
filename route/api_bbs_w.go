@@ -9,30 +9,26 @@ func Api_bbs_w_exter(config tool.Config) string {
     other_set := map[string]string{}
     json.Unmarshal([]byte(config.Other_set), &other_set)
 
-    return_data := Api_bbs_w(config, other_set["sub_code"])
+    sub_split := strings.Split(other_set["sub_code"], "-")
+
+    set_id := sub_split[0]
+    set_code := sub_split[1]
+
+    return_data := Api_bbs_w(config, set_id, set_code)
 
     json_data, _ := json.Marshal(return_data)
     return string(json_data)
 }
 
-func Api_bbs_w(config tool.Config, sub_code string) map[string]any {
+func Api_bbs_w(config tool.Config, set_id string, set_code string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    sub_code_parts := strings.Split(sub_code, "-")
-
-    bbs_num := ""
-    post_num := ""
-
-    if len(sub_code_parts) > 1 {
-        bbs_num = sub_code_parts[0]
-        post_num = sub_code_parts[1]
-    }
 
     rows := tool.Query_DB(
         db,
         "select set_name, set_data from bbs_data where set_id = ? and set_code = ?",
-        bbs_num, post_num,
+        set_id,
+        set_code,
     )
     defer rows.Close()
     
