@@ -16,7 +16,7 @@ func Api_bbs_list_exter(config tool.Config) string {
 func bbs_list(db *sql.DB) map[string]string {
     rows := tool.Query_DB(
         db,
-        "select set_data, set_id from bbs_set where set_name = 'bbs_name'",
+        "select set_data, set_id from bbs_set where set_name = 'bbs_name' and " + tool.Get_except_set_id_SQL(),
     )
     defer rows.Close()
 
@@ -69,10 +69,10 @@ func Api_bbs_list(config tool.Config) map[string]any {
         )
 
         items = append(items, BBS_item{
-            Id: v,
-            Name: k,
-            Type: bbs_type,
-            Date: bbs_date,
+            Id : v,
+            Name : k,
+            Type : bbs_type,
+            Date : bbs_date,
         })
     }
 

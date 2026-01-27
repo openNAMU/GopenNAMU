@@ -36,7 +36,7 @@ func Api_bbs(config tool.Config, bbs_num string, page string) map[string]any {
     if bbs_num == "" {
         rows := tool.Query_DB(
             db,
-            "select set_code, set_id, '0' from bbs_data where set_name = 'date' order by set_data desc limit 50",
+            "select set_code, set_id, '0' from bbs_data where set_name = 'date' and " + tool.Get_except_set_id_SQL() + " order by set_data desc limit 50",
         )
 
         rows_arr = append(rows_arr, rows)

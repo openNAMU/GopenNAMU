@@ -448,7 +448,7 @@ func Get_editor_ui(db *sql.DB, config Config, data string, do_type string, add_o
         <span class="__ON_SELECT_DIV__">
             <select class="__ON_SELECT__" onclick="do_sync_monaco_and_textarea();" id="opennamu_select_editor" onchange="opennamu_edit_turn_off_monaco();">
                 <option value="default" ` + select_A + `>` + Get_language(db, "default", true) + `</option>
-                <option value="default" ` + select_B + `>` + Get_language(db, "monaco_editor", true) + `</option>
+                <option value="monaco" ` + select_B + `>` + Get_language(db, "monaco_editor", true) + `</option>
             </select>
         </span>
     `
