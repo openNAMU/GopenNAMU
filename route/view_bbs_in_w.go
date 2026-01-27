@@ -5,6 +5,7 @@ import (
 	"opennamu/route/tool"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func View_bbs_in_w_comment(db *sql.DB, config tool.Config, user_name string, set_id string, set_code string) string {
@@ -50,12 +51,7 @@ func View_bbs_in_w_comment(db *sql.DB, config tool.Config, user_name string, set
         code_id := v["id"] + "-" + v["code"]
         code_id = re.ReplaceAllString(code_id, "")
 
-        count := 0
-        for _, ch := range code_id {
-            if ch == '-' {
-                count++
-            }
-        }
+        count := strings.Count(code_id, "-")
 
         select_html += `<option value="` + code_id + `">` + code_id + `</option>`
 
