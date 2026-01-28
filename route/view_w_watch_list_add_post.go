@@ -2,7 +2,7 @@ package route
 
 import "opennamu/route/tool"
 
-func View_w_watch_list_add_post(config tool.Config, doc_name string, do_type string) tool.View_result {
+func View_w_watch_list_add_post(config tool.Config, doc_name string, do_type string) string {
 	db := tool.DB_connect()
 	defer tool.DB_close(db)
 
@@ -22,29 +22,18 @@ func View_w_watch_list_add_post(config tool.Config, doc_name string, do_type str
 
     api_data := Api_w_watch_list_post(config, doc_name, do_type)
 
-    return_data := make(map[string]any)
-
+    out := ""
     if api_data["response"] != "ok" {
-        return_data["response"] = "error"
-        return_data["data"] = tool.Get_error_page(db, config, "error")
+        out = tool.Get_error_page(db, config, "error")
     } else {
-        return_data["response"] = "ok"
-
         if name_from {
-            return_data["data"] = tool.Get_redirect("/w/" + doc_name)
+            out = tool.Get_redirect("/w/" + doc_name)
         } else if do_type == "watchlist" {
-            return_data["data"] = tool.Get_redirect("/watch_list")
+            out = tool.Get_redirect("/watch_list")
         } else {
-            return_data["data"] = tool.Get_redirect("/star_doc")
+            out = tool.Get_redirect("/star_doc")
         }
     }
 
-    json_data, _ := json.Marshal(return_data)
-
-    data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-    
-    return data
+    return out
 }

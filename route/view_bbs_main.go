@@ -55,12 +55,9 @@ func Get_bbs_list_ui(config tool.Config, bbs_all_data []map[string]string, bbs_i
     return data_html
 }
 
-func View_bbs_main(config tool.Config, page string) tool.View_result {
+func View_bbs_main(config tool.Config, page string) string {
 	db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    return_data := make(map[string]any)
-    return_data["response"] = "ok" 
 
     bbs_list_api_data := Api_bbs_list(config)
 
@@ -98,7 +95,7 @@ func View_bbs_main(config tool.Config, page string) tool.View_result {
     bbs_api_data := Api_bbs(config, "", page)
     data_html += Get_bbs_list_ui(config, bbs_api_data["data"].([]map[string]string), bbs_id_to_name)
 
-    return_data["data"] = tool.Get_template(
+    out := tool.Get_template(
         db,
         config,
         tool.Get_language(db, "bbs_main", true),
@@ -110,12 +107,5 @@ func View_bbs_main(config tool.Config, page string) tool.View_result {
         },
     )
 
-    json_data, _ := json.Marshal(return_data)
-
-    result_data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-
-    return result_data
+    return out
 }

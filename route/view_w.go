@@ -5,12 +5,9 @@ import (
 	"opennamu/route/tool"
 )
 
-func View_w(config tool.Config, doc_name string) tool.View_result {
+func View_w(config tool.Config, doc_name string) (string, int) {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-	return_data := make(map[string]any)
-    return_data["response"] = "ok"
 
 	Api_w_page_view_post(config, doc_name)
 
@@ -59,15 +56,6 @@ func View_w(config tool.Config, doc_name string) tool.View_result {
 			{ "acl/" + tool.Url_parser(doc_name), tool.Get_language(db, "setting", true) },
 		},
 	)
-	return_data["data"] = out
 
-    json_data, _ := json.Marshal(return_data)
-
-    data := tool.View_result{
-        HTML : out,
-        JSON : string(json_data),
-		ST : status,
-    }
-
-    return data
+	return out, status
 }

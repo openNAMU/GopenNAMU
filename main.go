@@ -331,7 +331,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc_from")
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/star_doc_from/*doc_name", func(c *gin.Context) {
@@ -351,7 +351,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc")
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/star_doc/*doc_name", func(c *gin.Context) {
@@ -371,7 +371,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist_from")
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/watch_list_from/*doc_name", func(c *gin.Context) {
@@ -391,7 +391,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist")
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/watch_list/*doc_name", func(c *gin.Context) {
@@ -465,13 +465,43 @@ func main() {
     })
 
     r.GET("/w/*doc_name", func(c *gin.Context) {
-        route_data := route.View_w(tool.Config{
+        route_data, status_code := route.View_w(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"))
-        c.Data(route_data.ST, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(status_code, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/raw/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_raw(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "", "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/raw_rev/:rev/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_raw(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), c.Param("rev"), "")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/raw_acl/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_raw(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "", "document_acl")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/recent_block", func(c *gin.Context) {
@@ -691,7 +721,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, "1")
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/bbs/in/:set_id", func(c *gin.Context) {
