@@ -440,7 +440,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, tool.Get_IP(c)).HTML
+        }, tool.Get_IP(c))
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -450,7 +450,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("user_name"), "/")).HTML
+        }, strings.TrimPrefix(c.Param("user_name"), "/"))
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -472,6 +472,16 @@ func main() {
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"))
         c.Data(status_code, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/down/*doc_name", func(c *gin.Context) {
+        route_data := route.View_w_down(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.GET("/raw/*doc_name", func(c *gin.Context) {

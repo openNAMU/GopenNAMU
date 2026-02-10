@@ -4,12 +4,9 @@ import (
 	"opennamu/route/tool"
 )
 
-func View_user(config tool.Config, user_name string) tool.View_result {
+func View_user(config tool.Config, user_name string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    return_data := make(map[string]any)
-    return_data["response"] = "ok" 
 
     login_menu := ""
     tool_menu := ""
@@ -51,7 +48,7 @@ func View_user(config tool.Config, user_name string) tool.View_result {
 
     admin_menu := ""
 
-    return_data["data"] = tool.Get_template(
+    out := tool.Get_template(
         db,
         config,
         tool.Get_language(db, "user_tool", true),
@@ -73,12 +70,5 @@ func View_user(config tool.Config, user_name string) tool.View_result {
         [][]any{},
     )
 
-    json_data, _ := json.Marshal(return_data)
-
-    result_data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-
-    return result_data
+    return out
 }
