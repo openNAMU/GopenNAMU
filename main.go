@@ -122,8 +122,6 @@ func main() {
             route_data = route.Api_func_sha224(config)
         case "api_w_random":
             route_data = route.Api_w_random(config)
-        case "api_func_search":
-            route_data = route.Api_func_search(config)
         case "api_topic":
             route_data = route.Api_topic(config)
         case "api_func_ip":
@@ -899,6 +897,16 @@ func main() {
     r.GET("/view/*name", route.View_view_file)
     r.GET("/views/*name", route.View_view_file)
     r.GET("/image/*name", route.View_view_image_file)
+
+    r.POST("/search", func(c *gin.Context) {
+        route_data := route.View_main_search_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.PostForm("f_name"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
 
     r.NoRoute(func(c *gin.Context) {
         route_data := route.View_main_404_page(tool.Config{

@@ -4,23 +4,20 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_func_search(config tool.Config) string {
+func Api_func_search(config tool.Config, keyword string, num_str string, search_type string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    page := tool.Str_to_int(other_set["num"])
+    page := tool.Str_to_int(num_str)
     num := 0
     if page * 50 > 0 {
         num = page * 50 - 50
     }
 
-    name := other_set["name"]
+    name := keyword
     query := ""
     
-    if other_set["search_type"] == "title" {
+    if search_type == "title" {
         name = tool.Do_remove_spaces(name)
         query = "select title from data where replace(title, ' ', '') collate nocase like ? order by title limit ?, 50"
     } else {
@@ -47,6 +44,9 @@ func Api_func_search(config tool.Config) string {
         title_list = append(title_list, title)
     }
 
-    json_data, _ := json.Marshal(title_list)
-    return string(json_data)
+    return_data := make(map[string]any)
+    return_data["response"] = "ok"
+    return_data["data"] = title_list
+
+    return return_data
 }
