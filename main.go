@@ -898,13 +898,103 @@ func main() {
     r.GET("/views/*name", route.View_view_file)
     r.GET("/image/*name", route.View_view_image_file)
 
+    r.POST("/goto", func(c *gin.Context) {
+        route_data := route.View_main_search_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", true, c.PostForm("search"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.POST("/goto/*keyword", func(c *gin.Context) {
+        route_data := route.View_main_search_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", true, c.PostForm("search"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
     r.POST("/search", func(c *gin.Context) {
         route_data := route.View_main_search_post(tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, c.PostForm("f_name"))
+        }, "", false, c.PostForm("search"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/search/*keyword", func(c *gin.Context) {
+        route_data := route.View_main_search(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("keyword"), "/"), "1", "title")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.POST("/search/*keyword", func(c *gin.Context) {
+        route_data := route.View_main_search_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", false, c.PostForm("search"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.POST("/search_page/:num/*keyword", func(c *gin.Context) {
+        route_data := route.View_main_search_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", false, c.PostForm("search"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/search_page/:num/*keyword", func(c *gin.Context) {
+        route_data := route.View_main_search(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("keyword"), "/"), c.Param("num"), "title")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.POST("/search_data/*keyword", func(c *gin.Context) {
+        route_data := route.View_main_search_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", false, c.PostForm("search"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.POST("/search_data_page/:num/*keyword", func(c *gin.Context) {
+        route_data := route.View_main_search_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", false, c.PostForm("search"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/search_data_page/:num/*keyword", func(c *gin.Context) {
+        route_data := route.View_main_search(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("keyword"), "/"), c.Param("num"), "data")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 

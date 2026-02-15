@@ -26,7 +26,7 @@ func Api_w_raw(config tool.Config, doc_name string, exist_check string, rev stri
         title := ""
         exist := tool.QueryRow_DB(
             db,
-            "select title from data where title = ?",
+            "select title from data where title = ? collate nocase",
             []any{ &title },
             doc_name,
         )
@@ -37,6 +37,7 @@ func Api_w_raw(config tool.Config, doc_name string, exist_check string, rev stri
             new_data["exist"] = true
         }
 
+        new_data["data"] = title
         new_data["response"] = "ok"
     } else {        
         exist := false
