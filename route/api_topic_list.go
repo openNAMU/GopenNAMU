@@ -1,28 +1,46 @@
 package route
 
 import (
+	"database/sql"
 	"opennamu/route/tool"
 )
 
-func Api_topic_list(config tool.Config) string {
+func Api_topic_list(config tool.Config, num string, doc_name string, do_type string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    page_int := tool.Str_to_int(other_set["num"])
+    page_int := tool.Str_to_int(num)
     if page_int > 0 {
         page_int = (page_int * 50) - 50
     } else {
         page_int = 0
     }
 
-    rows := tool.Query_DB(
-        db,
-        "select code, sub, stop, agree, date from rd where title = ? order by sub asc limit ?, 50",
-        other_set["name"], page_int,
-    )
+    var rows *sql.Rows
+
+    switch do_type {
+    case "close":
+        rows = tool.Query_DB(
+            db,
+            "select code, sub, stop, agree, date from rd where title = ? and stop = 'O' order by sub asc limit ?, 50",
+            doc_name,
+            page_int,
+        )
+    case "open":
+        rows = tool.Query_DB(
+            db,
+            "select code, sub, stop, agree, date from rd where title = ? and agree = 'O' order by sub asc limit ?, 50",
+            doc_name,
+            page_int,
+        )
+    default:
+        rows = tool.Query_DB(
+            db,
+            "select code, sub, stop, agree, date from rd where title = ? order by sub asc limit ?, 50",
+            doc_name,
+            page_int,
+        )
+    }
     defer rows.Close()
 
     data_list := [][]string{}
@@ -75,14 +93,7 @@ func Api_topic_list(config tool.Config) string {
     }
 
     return_data := make(map[string]any)
-    return_data["language"] = map[string]string{
-        "closed":            tool.Get_language(db, "closed", false),
-        "agreed_discussion": tool.Get_language(db, "agreed_discussion", false),
-        "make_new_topic":    tool.Get_language(db, "make_new_topic", false),
-        "stop":              tool.Get_language(db, "stop", false),
-    }
     return_data["data"] = data_list
 
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+    return return_data
 }

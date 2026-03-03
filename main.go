@@ -150,8 +150,6 @@ func main() {
             route_data = route.Api_bbs_list_exter(config)
         case "api_list_old_page":
             route_data = route.Api_list_old_page(config)
-        case "api_topic_list":
-            route_data = route.Api_topic_list(config)
         case "api_w_set_reset":
             route_data = route.Api_w_set_reset(config)
         case "api_list_title_index":
@@ -509,6 +507,46 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"), "", "document_acl")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/topic/*doc_name", func(c *gin.Context) {
+        route_data := route.View_topic_list(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "", "1")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/topic_page/:num/*doc_name", func(c *gin.Context) {
+        route_data := route.View_topic_list(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "", c.Param("num"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/topic_close/:num/*doc_name", func(c *gin.Context) {
+        route_data := route.View_topic_list(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "close", c.Param("num"))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/topic_agree/:num/*doc_name", func(c *gin.Context) {
+        route_data := route.View_topic_list(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "agree", c.Param("num"))
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
