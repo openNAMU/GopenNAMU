@@ -1042,7 +1042,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, c.Request.URL.Path).HTML
+        }, c.Request.URL.Path)
         c.Data(http.StatusNotFound, "text/html; charset=utf-8", []byte(route_data))
     })
 

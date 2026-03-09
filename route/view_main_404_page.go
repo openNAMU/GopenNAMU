@@ -5,15 +5,9 @@ import (
 	"path/filepath"
 )
 
-func View_main_404_page(config tool.Config, url string) tool.View_result {
+func View_main_404_page(config tool.Config, url string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := make(map[string]any)
-    return_data["response"] = "ok"
 
     if url == "/" {
         frontpage := "FrontPage"
@@ -24,17 +18,7 @@ func View_main_404_page(config tool.Config, url string) tool.View_result {
             []any{ &frontpage },
         )
 
-        redirect := tool.Get_redirect("/w/" + tool.Url_parser(frontpage))
-
-        return_data["data"] = redirect
-        json_data, _ := json.Marshal(return_data)
-
-        data := tool.View_result{
-            HTML : return_data["data"].(string),
-            JSON : string(json_data),
-        }
-
-        return data
+        return tool.Get_redirect("/w/" + tool.Url_parser(frontpage))
     }
 
     page_404_set := ""
@@ -44,9 +28,11 @@ func View_main_404_page(config tool.Config, url string) tool.View_result {
         []any{ &page_404_set },
     )
 
+    data_html := ""
+
     page_404_dir := filepath.Join("..", "404.html")
     if tool.File_exist_check(page_404_dir) && page_404_set == "404_file" {
-        return_data["data"] = tool.File_text_read(page_404_dir)
+        data_html = tool.File_text_read(page_404_dir)
     } else {
         db_data := ""
 
@@ -57,7 +43,7 @@ func View_main_404_page(config tool.Config, url string) tool.View_result {
         )
 
         if db_data != "" {
-            return_data["data"] = tool.Get_template(
+            data_html = tool.Get_template(
                 db,
                 config,
                 "404",
@@ -66,7 +52,7 @@ func View_main_404_page(config tool.Config, url string) tool.View_result {
                 [][]any{},
             )
         } else {
-            return_data["data"] = tool.Get_template(
+            data_html = tool.Get_template(
                 db,
                 config,
                 "404",
@@ -77,12 +63,5 @@ func View_main_404_page(config tool.Config, url string) tool.View_result {
         }
     }
 
-    json_data, _ := json.Marshal(return_data)
-
-    data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-
-    return data
+    return data_html
 }
