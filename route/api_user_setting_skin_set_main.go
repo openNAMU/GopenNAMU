@@ -12,7 +12,7 @@ func Api_user_setting_skin_set_main(config tool.Config) map[string]any {
     return_data["response"] = "ok"
 
     db_set_list := map[string]string{}
-    for k, _ := range set_list {
+    for k := range set_list {
         var data string
         tool.QueryRow_DB(
             db,

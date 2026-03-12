@@ -24,9 +24,10 @@ func Get_ui_recent_discuss(db *sql.DB, config tool.Config, data_all [][]string) 
         }
 
         right := ``
-        if in_data[4] == "O" {
+        switch in_data[4] {
+        case "O":
             right += tool.Get_language(db, "closed", true) + " | "
-        } else if in_data[4] == "S" {
+        case "S":
             right += tool.Get_language(db, "stop", true) + " | "
         }
 

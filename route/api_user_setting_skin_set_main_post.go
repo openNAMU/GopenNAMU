@@ -157,7 +157,7 @@ func Api_user_setting_skin_set_main_post(config tool.Config, user_set_list map[s
 	return_data["response"] = "ok"
 
 	set_list := Get_main_skin_set_list(db)
-	for k, _ := range set_list {
+	for k := range set_list {
 		if val, ok := user_set_list[k]; ok {
 			tool.Exec_DB(
 				db,
