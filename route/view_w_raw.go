@@ -3,8 +3,8 @@ package route
 import "opennamu/route/tool"
 
 func View_w_raw(config tool.Config, doc_name string, rev string, do_type string) string {
-	db := tool.DB_connect()
-	defer tool.DB_close(db)
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
 
     sub := "(" + tool.Get_language(db, "raw", true) + ")"
     if rev != "" {

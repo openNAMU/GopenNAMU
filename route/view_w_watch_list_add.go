@@ -3,8 +3,8 @@ package route
 import "opennamu/route/tool"
 
 func View_w_watch_list_add(config tool.Config, doc_name string, do_type string) tool.View_result {
-	db := tool.DB_connect()
-	defer tool.DB_close(db)
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
 
     switch do_type {
     case "watchlist_from":

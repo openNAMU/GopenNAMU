@@ -80,7 +80,7 @@ func Get_ui_recent_block(db *sql.DB, config tool.Config, data_all [][]string) st
 }
 
 func View_list_recent_block(config tool.Config, num string, set_type string, why string, user_name string) string {
-	db := tool.DB_connect()
+    db := tool.DB_connect()
     defer tool.DB_close(db)
 
     data_html := ""

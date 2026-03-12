@@ -21,19 +21,19 @@ func Api_func_template(config tool.Config) string {
     }
 
     menu := [][]any{}
-	if v, ok := other_set["menu"]; ok {
-		switch x := v.(type) {
-		case [][]any:
-			menu = x
-		case []any:
-			for _, row := range x {
-				if r, ok := row.([]any); ok {
-					menu = append(menu, r)
-				}
-			}
-		default:
-		}
-	}
+    if v, ok := other_set["menu"]; ok {
+        switch x := v.(type) {
+        case [][]any:
+            menu = x
+        case []any:
+            for _, row := range x {
+                if r, ok := row.([]any); ok {
+                    menu = append(menu, r)
+                }
+            }
+        default:
+        }
+    }
 
     return tool.Get_template(
         db,

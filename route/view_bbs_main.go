@@ -56,7 +56,7 @@ func Get_bbs_list_ui(config tool.Config, bbs_all_data []map[string]string, bbs_i
 }
 
 func View_bbs_main(config tool.Config, page string) string {
-	db := tool.DB_connect()
+    db := tool.DB_connect()
     defer tool.DB_close(db)
 
     bbs_list_api_data := Api_bbs_list(config)

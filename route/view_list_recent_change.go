@@ -14,16 +14,16 @@ var re_esc_a = regexp.MustCompile(`&lt;a&gt;\s*([^\r\n]*?)\s*&lt;/a&gt;`)
 func Get_safe_send_data(data string) string {    
     escaped_data := tool.HTML_escape(data)
 
-	return re_esc_a.ReplaceAllStringFunc(escaped_data, func(match string) string {
-		inner_esc := re_esc_a.FindStringSubmatch(match)[1]
-		inner_text := strings.TrimSpace(html.UnescapeString(inner_esc))
+    return re_esc_a.ReplaceAllStringFunc(escaped_data, func(match string) string {
+        inner_esc := re_esc_a.FindStringSubmatch(match)[1]
+        inner_text := strings.TrimSpace(html.UnescapeString(inner_esc))
 
-		if inner_text == "" || strings.ContainsAny(inner_text, "<>") {
-			return match
-		}
+        if inner_text == "" || strings.ContainsAny(inner_text, "<>") {
+            return match
+        }
         
         return `<a href="/w/` + tool.Url_parser(inner_text) + `">` + strings.TrimSpace(inner_esc) + `</a>`
-	})
+    })
 }
 
 func Get_ui_history(db *sql.DB, config tool.Config, data_all [][]string) (string, string) {

@@ -9,8 +9,8 @@ func Api_bbs_w_page_view_post(config tool.Config, set_id string, set_code string
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-	return_data := make(map[string]any)
-	return_data["response"] = "ok"
+    return_data := make(map[string]any)
+    return_data["response"] = "ok"
 
     page_view_str := ""
     exist := tool.QueryRow_DB(
@@ -42,5 +42,5 @@ func Api_bbs_w_page_view_post(config tool.Config, set_id string, set_code string
         )
     }
 
-	return return_data
+    return return_data
 }

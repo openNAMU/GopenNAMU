@@ -12,13 +12,13 @@ import (
 )
 
 func Get_file_max_size(db *sql.DB) int {
-	data := "0"
+    data := "0"
 
-	QueryRow_DB(
-		db,
-		"select data from other where name = 'upload'",
-		[]any{ &data },
-	)
+    QueryRow_DB(
+        db,
+        "select data from other where name = 'upload'",
+        []any{ &data },
+    )
 
     file_max_size := Str_to_int(data)
 
@@ -26,13 +26,13 @@ func Get_file_max_size(db *sql.DB) int {
 }
 
 func Get_file_main_dir(db *sql.DB) string {
-	data := ""
+    data := ""
 
-	QueryRow_DB(
-		db,
-		"select data from other where name = 'image_where'",
-		[]any{ &data },
-	)
+    QueryRow_DB(
+        db,
+        "select data from other where name = 'image_where'",
+        []any{ &data },
+    )
 
     if data == "" {
         data = filepath.Join("..", "data", "images")
@@ -94,8 +94,8 @@ func Get_file_name_unallow_check(db *sql.DB, file_name string) bool {
 
 func File_name_to_dir(file_name string, file_ext string) string {
     h := sha256.New224()
-	io.WriteString(h, file_name)
-	hash_hex := hex.EncodeToString(h.Sum(nil))
+    io.WriteString(h, file_name)
+    hash_hex := hex.EncodeToString(h.Sum(nil))
 
     return hash_hex + "." + file_ext
 }

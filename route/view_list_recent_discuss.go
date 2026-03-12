@@ -45,7 +45,7 @@ func Get_ui_recent_discuss(db *sql.DB, config tool.Config, data_all [][]string) 
 }
 
 func View_list_recent_discuss(config tool.Config, limit string, num string, set_type string) string {
-	db := tool.DB_connect()
+    db := tool.DB_connect()
     defer tool.DB_close(db)
 
     data_html := ""

@@ -18,28 +18,28 @@ func View_view_image_file(c *gin.Context) {
 
     c.Header("X-Content-Type-Options", "nosniff")
 
-	raw_path := strings.TrimPrefix(c.Param("name"), "/")
-	if raw_path == "" {
-		c.String(http.StatusOK, "")
-		return
-	}
+    raw_path := strings.TrimPrefix(c.Param("name"), "/")
+    if raw_path == "" {
+        c.String(http.StatusOK, "")
+        return
+    }
 
     raw_path = strings.ReplaceAll(raw_path, "\\", "/")
-	file_name := path.Base(raw_path)
+    file_name := path.Base(raw_path)
 
-	if file_name == "." || file_name == "/" || strings.ContainsAny(file_name, `/\`) {
-		c.String(http.StatusBadRequest, "")
-		return
-	}
+    if file_name == "." || file_name == "/" || strings.ContainsAny(file_name, `/\`) {
+        c.String(http.StatusBadRequest, "")
+        return
+    }
 
-	re_cache := regexp.MustCompile(`\.cache_v[0-9]+$`)
-	file_name = re_cache.ReplaceAllString(file_name, "")
+    re_cache := regexp.MustCompile(`\.cache_v[0-9]+$`)
+    file_name = re_cache.ReplaceAllString(file_name, "")
 
-	parts := strings.Split(file_name, ".")
-	mime_type := "application/octet-stream"
-	if len(parts) >= 2 {
-		ext := strings.ToLower(parts[len(parts) - 1])
-		switch ext {
+    parts := strings.Split(file_name, ".")
+    mime_type := "application/octet-stream"
+    if len(parts) >= 2 {
+        ext := strings.ToLower(parts[len(parts) - 1])
+        switch ext {
         // Images
         case "jpeg", "jpg":
             mime_type = "image/jpeg"
@@ -154,18 +154,18 @@ func View_view_image_file(c *gin.Context) {
         case "zst":
             mime_type = "application/zstd"
         }
-	}
+    }
 
-	final_path := filepath.Join(tool.Get_file_main_dir(db), file_name)
-	if _, err := os.Stat(final_path); err != nil {
-		if os.IsNotExist(err) {
-			c.String(http.StatusNotFound, "")
+    final_path := filepath.Join(tool.Get_file_main_dir(db), file_name)
+    if _, err := os.Stat(final_path); err != nil {
+        if os.IsNotExist(err) {
+            c.String(http.StatusNotFound, "")
             return
-		}
+        }
 
-		c.String(http.StatusInternalServerError, "read error")
-		return
-	}
+        c.String(http.StatusInternalServerError, "read error")
+        return
+    }
 
     if strings.HasPrefix(mime_type, "text/") || mime_type == "application/javascript" || strings.HasPrefix(mime_type, "application/xml") {
         c.Header("Content-Type", mime_type+"; charset=utf-8")
@@ -173,5 +173,5 @@ func View_view_image_file(c *gin.Context) {
         c.Header("Content-Type", mime_type)
     }
 
-	c.File(final_path)
+    c.File(final_path)
 }

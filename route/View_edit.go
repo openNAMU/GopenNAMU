@@ -5,8 +5,8 @@ import (
 )
 
 func View_edit(config tool.Config, doc_name string) tool.View_result {
-	db := tool.DB_connect()
-	defer tool.DB_close(db)
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
 
     raw_data := Api_w_raw(config, doc_name, "", "")
     raw_data_get := ""

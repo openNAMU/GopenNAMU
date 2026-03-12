@@ -18,17 +18,17 @@ func Get_skin_route(skin_name string, route string) string {
 
 func Get_template_set(skin_name string) map[string]string {
     set_file_path := Get_skin_route(skin_name, "set.json")
-	if _, err := os.Stat(set_file_path); err == nil {
-		data, err := os.ReadFile(set_file_path)
-		if err != nil {
-			panic(err)
-		}
+    if _, err := os.Stat(set_file_path); err == nil {
+        data, err := os.ReadFile(set_file_path)
+        if err != nil {
+            panic(err)
+        }
 
-		set_json := map[string]string{}
-    	json.Unmarshal([]byte(data), &set_json)
+        set_json := map[string]string{}
+        json.Unmarshal([]byte(data), &set_json)
 
-		return set_json
-	}
+        return set_json
+    }
 
     return map[string]string{}
 }
@@ -136,15 +136,15 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
     
     imp_1[7] = added_menu
 
-	context := pongo2.Context{
-		"imp" : []any{
-			name,
-			imp_1,
-			imp_2,
-			imp_3,
-		},
-		"data" : `<div class="opennamu_main">` + data + `</div>`,
-		"menu" : menu_func_result,
+    context := pongo2.Context{
+        "imp" : []any{
+            name,
+            imp_1,
+            imp_2,
+            imp_3,
+        },
+        "data" : `<div class="opennamu_main">` + data + `</div>`,
+        "menu" : menu_func_result,
 
         "title" : name,
         
@@ -177,19 +177,19 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
         "main_head_dark" : imp_3[5],
         "description_doc" : imp_3[6],
         "view_count" : imp_3[7],
-	}
+    }
 
-	tpl, err := pongo2.FromFile(Get_skin_route(skin_name, "index.html"))
-	if err != nil {
-		panic(err)
-	}
+    tpl, err := pongo2.FromFile(Get_skin_route(skin_name, "index.html"))
+    if err != nil {
+        panic(err)
+    }
 
-	out, err := tpl.Execute(context)
-	if err != nil {
-		panic(err)
-	}
+    out, err := tpl.Execute(context)
+    if err != nil {
+        panic(err)
+    }
 
-	return out
+    return out
 }
 
 func Get_redirect(target string) string {

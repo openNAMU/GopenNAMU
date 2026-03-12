@@ -54,8 +54,8 @@ func View_main_search(config tool.Config, keyword string, num string, search_typ
         </ul>
     `
 
-	data_api := Api_func_search(config, keyword, num, search_type)
-	data_api_in := data_api["data"].([]string)
+    data_api := Api_func_search(config, keyword, num, search_type)
+    data_api_in := data_api["data"].([]string)
 
     data_html += "<ul>"
     for _, v := range data_api_in {

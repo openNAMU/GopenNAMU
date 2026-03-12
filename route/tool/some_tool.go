@@ -530,16 +530,16 @@ func Deep_copy_config(src Config) Config {
 }
 
 func Choose(v string, def string) string {
-	if strings.TrimSpace(v) == "" {
-		return def
-	}
+    if strings.TrimSpace(v) == "" {
+        return def
+    }
 
-	return v
+    return v
 }
 
 func File_exist_check(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil
+    _, err := os.Stat(path)
+    return err == nil
 }
 
 func File_text_read(path string) string {
@@ -579,49 +579,49 @@ func Do_remove_spaces(s string) string {
 }
 
 func Get_init_set_list(need string) map[string]map[string]any {
-	init_set_list := map[string]map[string]any{
-		"host": {
-			"display" : "Host",
-			"require" : "conv",
-			"default" : "0.0.0.0",
-		},
-		"port": {
-			"display" : "Port",
-			"require" : "conv",
-			"default" : "3000",
-		},
-		"golang_port": {
-			"display" : "Golang port",
-			"require" : "conv",
-			"default" : "3001",
-		},
-		"language": {
-			"display" : "Language",
-			"require" : "select",
-			"default" : "ko-KR",
-			"list" : []string{ "ko-KR", "en-US" },
-		},
-		"markup": {
-			"display" : "Markup",
-			"require" : "select",
-			"default" : "namumark",
-			"list" : []string{ "namumark", "namumark_beta", "macromark", "markdown", "custom", "raw" },
-		},
-		"encode": {
-			"display" : "Encryption method",
-			"require" : "select",
-			"default" : "sha3",
-			"list" : []string{ "sha3", "sha3-salt", "sha3-512", "sha3-512-salt" },
-		},
-	}
+    init_set_list := map[string]map[string]any{
+        "host": {
+            "display" : "Host",
+            "require" : "conv",
+            "default" : "0.0.0.0",
+        },
+        "port": {
+            "display" : "Port",
+            "require" : "conv",
+            "default" : "3000",
+        },
+        "golang_port": {
+            "display" : "Golang port",
+            "require" : "conv",
+            "default" : "3001",
+        },
+        "language": {
+            "display" : "Language",
+            "require" : "select",
+            "default" : "ko-KR",
+            "list" : []string{ "ko-KR", "en-US" },
+        },
+        "markup": {
+            "display" : "Markup",
+            "require" : "select",
+            "default" : "namumark",
+            "list" : []string{ "namumark", "namumark_beta", "macromark", "markdown", "custom", "raw" },
+        },
+        "encode": {
+            "display" : "Encryption method",
+            "require" : "select",
+            "default" : "sha3",
+            "list" : []string{ "sha3", "sha3-salt", "sha3-512", "sha3-512-salt" },
+        },
+    }
 
-	if need == "" || need == "all" {
-		return init_set_list
-	}
+    if need == "" || need == "all" {
+        return init_set_list
+    }
 
-	return map[string]map[string]any{
-		need : init_set_list[need],
-	}
+    return map[string]map[string]any{
+        need : init_set_list[need],
+    }
 }
 
 func JS_escape(data string) string {

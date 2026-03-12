@@ -6,8 +6,8 @@ import (
 )
 
 func Api_edit_post_exter(config tool.Config) string {
-	other_set := map[string]string{}
-	json.Unmarshal([]byte(config.Other_set), &other_set)
+    other_set := map[string]string{}
+    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     return_data := Api_edit_post(
         config,

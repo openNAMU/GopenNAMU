@@ -3,8 +3,8 @@ package route
 import "opennamu/route/tool"
 
 func View_w_watch_list_add_post(config tool.Config, doc_name string, do_type string) string {
-	db := tool.DB_connect()
-	defer tool.DB_close(db)
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
 
     name_from := false
     switch do_type {

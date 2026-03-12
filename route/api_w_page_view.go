@@ -13,11 +13,11 @@ func Api_w_page_view_exter(config tool.Config) string {
 }
 
 func Api_w_page_view(config tool.Config, doc_name string) map[string]any {
-	db := tool.DB_connect()
-	defer tool.DB_close(db)
+    db := tool.DB_connect()
+    defer tool.DB_close(db)
 
-	return_data := make(map[string]any)
-	return_data["response"] = "ok"
+    return_data := make(map[string]any)
+    return_data["response"] = "ok"
 
     page_view := 0
 
@@ -37,5 +37,5 @@ func Api_w_page_view(config tool.Config, doc_name string) map[string]any {
 
     return_data["data"] = page_view
 
-	return return_data
+    return return_data
 }

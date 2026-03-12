@@ -80,14 +80,14 @@ func Api_file_upload_post(config tool.Config) string {
     }
 
     out, err := os.Create(dst_path)
-	if err != nil {
+    if err != nil {
         return_value["response"] = "error"
         return_value["data"] = "file create fail"
 
         json_data, _ := json.Marshal(return_value)
         return string(json_data)
-	}
-	defer out.Close()
+    }
+    defer out.Close()
 
     if _, err := io.Copy(out, base64.NewDecoder(base64.StdEncoding, strings.NewReader(file_data))); err != nil {
         _ = out.Close()
