@@ -51,6 +51,7 @@ func View_user_watch_list(config tool.Config, num string, do_type string) tool.V
             { "watch_list", tool.Get_language(db, "watchlist", false) },
             { "star_doc", tool.Get_language(db, "star_doc", false) },
         },
+        map[string]string{},
     )
 
     return_data := make(map[string]any)

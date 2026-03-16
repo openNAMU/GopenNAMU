@@ -105,6 +105,7 @@ func View_bbs_main(config tool.Config, page string) string {
             { "other", tool.Get_language(db, "other_tool", false) },
             { "bbs/make", tool.Get_language(db, "add", false) },
         },
+        map[string]string{},
     )
 
     return out

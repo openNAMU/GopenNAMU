@@ -85,6 +85,7 @@ func View_list_recent_discuss(config tool.Config, limit string, num string, set_
         data_html,
         []any{ sub },
         [][]any{},
+        map[string]string{},
     )
 
     return out

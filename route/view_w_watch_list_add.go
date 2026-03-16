@@ -29,6 +29,7 @@ func View_w_watch_list_add(config tool.Config, doc_name string, do_type string) 
         [][]any{
             { "w/" + tool.Url_parser(doc_name), tool.Get_language(db, "return", true) },
         },
+        map[string]string{},
     )
 
     json_data, _ := json.Marshal(return_data)

@@ -144,6 +144,7 @@ func View_bbs_in_w(config tool.Config, set_id string, set_code string) string {
             { "bbs/edit/" + tool.Url_parser(set_id) + "/" + tool.Url_parser(set_code), tool.Get_language(db, "edit", true) },
             { "bbs/tool/" + tool.Url_parser(set_id) + "/" + tool.Url_parser(set_code), tool.Get_language(db, "tool", true) },
         },
+        map[string]string{},
     )
 
     return out

@@ -55,6 +55,7 @@ func View_list_history(config tool.Config, doc_name string, set_type string, num
         [][]any{
             { "w/" + tool.Url_parser(doc_name), tool.Get_language(db, "return", true) },
         },
+        map[string]string{},
     )
 
     return out

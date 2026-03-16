@@ -26,6 +26,7 @@ func View_w_down(config tool.Config, doc_name string) string {
         [][]any{
             { "w/" + tool.Url_parser(doc_name), tool.Get_language(db, "return", true) },
         },
+        map[string]string{},
     )
 
     return out

@@ -42,5 +42,6 @@ func Api_func_template(config tool.Config) string {
         other_set["data"].(string),
         sub_menu,
         menu,
+        map[string]string{},
     )
 }

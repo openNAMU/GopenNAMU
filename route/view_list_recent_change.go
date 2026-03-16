@@ -195,6 +195,7 @@ func View_list_recent_change(config tool.Config, set_type string, limit string, 
         data_html,
         []any{ sub },
         [][]any{},
+        map[string]string{},
     )
 
     return out

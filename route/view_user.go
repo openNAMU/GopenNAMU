@@ -68,6 +68,7 @@ func View_user(config tool.Config, user_name string) string {
         ` + admin_menu,
         []any{},
         [][]any{},
+        map[string]string{},
     )
 
     return out

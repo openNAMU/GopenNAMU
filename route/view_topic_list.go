@@ -50,6 +50,7 @@ func View_topic_list(config tool.Config, doc_name string, do_type string, num st
         data_html,
         []any{ "(" + sub_title + ")" },
         menu,
+        map[string]string{},
     )
 
     return out

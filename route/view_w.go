@@ -55,6 +55,7 @@ func View_w(config tool.Config, doc_name string) (string, int) {
             { "xref/" + tool.Url_parser(doc_name), tool.Get_language(db, "backlink", true) },
             { "acl/" + tool.Url_parser(doc_name), tool.Get_language(db, "setting", true) },
         },
+        map[string]string{},
     )
 
     return out, status

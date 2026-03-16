@@ -66,7 +66,7 @@ func Get_use_skin_name(db *sql.DB, ip string) string {
     return skin
 }
 
-func Get_template(db *sql.DB, config Config, name string, data string, other []any, menu [][]any) string {
+func Get_template(db *sql.DB, config Config, name string, data string, other []any, menu [][]any, option map[string]string) string {
     skin_name := Get_use_skin_name(db, config.IP)
     
     template_set := Get_template_set(skin_name)
@@ -335,6 +335,7 @@ func Get_error_page(db *sql.DB, config Config, error_name string) string {
         `</ul>`,
         []any{},
         [][]any{},
+        map[string]string{},
     )
 }
 

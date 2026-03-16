@@ -23,6 +23,7 @@ func View_edit_file_upload(config tool.Config) tool.View_result {
         data_html,
         []any{},
         [][]any{},
+        map[string]string{},
     )
 
     return_data := make(map[string]any)

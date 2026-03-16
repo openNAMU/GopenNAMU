@@ -4,7 +4,7 @@ import (
 	"opennamu/route/tool"
 )
 
-func View_w_random(config tool.Config) tool.View_result {
+func View_w_random(config tool.Config) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -18,16 +18,5 @@ func View_w_random(config tool.Config) tool.View_result {
 
     redirect := tool.Get_redirect("/w/" + tool.Url_parser(title))
 
-    return_data := make(map[string]any)
-    return_data["response"] = "ok"
-    return_data["data"] = redirect
-
-    json_data, _ := json.Marshal(return_data)
-
-    data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-
-    return data
+    return redirect
 }

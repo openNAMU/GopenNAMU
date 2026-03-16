@@ -50,6 +50,7 @@ func View_main_404_page(config tool.Config, url string) string {
                 db_data,
                 []any{},
                 [][]any{},
+                map[string]string{},
             )
         } else {
             data_html = tool.Get_template(
@@ -59,6 +60,7 @@ func View_main_404_page(config tool.Config, url string) string {
                 tool.Get_language(db, "func_404_error", true),
                 []any{},
                 [][]any{},
+                map[string]string{},
             )
         }
     }

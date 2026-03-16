@@ -93,6 +93,7 @@ func View_main_search(config tool.Config, keyword string, num string, search_typ
         [][]any{
             { "other", tool.Get_language(db, "return", true) },
         },
+        map[string]string{},
     )
 
     return out

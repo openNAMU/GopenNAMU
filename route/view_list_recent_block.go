@@ -150,6 +150,7 @@ func View_list_recent_block(config tool.Config, num string, set_type string, why
         [][]any{
             { "other", tool.Get_language(db, "return", true) },
         },
+        map[string]string{},
     )
 
     return out

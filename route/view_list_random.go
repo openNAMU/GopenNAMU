@@ -33,6 +33,7 @@ func View_list_random(config tool.Config) tool.View_result {
         [][]any{
             { "other", tool.Get_language(db, "return", true) },
         },
+        map[string]string{},
     )
 
     return_data := make(map[string]any)

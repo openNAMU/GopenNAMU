@@ -31,6 +31,7 @@ func View_edit(config tool.Config, doc_name string) tool.View_result {
         form_data,
         []any{ "(" + tool.Get_language(db, "edit", true) + ")" },
         [][]any{},
+        map[string]string{},
     )
 
     return_data := make(map[string]any)

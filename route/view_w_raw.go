@@ -52,6 +52,7 @@ func View_w_raw(config tool.Config, doc_name string, rev string, do_type string)
         pre_data,
         []any{ sub },
         menu,
+        map[string]string{},
     )
 
     return out

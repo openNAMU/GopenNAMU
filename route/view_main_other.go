@@ -63,6 +63,7 @@ func View_main_other(config tool.Config) tool.View_result {
         </ul>`,
         []any{},
         [][]any{},
+        map[string]string{},
     )
 
     json_data, _ := json.Marshal(return_data)
