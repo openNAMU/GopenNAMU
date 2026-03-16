@@ -461,7 +461,7 @@ func main() {
     })
 
     r.GET("/w/*doc_name", func(c *gin.Context) {
-        route_data, status_code := route.View_w(tool.Config{
+        route_data, status_code := route.View_w(c, tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
@@ -791,7 +791,7 @@ func main() {
     })
 
     r.GET("/bbs/w/:set_id/:set_code", func(c *gin.Context) {
-        route_data := route.View_bbs_in_w(tool.Config{
+        route_data := route.View_bbs_in_w(c, tool.Config{
             Other_set: "",
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),

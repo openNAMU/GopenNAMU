@@ -3,9 +3,11 @@ package route
 import (
 	"net/http"
 	"opennamu/route/tool"
+
+	"github.com/gin-gonic/gin"
 )
 
-func View_w(config tool.Config, doc_name string) (string, int) {
+func View_w(c *gin.Context, config tool.Config, doc_name string) (string, int) {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -55,7 +57,9 @@ func View_w(config tool.Config, doc_name string) (string, int) {
             { "xref/" + tool.Url_parser(doc_name), tool.Get_language(db, "backlink", true) },
             { "acl/" + tool.Url_parser(doc_name), tool.Get_language(db, "setting", true) },
         },
-        map[string]string{},
+        map[string]string{
+            "path" : c.Request.URL.Path,
+        },
     )
 
     return out, status

@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func View_bbs_in_w_comment(db *sql.DB, config tool.Config, user_name string, set_id string, set_code string) string {
@@ -97,7 +99,7 @@ func View_bbs_in_w_comment(db *sql.DB, config tool.Config, user_name string, set
     return data_html
 }
 
-func View_bbs_in_w(config tool.Config, set_id string, set_code string) string {
+func View_bbs_in_w(c *gin.Context, config tool.Config, set_id string, set_code string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -144,7 +146,9 @@ func View_bbs_in_w(config tool.Config, set_id string, set_code string) string {
             { "bbs/edit/" + tool.Url_parser(set_id) + "/" + tool.Url_parser(set_code), tool.Get_language(db, "edit", true) },
             { "bbs/tool/" + tool.Url_parser(set_id) + "/" + tool.Url_parser(set_code), tool.Get_language(db, "tool", true) },
         },
-        map[string]string{},
+        map[string]string{
+            "path" : c.Request.URL.Path,
+        },
     )
 
     return out

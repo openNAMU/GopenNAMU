@@ -136,6 +136,11 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
     
     imp_1[7] = added_menu
 
+    path := ""
+    if option["path"] != "" {
+        path = option["path"]
+    }
+
     context := pongo2.Context{
         "imp" : []any{
             name,
@@ -167,7 +172,7 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
         "user_auth" : imp_2[9],
         "user_ip" : imp_2[10],
         "user_discuss" : imp_2[11],
-        "user_path" : imp_2[12],
+        "user_path" : path,
         "user_level" : imp_2[13],
 
         "sub_title" : imp_3[0],

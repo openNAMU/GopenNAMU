@@ -35,6 +35,13 @@ func Api_func_template(config tool.Config) string {
         }
     }
 
+    option := map[string]string{}
+    if v, ok := other_set["option"]; ok {
+        for k, v := range v.(map[string]any) {
+            option[k] = v.(string)
+        }
+    }
+
     return tool.Get_template(
         db,
         config,
@@ -42,6 +49,6 @@ func Api_func_template(config tool.Config) string {
         other_set["data"].(string),
         sub_menu,
         menu,
-        map[string]string{},
+        option,
     )
 }
