@@ -286,7 +286,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, "1", "watchlist").HTML
+        }, "1", "watchlist")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -296,7 +296,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, "1", "star_doc").HTML
+        }, "1", "star_doc")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -306,7 +306,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("doc_name"), "/"), strings.TrimPrefix(c.Param("count"), "/"), "watchlist").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), strings.TrimPrefix(c.Param("count"), "/"), "watchlist")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -316,7 +316,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("doc_name"), "/"), strings.TrimPrefix(c.Param("count"), "/"), "star_doc").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), strings.TrimPrefix(c.Param("count"), "/"), "star_doc")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -336,7 +336,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc_from").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc_from")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -356,7 +356,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "star_doc")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -376,7 +376,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist_from").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist_from")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -396,7 +396,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist").HTML
+        }, strings.TrimPrefix(c.Param("doc_name"), "/"), "watchlist")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -406,7 +406,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }).HTML
+        })
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -426,7 +426,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }).HTML
+        })
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -456,7 +456,7 @@ func main() {
             IP: tool.Get_IP(c),
             Cookies: tool.Get_Cookies(c),
             Session: "",
-        }).HTML
+        })
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
@@ -855,7 +855,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"))
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.POST("/edit/*doc_name", func(c *gin.Context) {
@@ -870,7 +870,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, doc_name, data, send, agree)
-        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data.HTML))
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
     r.POST("/upload", func(c *gin.Context) {
@@ -928,7 +928,7 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
             Other_set: other_set_arr_str,
-        }).HTML
+        })
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
     

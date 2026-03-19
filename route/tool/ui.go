@@ -219,12 +219,6 @@ location.replace(%s);
 </html>`, jsURL, attrURL, attrURL)
 }
 
-type View_result struct {
-    HTML string
-    JSON string
-    ST int
-}
-
 func Cache_v() string {
     return ".cache_v288"
 }

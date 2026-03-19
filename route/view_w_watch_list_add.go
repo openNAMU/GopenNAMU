@@ -2,7 +2,7 @@ package route
 
 import "opennamu/route/tool"
 
-func View_w_watch_list_add(config tool.Config, doc_name string, do_type string) tool.View_result {
+func View_w_watch_list_add(config tool.Config, doc_name string, do_type string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -17,8 +17,7 @@ func View_w_watch_list_add(config tool.Config, doc_name string, do_type string) 
         do_type = "star_doc"
     }
 
-    return_data := make(map[string]any)
-    return_data["data"] = tool.Get_template(
+    out := tool.Get_template(
         db,
         config,
         doc_name,
@@ -32,12 +31,5 @@ func View_w_watch_list_add(config tool.Config, doc_name string, do_type string) 
         map[string]string{},
     )
 
-    json_data, _ := json.Marshal(return_data)
-
-    data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-    
-    return data
+    return out
 }

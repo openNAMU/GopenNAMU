@@ -4,7 +4,7 @@ import (
 	"opennamu/route/tool"
 )
 
-func View_edit(config tool.Config, doc_name string) tool.View_result {
+func View_edit(config tool.Config, doc_name string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -34,16 +34,5 @@ func View_edit(config tool.Config, doc_name string) tool.View_result {
         map[string]string{},
     )
 
-    return_data := make(map[string]any)
-    return_data["response"] = "ok"
-    return_data["data"] = out
-
-    json_data, _ := json.Marshal(return_data)
-    
-    result_data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-
-    return result_data
+    return out
 }

@@ -4,7 +4,7 @@ import (
 	"opennamu/route/tool"
 )
 
-func View_user_watch_list(config tool.Config, num string, do_type string) tool.View_result {
+func View_user_watch_list(config tool.Config, num string, do_type string) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -15,18 +15,7 @@ func View_user_watch_list(config tool.Config, num string, do_type string) tool.V
     data_html := ""
 
     if api_data["response"] != "ok" {
-        return_data := make(map[string]any)
-        return_data["response"] = "error"
-        return_data["data"] = tool.Get_error_page(db, config, "auth")
-
-        json_data, _ := json.Marshal(return_data)
-
-        data := tool.View_result{
-            HTML : return_data["data"].(string),
-            JSON : string(json_data),
-        }
-
-        return data
+        return tool.Get_error_page(db, config, "auth")
     } else {
         data_html += "<ul>"
         for _, title := range api_data["data"].([]string) {
@@ -54,16 +43,5 @@ func View_user_watch_list(config tool.Config, num string, do_type string) tool.V
         map[string]string{},
     )
 
-    return_data := make(map[string]any)
-    return_data["response"] = "ok"
-    return_data["data"] = out
-    
-    json_data, _ := json.Marshal(return_data)
-
-    data := tool.View_result{
-        HTML : out,
-        JSON : string(json_data),
-    }
-
-    return data
+    return out
 }

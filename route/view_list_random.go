@@ -4,7 +4,7 @@ import (
 	"opennamu/route/tool"
 )
 
-func View_list_random(config tool.Config) tool.View_result {
+func View_list_random(config tool.Config) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -36,16 +36,5 @@ func View_list_random(config tool.Config) tool.View_result {
         map[string]string{},
     )
 
-    return_data := make(map[string]any)
-    return_data["response"] = "ok"
-    return_data["data"] = out
-
-    json_data, _ := json.Marshal(return_data)
-
-    result_data := tool.View_result{
-        HTML : out,
-        JSON : string(json_data),
-    }
-
-    return result_data
+    return out
 }

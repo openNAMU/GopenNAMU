@@ -4,13 +4,11 @@ import (
 	"opennamu/route/tool"
 )
 
-func View_main_other(config tool.Config) tool.View_result {
+func View_main_other(config tool.Config) string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
     
-    return_data := make(map[string]any)
-    return_data["response"] = "ok"
-    return_data["data"] = tool.Get_template(
+    out := tool.Get_template(
         db,
         config,
         tool.Get_language(db, "other_tool", true),
@@ -66,12 +64,5 @@ func View_main_other(config tool.Config) tool.View_result {
         map[string]string{},
     )
 
-    json_data, _ := json.Marshal(return_data)
-
-    data := tool.View_result{
-        HTML : return_data["data"].(string),
-        JSON : string(json_data),
-    }
-
-    return data
+    return out
 }
