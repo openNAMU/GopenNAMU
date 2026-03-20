@@ -148,8 +148,6 @@ func main() {
             route_data = route.Api_func_auth(config)
         case "api_bbs_list":
             route_data = route.Api_bbs_list_exter(config)
-        case "api_list_old_page":
-            route_data = route.Api_list_old_page(config)
         case "api_w_set_reset":
             route_data = route.Api_w_set_reset(config)
         case "api_list_title_index":
@@ -407,6 +405,86 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         })
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/list/document/old", func(c *gin.Context) {
+        route_data := route.View_list_old_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "old")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/list/document/old/:num", func(c *gin.Context) {
+        route_data := route.View_list_old_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "old")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/list/document/new", func(c *gin.Context) {
+        route_data := route.View_list_old_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "new")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/list/document/new/:num", func(c *gin.Context) {
+        route_data := route.View_list_old_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "new")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/list/document/long", func(c *gin.Context) {
+        route_data := route.View_list_long_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "long")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/list/document/long/:num", func(c *gin.Context) {
+        route_data := route.View_list_long_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "long")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/list/document/short", func(c *gin.Context) {
+        route_data := route.View_list_long_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "1", "short")
+        c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+    })
+
+    r.GET("/list/document/short/:num", func(c *gin.Context) {
+        route_data := route.View_list_long_page(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("num"), "short")
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 

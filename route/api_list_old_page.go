@@ -4,14 +4,11 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_list_old_page(config tool.Config) string {
+func Api_list_old_page(config tool.Config, num string, set_type string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    page_int := tool.Str_to_int(other_set["num"])
+    page_int := tool.Str_to_int(num)
     if page_int > 0 {
         page_int = (page_int * 50) - 50
     } else {
@@ -19,7 +16,7 @@ func Api_list_old_page(config tool.Config) string {
     }
 
     query := ""
-    if other_set["set_type"] == "old" {
+    if set_type == "old" {
         query = "select doc_name, set_data from data_set where set_name = 'last_edit' and doc_rev = '' and " + tool.Get_except_document_name_SQL("doc_name") + " and not (doc_name) in (select doc_name from data_set where set_name = 'doc_type' and set_data != '') order by set_data asc limit ?, 50"
     } else {
         query = "select doc_name, set_data from data_set where set_name = 'last_edit' and doc_rev = '' and " + tool.Get_except_document_name_SQL("doc_name") + " and not (doc_name) in (select doc_name from data_set where set_name = 'doc_type' and set_data != '') order by set_data desc limit ?, 50"
@@ -43,12 +40,11 @@ func Api_list_old_page(config tool.Config) string {
             panic(err)
         }
 
-        data_list = append(data_list, []string{doc_name, date})
+        data_list = append(data_list, []string{ doc_name, date })
     }
 
     return_data := make(map[string]any)
     return_data["data"] = data_list
 
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
+    return return_data
 }
