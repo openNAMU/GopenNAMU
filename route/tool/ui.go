@@ -141,6 +141,11 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
         path = option["path"]
     }
 
+    doc_length := ""
+    if _, ok := option["doc_length"]; ok {
+        doc_length = option["doc_length"]
+    }
+
     context := pongo2.Context{
         "imp" : []any{
             name,
@@ -182,6 +187,7 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
         "main_head_dark" : imp_3[5],
         "description_doc" : imp_3[6],
         "view_count" : imp_3[7],
+        "length_doc" : doc_length,
     }
 
     tpl, err := pongo2.FromFile(Get_skin_route(skin_name, "index.html"))
