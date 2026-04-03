@@ -142,8 +142,8 @@ func Get_template(db *sql.DB, config Config, name string, data string, other []a
     }
 
     doc_length := ""
-    if _, ok := option["doc_length"]; ok {
-        doc_length = option["doc_length"]
+    if _, ok := option["length_doc"]; ok {
+        doc_length = option["length_doc"]
     }
 
     context := pongo2.Context{
