@@ -128,8 +128,6 @@ func main() {
             route_data = route.Api_func_ip(config)
         case "api_list_recent_edit_request":
             route_data = route.Api_list_recent_edit_request(config)
-        case "api_bbs":
-            route_data = route.Api_bbs_exter(config)
         case "api_w_watch_list":
             route_data = route.Api_w_watch_list_exter(config)
         case "api_user_watch_list":

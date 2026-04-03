@@ -5,16 +5,6 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_bbs_exter(config tool.Config) string {
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := Api_bbs(config, other_set["bbs_num"], other_set["page"])
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
-}
-
 func Api_bbs_num_to_name(db *sql.DB, set_id string) string {
     bbs_name := ""
 
