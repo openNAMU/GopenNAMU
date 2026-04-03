@@ -4,12 +4,9 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_user_setting_editor(config tool.Config) string {
+func Api_user_setting_editor(config tool.Config) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
-
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
 
     ip := config.IP
     if !tool.IP_or_user(ip) {
@@ -37,8 +34,7 @@ func Api_user_setting_editor(config tool.Config) string {
         return_data["response"] = "ok"
         return_data["data"] = data_list
 
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
+        return return_data
     } else {
         return_data := make(map[string]any)
         return_data["response"] = "require auth"
@@ -46,7 +42,6 @@ func Api_user_setting_editor(config tool.Config) string {
             "authority_error": tool.Get_language(db, "authority_error", false),
         }
 
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
+        return return_data
     }
 }

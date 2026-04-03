@@ -4,28 +4,7 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_list_recent_change_exter(config tool.Config) string {
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := Api_list_recent_change_call(config, other_set["type"], other_set["limit"], other_set["num"])
-
-    var json_data []byte
-
-    if other_set["legacy"] != "" {
-        json_data, _ = json.Marshal(return_data["data"].([][]string))
-    } else {
-        json_data, _ = json.Marshal(return_data)
-    }
-    
-    return string(json_data)
-}
-
 func Api_list_recent_change(config tool.Config, set_type string, limit string, num string) map[string]any {
-    return Api_list_recent_change_call(config, set_type, limit, num)
-}
-
-func Api_list_recent_change_call(config tool.Config, set_type string, limit string, num string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -48,7 +27,9 @@ func Api_list_recent_change_call(config tool.Config, set_type string, limit stri
     rows := tool.Query_DB(
         db,
         "select id, title from rc where type = ? order by date desc limit ?, ?",
-        set_type, page_int, limit_int,
+        set_type,
+        page_int,
+        limit_int,
     )
     defer rows.Close()
 

@@ -53,11 +53,15 @@ func View_main_404_page(config tool.Config, url string) string {
                 map[string]string{},
             )
         } else {
+            data_in := tool.Get_language(db, "func_404_error", true)
+            data_in += "<hr class=\"main_hr\">"
+            data_in += "Path : " + url
+
             data_html = tool.Get_template(
                 db,
                 config,
                 "404",
-                tool.Get_language(db, "func_404_error", true),
+                data_in,
                 []any{},
                 [][]any{},
                 map[string]string{},

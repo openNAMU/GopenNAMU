@@ -126,8 +126,6 @@ func main() {
             route_data = route.Api_topic(config)
         case "api_func_ip":
             route_data = route.Api_func_ip(config)
-        case "api_list_recent_change":
-            route_data = route.Api_list_recent_change_exter(config)
         case "api_list_recent_edit_request":
             route_data = route.Api_list_recent_edit_request(config)
         case "api_bbs":
@@ -150,12 +148,6 @@ func main() {
             route_data = route.Api_w_set_reset(config)
         case "api_list_title_index":
             route_data = route.Api_list_title_index(config)
-        case "api_user_setting_editor_post":
-            route_data = route.Api_user_setting_editor_post(config)
-        case "api_user_setting_editor_delete":
-            route_data = route.Api_user_setting_editor_delete(config)
-        case "api_user_setting_editor":
-            route_data = route.Api_user_setting_editor(config)
         case "api_setting":
             route_data = route.Api_setting(config)
         case "api_setting_put":
@@ -236,6 +228,60 @@ func main() {
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
+    r.GET("/api/recent_change", func(c *gin.Context) {
+        route_data := route.Api_list_recent_change(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "normal", "10", "1")
+        in_data := route_data["data"].([][]string)
+        c.JSON(http.StatusOK, in_data)
+    })
+
+    r.GET("/api/recent_change/:limit", func(c *gin.Context) {
+        route_data := route.Api_list_recent_change(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "normal", c.Param("limit"), "1")
+        in_data := route_data["data"].([][]string)
+        c.JSON(http.StatusOK, in_data)
+    })
+
+    r.GET("/api/recent_discuss", func(c *gin.Context) {
+        route_data := route.Api_list_recent_discuss(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "10", "1", "")
+        in_data := route_data["data"].([][]string)
+        c.JSON(http.StatusOK, in_data)
+    })
+
+    r.GET("/api/recent_discuss/:limit", func(c *gin.Context) {
+        route_data := route.Api_list_recent_discuss(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("limit"), "1", "")
+        in_data := route_data["data"].([][]string)
+        c.JSON(http.StatusOK, in_data)
+    })
+
+    r.GET("/api/v2/user/setting/editor", func(c *gin.Context) {
+        route_data := route.Api_user_setting_editor(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        })
+        c.JSON(http.StatusOK, route_data)
+    })
+
     r.GET("/api/v2/page_view/*doc_name", func(c *gin.Context) {
         route_data := route.Api_w_page_view(tool.Config{
             Other_set: "",
@@ -243,6 +289,26 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("doc_name"), "/"))
+        c.JSON(http.StatusOK, route_data)
+    })
+
+    r.POST("/api/v2/user/setting/editor", func(c *gin.Context) {
+        route_data := route.Api_user_setting_editor_post(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Request.FormValue("data"))
+        c.JSON(http.StatusOK, route_data)
+    })
+
+    r.DELETE("/api/v2/user/setting/editor", func(c *gin.Context) {
+        route_data := route.Api_user_setting_editor_delete(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Request.FormValue("data"))
         c.JSON(http.StatusOK, route_data)
     })
 
@@ -273,6 +339,16 @@ func main() {
             Cookies: tool.Get_Cookies(c),
             Session: "",
         }, strings.TrimPrefix(c.Param("set_id") , "/"), strings.TrimPrefix(c.Param("set_code"), "/"))
+        c.JSON(http.StatusOK, route_data)
+    })
+
+    r.GET("/api/v2/bbs/main", func(c *gin.Context) {
+        route_data := route.Api_bbs(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, "", "1")
         c.JSON(http.StatusOK, route_data)
     })
 
