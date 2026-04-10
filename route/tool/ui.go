@@ -471,9 +471,6 @@ func Get_editor_ui(db *sql.DB, config Config, data string, do_type string, add_o
     }
 
     out_field := Get_captcha_ui(db, config) + Get_IP_warning_ui(db, config) + add_on
-    if out_field != "" {
-        out_field += `<hr class="main_hr">`
-    }
 
     return `
         <textarea class="__ON_TEXTAREA__" style="display: none;" id="opennamu_edit_origin" name="doc_data_org">` + HTML_escape(data) + `</textarea>
@@ -717,4 +714,72 @@ func Get_thread_ui(user_name string, date string, data string, code string, colo
             <hr class="main_hr">
         </span>
     `
+}
+
+func Get_edit_check_box_ui(db *sql.DB) string {
+    cccb_text := ""
+
+    Query_DB(
+        db,
+        `select data from other where name = "copyright_checkbox_text"`,
+        &cccb_text,
+    )
+
+    result := ""
+    if cccb_text != "" {
+        result = `
+            <label class="__ON_CHECKLABEL__"><input class="__ON_CHECKBOX__" type="checkbox" name="copyright_agreement" value="yes" checked> ` + cccb_text + `</label>
+            <hr class="main_hr">
+        `
+    }
+
+    return result
+}
+
+func Get_edit_bottom_text_ui(db *sql.DB, do_type string) string {
+    b_text := ""
+
+    Query_DB(
+        db,
+        `select data from other where name = "edit_bottom_text"`,
+        &b_text,
+    )
+
+    db_data := ""
+
+    switch do_type {
+    case "edit":
+        Query_DB(
+            db,
+            `select data from other where name = "edit_only_bottom_text"`,
+            &db_data,
+        )
+    case "move":
+        Query_DB(
+            db,
+            `select data from other where name = "move_bottom_text"`,
+            &db_data,
+        )
+    case "delete":
+        Query_DB(
+            db,
+            `select data from other where name = "delete_bottom_text"`,
+            &db_data,
+        )
+    default:
+        Query_DB(
+            db,
+            `select data from other where name = "revert_bottom_text"`,
+            &db_data,
+        )
+    }
+    
+    result := ""
+    if db_data != "" {
+        result = db_data + `<hr class="main_hr">`
+    } else if b_text != "" {
+        result = b_text + `<hr class="main_hr">`
+    }
+
+    return result
 }
