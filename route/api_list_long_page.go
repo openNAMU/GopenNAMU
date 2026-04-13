@@ -15,9 +15,9 @@ func Api_list_long_page(config tool.Config, num string, set_type string) map[str
 
     query := ""
     if set_type == "long" {
-        query = "select doc_name, set_data from data_set where set_name = 'length' and doc_rev = '' and " + tool.Get_except_document_name_SQL("doc_name") + " order by set_data + 0 asc limit ?, 50"
-    } else {
         query = "select doc_name, set_data from data_set where set_name = 'length' and doc_rev = '' and " + tool.Get_except_document_name_SQL("doc_name") + " order by set_data + 0 desc limit ?, 50"
+    } else {
+        query = "select doc_name, set_data from data_set where set_name = 'length' and doc_rev = '' and " + tool.Get_except_document_name_SQL("doc_name") + " order by set_data + 0 asc limit ?, 50"
     }
 
     rows := tool.Query_DB(
