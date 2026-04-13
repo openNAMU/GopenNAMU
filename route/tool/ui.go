@@ -352,7 +352,9 @@ func Get_page_control(db *sql.DB, page int, count int, max_count int, url string
         before_url := strings.ReplaceAll(url, "{}", strconv.Itoa(prev_page))
 
         data_html += `<a href="` + before_url + `">(` + Get_language(db, "previous", true) + `)</a> `
-    } else if count == max_count {
+    }
+    
+    if count == max_count {
         prev_page := page + 1
         after_url := strings.ReplaceAll(url, "{}", strconv.Itoa(prev_page))
 
