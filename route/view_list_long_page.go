@@ -6,7 +6,7 @@ func View_list_long_page(config tool.Config, num string, set_type string) string
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-	api_data := Api_list_old_page(config, num, set_type)
+	api_data := Api_list_long_page(config, num, set_type)
     api_data_list := api_data["data"].([][]string)
 
     if set_type != "long" {
@@ -25,10 +25,10 @@ func View_list_long_page(config tool.Config, num string, set_type string) string
         doc_title := tool.HTML_escape(data[0])
         length := tool.HTML_escape(data[1])
 
-        right := `<a href="/w/` + doc_name + `">(` + doc_title + `)</a>`
+        right := `<a href="/w/` + doc_name + `">` + doc_title + `</a>`
         left := length
 
-        data_html += tool.Get_list_ui(left, right, "", "")
+        data_html += tool.Get_list_ui(right, left, "", "")
     }
 
     data_html += tool.Get_page_control(

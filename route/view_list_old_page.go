@@ -25,8 +25,8 @@ func View_list_old_page(config tool.Config, num string, set_type string) string 
         doc_title := tool.HTML_escape(data[0])
         date := tool.HTML_escape(data[1])
 
-        right := `<a href="/w/` + doc_name + `">(` + doc_title + `)</a>`
-        left := date
+        left := `<a href="/w/` + doc_name + `">` + doc_title + `</a>`
+        right := date
 
         data_html += tool.Get_list_ui(left, right, "", "")
     }
