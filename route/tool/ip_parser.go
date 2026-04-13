@@ -20,6 +20,32 @@ func IP_or_user(ip string) bool {
     }
 }
 
+func Get_user_document(db *sql.DB, user_name string) bool {
+    data := ""
+
+    QueryRow_DB(
+        db,
+        "select title from data where title = ?",
+        []any{ &data },
+        "user:" + user_name,
+    )
+
+    return data != ""
+}
+
+func Get_user_title(db *sql.DB, user_name string) string {
+    user_title := ""
+
+    QueryRow_DB(
+        db,
+        "select data from user_set where name = 'user_title' and id = ?",
+        []any{ &user_title },
+        user_name,
+    )
+
+    return user_title
+}
+
 func Get_level(db *sql.DB, ip string) []string {
     level := "0"
     QueryRow_DB(
@@ -184,6 +210,8 @@ func Get_user_ban_type(ban_type string) string {
     }
 }
 
+// Get_user_ban : login, register, edit_request, ""
+// Return : []string{"true", "a" + ban_type}
 func Get_user_ban(db *sql.DB, ip string, tool string) []string {
     rows := Query_DB(
         db,
@@ -337,14 +365,7 @@ func IP_parser(db *sql.DB, ip string, my_ip string) string {
             }
 
             ip = "<a href=\"/w/" + Url_parser("user:" + raw_ip) + "\">" + ip + "</a>"
-
-            user_title := ""
-            QueryRow_DB(
-                db,
-                "select data from user_set where name = 'user_title' and id = ?",
-                []any{ &user_title },
-                raw_ip,
-            )
+            user_title := Get_user_title(db, raw_ip)
 
             if Check_acl(db, "", "", "user_name_bold", raw_ip) {
                 ip = "<b>" + ip + "</b>"
@@ -401,10 +422,6 @@ func Do_ban_insert(db *sql.DB, user_name string, end_date string, reason string,
             login,
         )
     }
-}
-
-func Get_user_info(db *sql.DB, user_name string) string {
-    return ""
 }
 
 func Get_main_skin_set(db *sql.DB, config Config, set_name string) string {

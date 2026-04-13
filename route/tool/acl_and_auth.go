@@ -125,6 +125,23 @@ func Get_auth_group_info(db *sql.DB, auth string) map[string]bool {
     return Check_auth(data_list)
 }
 
+func Get_auth_date(db *sql.DB, user_name string) string {
+    data := ""
+
+    QueryRow_DB(
+        db,
+        "select data from user_set where id = ? and name = 'auth_date'",
+        []any{ &data },
+        user_name,
+    )
+
+    if data == "" {
+        data = "0"
+    }
+
+    return data
+}
+
 func Auth_include_upper_auth(auth_info map[string]bool) bool {
     return auth_info["owner"]
 }

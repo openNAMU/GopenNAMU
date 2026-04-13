@@ -719,10 +719,10 @@ func Get_thread_ui(user_name string, date string, data string, code string, colo
 func Get_edit_check_box_ui(db *sql.DB) string {
     cccb_text := ""
 
-    Query_DB(
+    QueryRow_DB(
         db,
         `select data from other where name = "copyright_checkbox_text"`,
-        &cccb_text,
+        []any{ &cccb_text },
     )
 
     result := ""
@@ -739,38 +739,38 @@ func Get_edit_check_box_ui(db *sql.DB) string {
 func Get_edit_bottom_text_ui(db *sql.DB, do_type string) string {
     b_text := ""
 
-    Query_DB(
+    QueryRow_DB(
         db,
         `select data from other where name = "edit_bottom_text"`,
-        &b_text,
+        []any{ &b_text },
     )
 
     db_data := ""
 
     switch do_type {
     case "edit":
-        Query_DB(
+        QueryRow_DB(
             db,
             `select data from other where name = "edit_only_bottom_text"`,
-            &db_data,
+            []any{ &db_data },
         )
     case "move":
-        Query_DB(
+        QueryRow_DB(
             db,
             `select data from other where name = "move_bottom_text"`,
-            &db_data,
+            []any{ &db_data },
         )
     case "delete":
-        Query_DB(
+        QueryRow_DB(
             db,
             `select data from other where name = "delete_bottom_text"`,
-            &db_data,
+            []any{ &db_data },
         )
     default:
-        Query_DB(
+        QueryRow_DB(
             db,
             `select data from other where name = "revert_bottom_text"`,
-            &db_data,
+            []any{ &db_data },
         )
     }
     

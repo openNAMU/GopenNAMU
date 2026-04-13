@@ -226,6 +226,16 @@ func main() {
         c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
     })
 
+    r.GET("/api/user_info/:user_name", func(c *gin.Context) {
+        route_data := route.Api_user_info(tool.Config{
+            Other_set: "",
+            IP: tool.Get_IP(c),
+            Cookies: tool.Get_Cookies(c),
+            Session: "",
+        }, c.Param("user_name"))
+        c.JSON(http.StatusOK, route_data)
+    })
+
     r.GET("/api/recent_change", func(c *gin.Context) {
         route_data := route.Api_list_recent_change(tool.Config{
             Other_set: "",
