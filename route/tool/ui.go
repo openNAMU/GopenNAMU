@@ -326,8 +326,23 @@ func Get_list_ui(left string, right string, bottom string, class_name string) st
 
 func Get_error_page(db *sql.DB, config Config, error_name string) string {
     data := ""
-    if error_name == "auth" {
+    switch error_name {
+    case "auth":
         data = Get_language(db, "authority_error", true)
+    case "slow edit limit":
+        data = Get_language(db, "fast_edit_error", true)
+    case "edit filter (content)":
+        data = Get_language(db, "edit_filter_error", true) + " (content)"
+    case "edit filter (send)":
+        data = Get_language(db, "edit_filter_error", true) + " (send)"
+    case "send require":
+        data = Get_language(db, "error_edit_send_request", true)
+    case "checkbox check require":
+        data = Get_language(db, "copyright_disagreed", true)
+    case "overflow max length":
+        data = Get_language(db, "document_content_max_length_error", true)
+    default:
+        data = Get_language(db, "inter_error", true)
     }
 
     return Get_template(

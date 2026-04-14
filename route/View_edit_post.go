@@ -14,7 +14,7 @@ func View_edit_post(config tool.Config, doc_name string, data string, send strin
     if return_data["response"].(string) == "ok" {
         result_html = tool.Get_redirect("/w/" + tool.Url_parser(doc_name))
     } else {
-        result_html = tool.Get_error_page(db, config, "auth")
+        result_html = tool.Get_error_page(db, config, return_data["data"].(string))
     }
 
     return result_html
