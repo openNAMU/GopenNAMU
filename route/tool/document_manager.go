@@ -136,6 +136,7 @@ func Do_edit_slow_check(db *sql.DB, config Config, do_type string) bool {
     return true
 }
 
+// Do_edit_max_length_check : over is false, under is true
 func Do_edit_max_length_check(db *sql.DB, config Config, data string) bool {
     var check string
 
@@ -145,7 +146,7 @@ func Do_edit_max_length_check(db *sql.DB, config Config, data string) bool {
         []any{ &check },
     )
 
-    if !exist {
+    if !exist || check == "" {
         return true
     }
 
