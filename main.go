@@ -1043,7 +1043,7 @@ func main() {
 			IP:        tool.Get_IP(c),
 			Cookies:   tool.Get_Cookies(c),
 			Session:   "",
-		}, strings.TrimPrefix(c.Param("doc_name"), "/"))
+		}, strings.TrimPrefix(c.Param("doc_name"), "/"), c.Query("load"))
 		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
 	})
 
