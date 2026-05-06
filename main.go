@@ -122,8 +122,6 @@ func main() {
 			route_data = route.Api_w_random(config)
 		case "api_topic":
 			route_data = route.Api_topic(config)
-		case "api_func_ip":
-			route_data = route.Api_func_ip(config)
 		case "api_list_recent_edit_request":
 			route_data = route.Api_list_recent_edit_request(config)
 		case "api_w_watch_list":
@@ -148,8 +146,6 @@ func main() {
 			route_data = route.Api_setting(config)
 		case "api_setting_put":
 			route_data = route.Api_setting_put(config)
-		case "api_func_ip_menu":
-			route_data = route.Api_func_ip_menu(config)
 		case "api_func_ip_post":
 			route_data = route.Api_func_ip_post(config)
 		case "api_list_acl":
@@ -276,6 +272,26 @@ func main() {
 		}, c.Param("limit"), "1", "")
 		in_data := route_data["data"].([][]string)
 		c.JSON(http.StatusOK, in_data)
+	})
+
+	r.GET("/api/v2/ip/:ip", func(c *gin.Context) {
+		route_data := route.Api_func_ip(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("ip"))
+		c.JSON(http.StatusOK, route_data)
+	})
+
+	r.GET("/api/v2/ip_menu/:ip", func(c *gin.Context) {
+		route_data := route.Api_func_ip_menu(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("ip"), "")
+		c.JSON(http.StatusOK, route_data)
 	})
 
 	r.GET("/api/v2/user/setting/editor", func(c *gin.Context) {

@@ -107,7 +107,9 @@ func Api_bbs_w_comment_one(config tool.Config, already_auth_check bool, do_type 
         return_data["data"] = data_list
     } else {
         if len(data_list) > 0 {
-            return_data["data"] = []map[string]string{ data_list[0] }
+            return_data["data"] = []map[string]string{
+                data_list[0],
+            }
         } else {
             return_data["data"] = []map[string]string{}
         }
