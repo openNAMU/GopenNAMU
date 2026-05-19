@@ -324,6 +324,7 @@ func Get_list_ui(left string, right string, bottom string, class_name string) st
     return data_html
 }
 
+// Get_error_page : auth, slow edit limit, edit filter (content), edit filter (send), send require, checkbox check require, overflow max length
 func Get_error_page(db *sql.DB, config Config, error_name string) string {
     data := ""
     switch error_name {

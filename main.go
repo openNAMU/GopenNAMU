@@ -975,6 +975,29 @@ func main() {
 		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
 	})
 
+	r.GET("/bbs/make", func(c *gin.Context) {
+		route_data := route.View_bbs_make(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		})
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
+	r.POST("/bbs/make", func(c *gin.Context) {
+		bbs_name := c.PostForm("bbs_name")
+		bbs_type := c.PostForm("bbs_type")
+
+		route_data := route.View_bbs_make_post(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, bbs_name, bbs_type)
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
 	r.GET("/bbs/in/:set_id", func(c *gin.Context) {
 		route_data := route.View_bbs_in(tool.Config{
 			Other_set: "",
