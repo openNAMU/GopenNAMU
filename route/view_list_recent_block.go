@@ -98,7 +98,7 @@ func View_list_recent_block(config tool.Config, num string, set_type string, why
         { "ongoing", tool.Get_language(db, "in_progress", true) },
     }
     for _, option := range menu_option {
-        data_html += `<a href="/recent_discuss/1/` + option[0] + `">(` + option[1] + `)</a> `
+        data_html += `<a href="/recent_block/1/` + option[0] + `">(` + option[1] + `)</a> `
 
         if option[0] == set_type && set_type != "all" {
             sub = "(" + option[1] + ")"
