@@ -4,7 +4,7 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_w_random(config tool.Config) string {
+func Api_w_random(config tool.Config) map[string]string {
     db := tool.DB_connect()
     defer tool.DB_close(db)
     
@@ -18,6 +18,5 @@ func Api_w_random(config tool.Config) string {
     new_data := map[string]string{}
     new_data["data"] = title
 
-    json_data, _ := json.Marshal(new_data)
-    return string(json_data)
+    return new_data
 }

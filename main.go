@@ -118,8 +118,6 @@ func main() {
 			route_data = "ok"
 		case "api_func_sha224":
 			route_data = route.Api_func_sha224(config)
-		case "api_w_random":
-			route_data = route.Api_w_random(config)
 		case "api_topic":
 			route_data = route.Api_topic(config)
 		case "api_list_recent_edit_request":
