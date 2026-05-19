@@ -132,8 +132,6 @@ func main() {
 			route_data = route.Api_w_render_exter(config)
 		case "api_func_llm":
 			route_data = route.Api_func_llm(config)
-		case "api_func_language":
-			route_data = route.Api_func_language(config)
 		case "api_func_auth":
 			route_data = route.Api_func_auth(config)
 		case "api_bbs_list":
@@ -272,6 +270,20 @@ func main() {
 		}, c.Param("limit"), "1", "")
 		in_data := route_data["data"].([][]string)
 		c.JSON(http.StatusOK, in_data)
+	})
+
+	r.POST("/api/v2/lang", func(c *gin.Context) {
+		data := c.PostForm("data")
+		safe := c.PostForm("safe")
+		legacy := c.PostForm("legacy")
+
+		route_data := route.Api_func_language(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, data, safe, legacy)
+		c.JSON(http.StatusOK, route_data)
 	})
 
 	r.GET("/api/v2/ip/:ip", func(c *gin.Context) {
