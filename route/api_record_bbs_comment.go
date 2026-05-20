@@ -2,7 +2,7 @@ package route
 
 import "opennamu/route/tool"
 
-func Api_record_bbs(config tool.Config, user_name string, page string) map[string]any {
+func Api_record_bbs_comment(config tool.Config, user_name string, page string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
@@ -14,7 +14,7 @@ func Api_record_bbs(config tool.Config, user_name string, page string) map[strin
 
     rows := tool.Query_DB(
         db,
-        `select distinct set_id from bbs_data where set_name = "user_id" and set_data = ? order by set_id desc limit ?, 50`,
+        `select substr(set_id, 1, instr(set_id, '-') - 1) as bbs_id, min(set_id) as set_id from bbs_data where set_name = "comment_user_id" and set_data = ? group by bbs_id order by bbs_id desc limit ?, 50`,
         user_name,
         num,
     )
@@ -23,9 +23,10 @@ func Api_record_bbs(config tool.Config, user_name string, page string) map[strin
     data_list := [][]string{}
 
     for rows.Next() {
+        var bbs_id string
         var set_id string
 
-        err := rows.Scan(&set_id)
+        err := rows.Scan(&bbs_id, &set_id)
         if err != nil {
             panic(err)
         }
@@ -33,12 +34,12 @@ func Api_record_bbs(config tool.Config, user_name string, page string) map[strin
         date := ""
         tool.QueryRow_DB(
             db,
-            `select set_data from bbs_data where set_name = "date" and set_id = ? order by set_data desc limit 1`,
+            `select set_data from bbs_data where set_name = "comment_date" and set_id = ? order by set_data desc limit 1`,
             []any{ &date },
             set_id,
         )
 
-        data_list = append(data_list, []string{set_id, date})
+        data_list = append(data_list, []string{bbs_id, date})
     }
 
     result_data := make(map[string]any)

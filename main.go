@@ -535,6 +535,86 @@ func main() {
 		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
 	})
 
+	r.GET("/record_bbs/:user_name", func(c *gin.Context) {
+		route_data := route.View_record_bbs(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("user_name"), "1")
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
+	r.GET("/record_bbs/:user_name/:page", func(c *gin.Context) {
+		route_data := route.View_record_bbs(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("user_name"), c.Param("page"))
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
+	r.GET("/record_bbs_in/:set_id/:user_name", func(c *gin.Context) {
+		route_data := route.View_record_bbs_in(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("user_name"), c.Param("set_id"), "1")
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
+	r.GET("/record_bbs_in/:set_id/:user_name/:page", func(c *gin.Context) {
+		route_data := route.View_record_bbs_in(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("user_name"), c.Param("set_id"), c.Param("page"))
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
+	r.GET("/record_bbs_comment/:user_name", func(c *gin.Context) {
+		route_data := route.View_record_bbs_comment(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("user_name"), "1")
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
+	r.GET("/record_bbs_comment/:user_name/:page", func(c *gin.Context) {
+		route_data := route.View_record_bbs_comment(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("user_name"), c.Param("page"))
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
+	r.GET("/record_bbs_comment_in/:set_id/:user_name", func(c *gin.Context) {
+		route_data := route.View_record_bbs_comment_in(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("user_name"), c.Param("set_id"), "1")
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
+	r.GET("/record_bbs_comment_in/:set_id/:user_name/:page", func(c *gin.Context) {
+		route_data := route.View_record_bbs_comment_in(tool.Config{
+			Other_set: "",
+			IP:        tool.Get_IP(c),
+			Cookies:   tool.Get_Cookies(c),
+			Session:   "",
+		}, c.Param("user_name"), c.Param("set_id"), c.Param("page"))
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
+	})
+
 	r.GET("/list/random", func(c *gin.Context) {
 		route_data := route.View_list_random(tool.Config{
 			Other_set: "",

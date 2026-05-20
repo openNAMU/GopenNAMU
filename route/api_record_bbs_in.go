@@ -15,6 +15,7 @@ func Api_record_bbs_in(config tool.Config, user_name string, set_id string, page
     rows := tool.Query_DB(
         db,
         `select set_code from bbs_data where set_name = "user_id" and set_id = ? and set_data = ? order by set_code desc limit ?, 50`,
+        set_id,
         user_name,
         num,
     )
