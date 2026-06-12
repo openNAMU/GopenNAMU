@@ -13,58 +13,16 @@ import (
 
 var db_set = map[string]string{}
 
-func DB_table_list() map[string][]string {
-    create_data := map[string][]string{}
+func Get_DB_set() map[string]string {
+    new_db_set := map[string]string{}
 
-    // 폐지 예정 (data_set으로 통합)
-    create_data["data_set"] = []string{"doc_name", "doc_rev", "set_name", "set_data"}
-
-    create_data["data"] = []string{"title", "data", "type"}
-    create_data["history"] = []string{"id", "title", "data", "date", "ip", "send", "leng", "hide", "type"}
-    create_data["rc"] = []string{"id", "title", "date", "type"}
-    create_data["acl"] = []string{"title", "data", "type"}
-
-    // 개편 예정 (data_link로 변경)
-    create_data["back"] = []string{"title", "link", "type", "data"}
-
-    // 폐지 예정 (topic_set으로 통합) [가장 시급]
-    create_data["topic_set"] = []string{"thread_code", "set_name", "set_id", "set_data"}
-
-    create_data["rd"] = []string{"title", "sub", "code", "date", "band", "stop", "agree", "acl"}
-    create_data["topic"] = []string{"id", "data", "date", "ip", "block", "top", "code"}
-
-    // 폐지 예정 (user_set으로 통합)
-    create_data["rb"] = []string{"block", "end", "today", "blocker", "why", "band", "login", "ongoing"}
-
-    // 개편 예정 (wiki_set과 wiki_filter과 wiki_vote으로 변경)
-    create_data["other"] = []string{"name", "data", "coverage"}
-    create_data["html_filter"] = []string{"html", "kind", "plus", "plus_t"}
-    create_data["vote"] = []string{"name", "id", "subject", "data", "user", "type", "acl"}
-
-    // 개편 예정 (auth와 auth_log로 변경)
-    create_data["alist"] = []string{"name", "acl"}
-    create_data["re_admin"] = []string{"who", "what", "time"}
-
-    // 개편 예정 (user_notice와 user_agent로 변경)
-    create_data["ua_d"] = []string{"name", "ip", "ua", "today", "sub"}
-
-    create_data["user_set"] = []string{"name", "id", "data"}
-    create_data["user_notice"] = []string{"id", "name", "data", "date", "readme"}
-
-    create_data["bbs_set"] = []string{"set_name", "set_code", "set_id", "set_data"}
-    create_data["bbs_data"] = []string{"set_name", "set_code", "set_id", "set_data"}
-
-    return create_data
-}
-
-func DB_init_standalone() {
     db_env, db_env_exist := os.LookupEnv("NAMU_DB")
     db_env_type, db_env_type_exist := os.LookupEnv("NAMU_DB_TYPE")
     if db_env_exist || db_env_type_exist {
-        db_set["db_name"] = Choose(db_env, "data")
-        db_set["db_type"] = Choose(db_env_type, "sqlite")
+        new_db_set["db_name"] = Choose(db_env, "data")
+        new_db_set["db_type"] = Choose(db_env_type, "sqlite")
 
-        return
+        return new_db_set
     }
     
     path_dir := filepath.Join("..", "data", "set.json")
@@ -74,65 +32,65 @@ func DB_init_standalone() {
             tmp := map[string]string{}
             if err := json.Unmarshal(raw, &tmp); err == nil {
                 if v, ok := tmp["db"]; ok {
-                    db_set["db_name"] = v
+                    new_db_set["db_name"] = v
                 } else {
-                    db_set["db_name"] = "data"
+                    new_db_set["db_name"] = "data"
                 }
                 
                 if v, ok := tmp["db_type"]; ok {
-                    db_set["db_type"] = v
+                    new_db_set["db_type"] = v
                 } else {
-                    db_set["db_type"] = "sqlite"
+                    new_db_set["db_type"] = "sqlite"
                 }
 
-                return
+                return new_db_set
             }
         }
     }
 
-    db_set["db_name"] = "unknown"
-    db_set["db_type"] = "sqlite"
+    new_db_set["db_name"] = "data"
+    new_db_set["db_type"] = "sqlite"
     
-    return
+    return new_db_set
 }
 
-func DB_init_standalone_MySQL() {
+func Get_DB_set_MySQL(new_db_set map[string]string) map[string]string {
     path := filepath.Join("..", "data", "mysql.json")
     if !File_exist_check(path) {
-        return
+        return map[string]string{}
     }
 
     raw, err := os.ReadFile(path)
     if err != nil {
-        return
+        return map[string]string{}
     }
 
     tmp := map[string]string{}
     if err := json.Unmarshal(raw, &tmp); err != nil {
-        return
+        return tmp
     }
 
     if host, ok := tmp["host"]; ok && host != "" {
-        db_set["db_mysql_host"] = host
+        new_db_set["db_mysql_host"] = host
     } else {
-        db_set["db_mysql_host"] = "127.0.0.1"
+        new_db_set["db_mysql_host"] = "127.0.0.1"
     }
 
     if port, ok := tmp["port"]; ok && port != "" {
-        db_set["db_mysql_port"] = port
+        new_db_set["db_mysql_port"] = port
     } else {
-        db_set["db_mysql_port"] = "3306"
+        new_db_set["db_mysql_port"] = "3306"
     }
 
     if user, ok := tmp["user"]; ok {
-        db_set["db_mysql_user"] = user
+        new_db_set["db_mysql_user"] = user
     }
 
     if pw, ok := tmp["password"]; ok {
-        db_set["db_mysql_pw"] = pw
+        new_db_set["db_mysql_pw"] = pw
     }
 
-    return
+    return new_db_set
 }
 
 func Exec_DB(db *sql.DB, query string, values ...any) {
@@ -183,7 +141,7 @@ func Query_DB(db *sql.DB, query string, values ...any) *sql.Rows {
     }
 }
 
-// 이래서 포인터를 배우는구나...
+// QueryRow_DB 이래서 포인터를 배우는구나...
 func QueryRow_DB(db *sql.DB, query string, var_list []any, values ...any) bool {
     const retryDelay = 10 * time.Millisecond
 
@@ -213,11 +171,42 @@ func QueryRow_DB(db *sql.DB, query string, var_list []any, values ...any) bool {
     }
 }
 
-func DB_init() {
-    DB_init_standalone()
+func DB_boot() map[string]string {
+    new_db_set := Get_DB_set()
+    if new_db_set["db_type"] == "mysql" {
+        new_db_set = Get_DB_set_MySQL(new_db_set)
+    }
 
-    if db_set["db_type"] == "mysql" {
-        DB_init_standalone_MySQL()
+    db_set = new_db_set
+
+    return new_db_set
+}
+
+func DB_connect_init() (*sql.DB, error) {
+    if db_set["db_type"] == "sqlite" {
+        db, err := sql.Open("sqlite", filepath.Join("..", db_set["db_name"] + ".db") + "?_journal_mode=WAL&_busy_timeout=5000")
+        if err != nil {
+            return nil, err
+        }
+
+        if err := db.Ping(); err != nil {
+            db.Close()
+            return nil, err
+        }
+
+        return db, nil
+    } else {
+        db, err := sql.Open("mysql", db_set["db_mysql_user"] + ":" + db_set["db_mysql_pw"] + "@tcp(" + db_set["db_mysql_host"] + ":" + db_set["db_mysql_port"] + ")")
+        if err != nil {
+            return nil, err
+        }
+
+        if err := db.Ping(); err != nil {
+            db.Close()
+            return nil, err
+        }
+
+        return db, nil
     }
 }
 

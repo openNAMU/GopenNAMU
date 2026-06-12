@@ -96,7 +96,9 @@ func main() {
 
 	r.Use(error_handler())
 	pongo_init()
-	tool.DB_init()
+	
+	tool.Main_init()
+	tool.DB_boot()
 
 	r.POST("/compatible_api/:url", func(c *gin.Context) {
 		body, err := io.ReadAll(c.Request.Body)
