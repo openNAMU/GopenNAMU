@@ -127,6 +127,15 @@ func DB_alter_add_column(db *sql.DB, table_name string, column_name string, fiel
     )
 }
 
+func DB_create_history_index(db *sql.DB) {
+    _, err := db.Exec(DB_change(
+        `create index history_index on history (title, ip)`,
+    ))
+    if err != nil {
+        return
+    }
+}
+
 func DB_make(db *sql.DB, new_db_set map[string]string) error {
     if new_db_set["db_type"] == "mysql" {
         DB_make_MySQL(db, new_db_set)
@@ -161,6 +170,8 @@ func DB_make(db *sql.DB, new_db_set map[string]string) error {
         }
     }
 
+    DB_create_history_index(db)
+
     return nil
 }
 
@@ -192,15 +203,16 @@ func Main_init() {
         []any{ &now_version },
     )
 
+    last_version := Get_last_version()
     if now_version == "" {
-        First_init()
+        First_init(db)
     } else {
-        last_version := Get_last_version()
-
         if now_version != last_version["c_ver"] {
-            Make_set_json()
+            Update_init(db)
         }
     }
+
+    Always_init(db, last_version["c_ver"])
 }
 
 func Get_last_version() map[string]string {
@@ -220,10 +232,221 @@ func Get_last_version() map[string]string {
     }
 }
 
-func First_init() {
+func First_init(db *sql.DB) {
+    email := ""
+    exists := QueryRow_DB(
+        db,
+        `select html from html_filter where kind = 'email'`,
+        []any{ &email },
+    )
+    if !exists {
+        for _, v := range []string{ "naver.com", "gmail.com", "daum.net", "kakao.com" } {
+            Exec_DB(
+                db,
+                `insert into html_filter (html, kind, plus, plus_t) values (?, 'email', '', '')`,
+                v,
+            )
+        }
+    }
 
+    extension := ""
+    exists = QueryRow_DB(
+        db,
+        `select html from html_filter where kind = 'extension'`,
+        []any{ &extension },
+    )
+    if !exists {
+        for _, v := range []string{ "jpg", "jpeg", "png", "gif", "webp" } {
+            Exec_DB(
+                db,
+                `insert into html_filter (html, kind, plus, plus_t) values (?, 'extension', '', '')`,
+                v,
+            )
+        }
+    }
+
+    smtp_server := ""
+    exists = QueryRow_DB(
+        db,
+        `select data from other where name = "smtp_server"`,
+        []any{ &smtp_server },
+    )
+    if !exists {
+        for _, v := range [][]string{
+            { "smtp_server", "smtp.gmail.com" },
+            { "smtp_port", "587" },
+            { "smtp_security", "starttls" },
+        } {
+            Exec_DB(
+                db,
+                `insert into other (name, data, coverage) values (?, ?, '')`,
+                v[0],
+                v[1],
+            )
+        }
+    }
+
+    name_filter := ""
+    exists = QueryRow_DB(
+        db,
+        `select html from html_filter where kind = 'name'`,
+        []any{ &name_filter },
+    )
+    if !exists {
+        Exec_DB(
+            db,
+            `insert into html_filter (html, kind, plus, plus_t) values (?, "name", "", "")`,
+            `(?:[^A-Za-zㄱ-ㅣ가-힣0-9])`,
+        )
+    }
 }
 
-func Make_set_json() {
+func Update_init(db *sql.DB) {
+    
+}
 
+func Always_init(db *sql.DB, version string) {
+    // 버전 기입
+    Exec_DB(
+        db,
+        `delete from other where name = "ver"`,
+    )
+    Exec_DB(
+        db,
+        `insert into other (name, data, coverage) values ("ver", ?, "")`,
+        version,
+    )
+
+    // 기본 권한 그룹 설정
+    Exec_DB(
+        db,
+        `delete from alist where name = "owner"`,
+    )
+    Exec_DB(
+        db,
+        `insert into alist (name, acl) values ("owner", "owner")`,
+    )
+
+    user := ""
+    QueryRow_DB(
+        db,
+        `select name from alist where name = 'user' limit 1`,
+        []any{ &user },
+    )
+    if user == "" {
+        Exec_DB(
+            db,
+            `insert into alist (name, acl) values ("user", "user")`,
+        )
+    }
+
+    ip := ""
+    QueryRow_DB(
+        db,
+        `select name from alist where name = 'ip' limit 1`,
+        []any{ &ip },
+    )
+    if ip == "" {
+        Exec_DB(
+            db,
+            `insert into alist (name, acl) values ("ip", "ip")`,
+        )
+    }
+
+    ban := ""
+    QueryRow_DB(
+        db,
+        `select name from alist where name = 'ban' limit 1`,
+        []any{ &ban },
+    )
+    if ban == "" {
+        Exec_DB(
+            db,
+            `insert into alist (name, acl) values ("ban", "view")`,
+        )
+    }
+
+    length := 0
+    QueryRow_DB(
+        db,
+        `select count(*) from bbs_set where set_id = "0" and set_name = "bbs_name"`, 
+        []any{ &length },
+    )
+    
+    if length > 1 {
+        Exec_DB(
+            db,
+            `delete from bbs_set where set_id = "0" and set_name = "bbs_name"`,
+        )
+        Exec_DB(
+            db,
+            `delete from bbs_set where set_id = "0" and set_name = "bbs_type"`,
+        )
+
+        length = 0
+    }
+
+    if length == 0 {
+        Exec_DB(
+            db,
+            `insert into bbs_set (set_name, set_code, set_id, set_data) values ('bbs_name', '', '0', 'document_comment')`,
+        )
+        Exec_DB(
+            db,
+            `insert into bbs_set (set_name, set_code, set_id, set_data) values ('bbs_type', '', '0', 'comment')`,
+        )
+    }
+
+    image_url := Get_image_url(db)
+    exists_folder := false
+
+    _, err := os.Stat(image_url)
+    if err == nil {
+        exists_folder = true
+    }
+
+    if !exists_folder {
+        os.MkdirAll(image_url, 0755)
+    }
+
+    key := ""
+    exists := QueryRow_DB(
+        db,
+        `select data from other where name = "key"`,
+        []any{ &key },
+    )
+    if !exists {
+        Exec_DB(
+            db,
+            `insert into other (name, data, coverage) values ("key", ?, "")`,
+            Get_random_key(128),
+        )
+    }
+
+    salt := ""
+    exists = QueryRow_DB(
+        db,
+        `select data from other where name = "salt_key"`,
+        []any{ &salt },
+    )
+    if !exists {
+        Exec_DB(
+            db,
+            `insert into other (name, data, coverage) values ("salt_key", ?, "")`,
+            Get_random_key(4),
+        )
+    }
+
+    document_count := ""
+    exists = QueryRow_DB(
+        db,
+        `select data from other where name = "count_all_title"`,
+        []any{ &document_count },
+    )
+    if !exists {
+        Exec_DB(
+            db,
+            `insert into other (name, data, coverage) values ("count_all_title", "0", "")`,
+        )
+    }
 }

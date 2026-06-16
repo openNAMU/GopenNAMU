@@ -1,11 +1,13 @@
 package tool
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
 	"html"
 	"html/template"
+	"math/big"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -638,4 +640,38 @@ func JS_escape(data string) string {
     data = strings.ReplaceAll(data, "\u2029", `\u2029`)
 
     return data
+}
+
+func Get_image_url(db *sql.DB) string {
+    image_url := ""
+    QueryRow_DB(
+        db,
+        `select data from other where name = "image_where"`,
+        []any{ &image_url },
+    )
+
+    if image_url == "" {
+        image_url = filepath.Join("..", "data", "images")
+    }
+
+    return image_url
+}
+
+func Get_random_key(long int) string {
+	const letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	result := make([]byte, long)
+
+	lettersLen := big.NewInt(int64(len(letters)))
+
+	for i := 0; i < long; i++ {
+		num, err := rand.Int(rand.Reader, lettersLen)
+		if err != nil {
+			result[i] = letters[0]
+			continue
+		}
+        
+		result[i] = letters[num.Int64()]
+	}
+
+	return string(result)
 }

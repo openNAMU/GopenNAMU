@@ -57,40 +57,40 @@ func Get_DB_set() map[string]string {
 func Get_DB_set_MySQL(new_db_set map[string]string) map[string]string {
     path := filepath.Join("..", "data", "mysql.json")
     if !File_exist_check(path) {
-        return map[string]string{}
+        return new_db_set
     }
 
     raw, err := os.ReadFile(path)
     if err != nil {
-        return map[string]string{}
+        return new_db_set
     }
 
-    tmp := map[string]string{}
+    tmp := new_db_set
     if err := json.Unmarshal(raw, &tmp); err != nil {
         return tmp
     }
 
     if host, ok := tmp["host"]; ok && host != "" {
-        new_db_set["db_mysql_host"] = host
+        tmp["db_mysql_host"] = host
     } else {
-        new_db_set["db_mysql_host"] = "127.0.0.1"
+        tmp["db_mysql_host"] = "127.0.0.1"
     }
 
     if port, ok := tmp["port"]; ok && port != "" {
-        new_db_set["db_mysql_port"] = port
+        tmp["db_mysql_port"] = port
     } else {
-        new_db_set["db_mysql_port"] = "3306"
+        tmp["db_mysql_port"] = "3306"
     }
 
     if user, ok := tmp["user"]; ok {
-        new_db_set["db_mysql_user"] = user
+        tmp["db_mysql_user"] = user
     }
 
     if pw, ok := tmp["password"]; ok {
-        new_db_set["db_mysql_pw"] = pw
+        tmp["db_mysql_pw"] = pw
     }
 
-    return new_db_set
+    return tmp
 }
 
 func Exec_DB(db *sql.DB, query string, values ...any) {
