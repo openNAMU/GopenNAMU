@@ -1367,8 +1367,12 @@ func main() {
 
 	if standalone_mode {
 		log.Default().Println("Run in http://127.0.0.1:" + port)
-		r.Run("0.0.0.0:" + port)
+		if err := r.Run("0.0.0.0:" + port); err != nil {
+			log.Fatalf("server failed: %v", err)
+		}
 	} else {
-		r.Run("127.0.0.1:" + port)
+		if err := r.Run("127.0.0.1:" + port); err != nil {
+			log.Fatalf("server failed: %v", err)
+		}
 	}
 }
