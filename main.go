@@ -36,9 +36,9 @@ func error_handler() gin.HandlerFunc {
 				stackTrace := debug.Stack()
 
 				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-					"response": "error",
-					"error":    err.Error(),
-					"stack":    string(stackTrace),
+					"response" : "error",
+					"error" : err.Error(),
+					"stack" : string(stackTrace),
 				})
 			}
 		}()
@@ -98,124 +98,6 @@ func main() {
 	pongo_init()
 	
 	tool.Main_init()
-
-	r.POST("/compatible_api/:url", func(c *gin.Context) {
-		body, err := io.ReadAll(c.Request.Body)
-		if err != nil {
-			panic(err)
-		}
-
-		config := tool.Config{
-			Other_set: string(body),
-			IP:        tool.Get_IP(c),
-			Cookies:   tool.Get_Cookies(c),
-			Session:   "",
-		}
-
-		route_data := ""
-
-		switch c.Param("url") {
-		case "test":
-			route_data = "ok"
-		case "api_func_sha224":
-			route_data = route.Api_func_sha224(config)
-		case "api_topic":
-			route_data = route.Api_topic(config)
-		case "api_list_recent_edit_request":
-			route_data = route.Api_list_recent_edit_request(config)
-		case "api_w_watch_list":
-			route_data = route.Api_w_watch_list_exter(config)
-		case "api_user_watch_list":
-			route_data = route.Api_user_watch_list_exter(config)
-		case "api_w_render":
-			route_data = route.Api_w_render_exter(config)
-		case "api_func_llm":
-			route_data = route.Api_func_llm(config)
-		case "api_func_auth":
-			route_data = route.Api_func_auth(config)
-		case "api_bbs_list":
-			route_data = route.Api_bbs_list_exter(config)
-		case "api_w_set_reset":
-			route_data = route.Api_w_set_reset(config)
-		case "api_list_title_index":
-			route_data = route.Api_list_title_index(config)
-		case "api_setting":
-			route_data = route.Api_setting(config)
-		case "api_setting_put":
-			route_data = route.Api_setting_put(config)
-		case "api_func_ip_post":
-			route_data = route.Api_func_ip_post(config)
-		case "api_list_acl":
-			route_data = route.Api_list_acl(config)
-		case "api_user_rankup":
-			route_data = route.Api_user_rankup(config)
-		case "api_func_acl":
-			route_data = route.Api_func_acl(config)
-		case "api_func_ban":
-			route_data = route.Api_func_ban(config)
-		case "api_func_auth_post":
-			route_data = route.Api_func_auth_post(config)
-		case "api_give_auth_patch":
-			route_data = route.Api_give_auth_patch(config)
-		case "api_list_auth":
-			route_data = route.Api_list_auth(config)
-		case "api_list_history":
-			route_data = route.Api_list_history_exter(config)
-		case "api_list_markup":
-			route_data = route.Api_list_markup(config)
-		case "api_bbs_w_set":
-			route_data = route.Api_bbs_w_set(config)
-		case "api_bbs_w_set_put":
-			route_data = route.Api_bbs_w_set_put(config)
-		case "api_func_alarm_post":
-			route_data = route.Api_func_alarm_post(config)
-		case "api_bbs_w_post":
-			route_data = route.Api_bbs_w_post_exter(config)
-		case "api_w_comment":
-			route_data = route.Api_w_comment_ui(config)
-		case "api_bbs_w_tabom":
-			route_data = route.Api_bbs_w_tabom_exter(config)
-		case "api_bbs_w_tabom_post":
-			route_data = route.Api_bbs_w_tabom_post(config)
-		case "api_func_email_post":
-			route_data = route.Api_func_email_post(config)
-		case "api_func_level":
-			route_data = route.Api_func_level(config)
-		case "api_func_wiki_set":
-			route_data = route.Api_func_wiki_set(config)
-		case "api_func_skin_name":
-			route_data = route.Api_func_skin_name(config)
-		case "api_func_wiki_custom":
-			route_data = route.Api_func_wiki_custom(config)
-		case "api_list_random":
-			route_data = route.Api_list_random_exter(config)
-		case "api_bbs_w":
-			route_data = route.Api_bbs_w_exter(config)
-		case "api_bbs_w_comment":
-			route_data = route.Api_bbs_w_comment_exter(config)
-		default:
-			route_data = "{ \"response\" : \"404\" }"
-		}
-
-		c.Data(http.StatusOK, "application/json", []byte(route_data))
-	})
-
-	r.POST("/api/template", func(c *gin.Context) {
-		body, err := io.ReadAll(c.Request.Body)
-		if err != nil {
-			panic(err)
-		}
-
-		config := tool.Config{
-			Other_set: string(body),
-			IP:        tool.Get_IP(c),
-			Cookies:   tool.Get_Cookies(c),
-			Session:   "",
-		}
-
-		route_data := route.Api_func_template(config)
-		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(route_data))
-	})
 
 	r.GET("/api/user_info/:user_name", func(c *gin.Context) {
 		route_data := route.Api_user_info(tool.Config{
