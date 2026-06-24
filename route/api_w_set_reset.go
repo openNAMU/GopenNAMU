@@ -4,14 +4,10 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_w_set_reset(config tool.Config) string {
+func Api_w_set_reset(config tool.Config, doc_name string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)
 
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    doc_name := other_set["name"]
     ip := config.IP
 
     if tool.Check_acl(db, "", "", "owner_auth", ip) {
@@ -47,8 +43,7 @@ func Api_w_set_reset(config tool.Config) string {
             "reset": tool.Get_language(db, "reset", false),
         }
 
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
+        return return_data
     } else {
         return_data := make(map[string]any)
         return_data["response"] = "require auth"
@@ -56,7 +51,6 @@ func Api_w_set_reset(config tool.Config) string {
             "authority_error": tool.Get_language(db, "authority_error", false),
         }
 
-        json_data, _ := json.Marshal(return_data)
-        return string(json_data)
+        return return_data
     }
 }

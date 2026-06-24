@@ -74,8 +74,6 @@ func pongo_init() {
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	standalone_mode := false
-
 	port := "3001"
 	if len(os.Args) > 1 {
 		port = os.Args[1]
@@ -90,8 +88,7 @@ func main() {
 	}
 
 	if len(os.Args) <= 3 || os.Args[3] != "api" {
-		standalone_mode = true
-		tool.IN_mod_OUT_mod(standalone_mode)
+		tool.IN_mod_OUT_mod(true)
 	}
 
 	r.Use(error_handler())
@@ -1247,14 +1244,8 @@ func main() {
 		c.Data(http.StatusNotFound, "text/html; charset=utf-8", []byte(route_data))
 	})
 
-	if standalone_mode {
-		log.Default().Println("Run in http://127.0.0.1:" + port)
-		if err := r.Run("0.0.0.0:" + port); err != nil {
-			log.Fatalf("server failed: %v", err)
-		}
-	} else {
-		if err := r.Run("127.0.0.1:" + port); err != nil {
-			log.Fatalf("server failed: %v", err)
-		}
+	log.Default().Println("Run in http://127.0.0.1:" + port)
+	if err := r.Run("0.0.0.0:" + port); err != nil {
+		log.Fatalf("server failed: %v", err)
 	}
 }

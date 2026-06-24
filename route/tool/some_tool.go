@@ -19,7 +19,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var standalone_mode = false
+var standalone_mode = true
 
 func Sha224(data string) string {
     hasher := sha256.New224()
@@ -65,11 +65,7 @@ func Get_month() string {
 }
 
 func Get_IP(c *gin.Context) string {
-    if standalone_mode {
-        return c.ClientIP()
-    } else {
-        return c.Request.Header.Get("X-Forwarded-For")
-    }
+    return c.ClientIP()
 }
 
 func Get_Cookies(c *gin.Context) string {
