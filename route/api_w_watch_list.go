@@ -68,13 +68,3 @@ func Api_w_watch_list(config tool.Config, name string, num_str string, do_type s
 
     return return_data
 }
-
-func Api_w_watch_list_exter(config tool.Config) string {
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := Api_w_watch_list(config, other_set["name"], other_set["num"], other_set["do_type"])
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
-}

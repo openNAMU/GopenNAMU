@@ -5,16 +5,6 @@ import (
 	"strconv"
 )
 
-func Api_bbs_w_post_exter(config tool.Config) string {
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := Api_bbs_w_post(config, other_set["set_id"], other_set["title"], other_set["data"])
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
-}
-
 func Api_bbs_w_post(config tool.Config, set_id string, title string, data string) map[string]string {
     db := tool.DB_connect()
     defer tool.DB_close(db)

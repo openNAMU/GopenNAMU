@@ -6,13 +6,6 @@ import (
 	"sort"
 )
 
-func Api_bbs_list_exter(config tool.Config) string {
-    return_data := Api_bbs_list(config)
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
-}
-
 func bbs_list(db *sql.DB) map[string]string {
     rows := tool.Query_DB(
         db,

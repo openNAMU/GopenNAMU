@@ -5,22 +5,6 @@ import (
 	"strings"
 )
 
-func Api_edit_post_exter(config tool.Config) string {
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := Api_edit_post(
-        config,
-        other_set["doc_name"],
-        other_set["data"],
-        other_set["send"],
-        other_set["agree"],
-    )
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
-}
-
 func Api_edit_post(config tool.Config, doc_name string, data string, send string, agree string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)

@@ -2,23 +2,7 @@ package route
 
 import (
 	"opennamu/route/tool"
-	"strings"
 )
-
-func Api_bbs_w_exter(config tool.Config) string {
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    sub_split := strings.Split(other_set["sub_code"], "-")
-
-    set_id := sub_split[0]
-    set_code := sub_split[1]
-
-    return_data := Api_bbs_w(config, set_id, set_code)
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
-}
 
 func Api_bbs_w(config tool.Config, set_id string, set_code string) map[string]any {
     db := tool.DB_connect()

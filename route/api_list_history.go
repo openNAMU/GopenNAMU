@@ -5,16 +5,6 @@ import (
 	"opennamu/route/tool"
 )
 
-func Api_list_history_exter(config tool.Config) string {    
-    other_set := map[string]string{}
-    json.Unmarshal([]byte(config.Other_set), &other_set)
-
-    return_data := Api_list_history(config, other_set["doc_name"], other_set["set_type"], other_set["num"])
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
-}
-
 func Api_list_history(config tool.Config, doc_name string, set_type string, num string) map[string]any {
     db := tool.DB_connect()
     defer tool.DB_close(db)

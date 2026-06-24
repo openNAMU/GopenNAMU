@@ -33,10 +33,3 @@ func Api_list_random(config tool.Config, list_count int) map[string]any {
 
     return return_data
 }
-
-func Api_list_random_exter(config tool.Config) string {
-    return_data := Api_list_random(config, 50)
-
-    json_data, _ := json.Marshal(return_data)
-    return string(json_data)
-}
