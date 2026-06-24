@@ -1,0 +1,75 @@
+html {
+    background: #393636;
+    color: white;
+}
+
+section {
+    background: black;
+    color: white;
+}
+
+aside {
+    background: #2a2526;
+}
+
+header#main {
+    background: #26373f;
+}
+
+header#main a, header#main a:hover {
+    background: #26373f;
+    color: white;
+}
+
+.top_cel_in {
+    background: #3e3741;
+}
+
+header#section {
+    background: #2c3439;
+}
+
+input, textarea, button, select, aside .side_button, .menu_item_link, input:hover, aside .side_button:hover, .menu_item_link:hover, #opennamu_save_button, #main_data button:hover {
+    background: black;
+    color: white;
+}
+
+button.search_button#goto, button.search_button#goto:hover {
+    background: #374433;
+}
+
+button.search_button#search, button.search_button#search:hover {
+    background: #39352e;
+}
+
+footer {
+    background: #393636;
+}
+
+#nav_bar {
+    background: #322c33;
+}
+
+#nav_bar a {
+    color: white;
+}
+
+header#main a:hover {
+    background: #405d6a;
+}
+
+button:hover, aside .side_button:hover, .menu_item_link:hover, #main_data button:hover, #topic_color:hover {
+    background: #444;
+}
+
+button.search_button#goto:hover {
+    background: #53664d;
+}
+
+button.search_button#search:hover {
+    background: #665f52;
+}
+
+#opennamu_save_button {
+    background: #325a56;
+}

@@ -1,0 +1,103 @@
+.opennamu_main html,
+.opennamu_main body {
+    background: black;
+    color: white;
+}
+
+.opennamu_main textarea, 
+.opennamu_main input, 
+.opennamu_main button, 
+.opennamu_main select {
+    background: #1f2023;
+    color: white;
+}
+
+.opennamu_main input::placeholder,
+.opennamu_main textarea::placeholder,
+.opennamu_main select::placeholder {
+    color: white;
+}
+
+.opennamu_main .opennamu_TOC,
+.opennamu_main .opennamu_redirect {
+    background: #1f2023;
+}
+
+.opennamu_main .opennamu_comment_color_gray {
+    background: #4a4a4a;
+}
+
+.opennamu_main .opennamu_comment_color_green {
+    background: #2e4a2e;
+}
+
+.opennamu_main .opennamu_comment_color_red {
+    background: #803737;
+}
+
+.opennamu_main .opennamu_comment_color_default {
+    background: #38340e;
+}
+
+.opennamu_main .opennamu_comment_color_blue {
+    background: #314c56;
+}
+
+.opennamu_main .opennamu_comment_blind_admin {
+    background: #2f2f2f;
+}
+
+.opennamu_main #main_table_top_tr {
+    background: #2e5f4e;
+}
+
+.opennamu_main code,
+.opennamu_main pre {
+    background: #313236;
+}
+
+.opennamu_main .hljs,
+.opennamu_main .hljs-subst {
+    color: white;
+}
+
+.opennamu_main blockquote {
+    background-color: #313236;
+    border-left: 4px solid #eee;
+}
+
+.opennamu_main .opennamu_spead_footnote {
+    background-color: #313236;
+    color: white;
+}
+
+.opennamu_main .opennamu_popup_footnote {
+    background-color: #313236;
+    color: white;
+}
+
+.opennamu_main .opennamu_history_blind {
+    background: #333;
+}
+
+/* 이 부분은 레거시 */
+.opennamu_main #topic_color {
+    background: #325a56;
+}
+
+/* diff */
+.opennamu_main .opennamu_diff_green {
+    background: #2e4a2e;
+}
+
+.opennamu_main .opennamu_diff_red {
+    background: #803737;
+}
+
+.opennamu_main a {
+    color: #A7C8FF;
+}
+
+.opennamu_main a:hover {
+    color: #7e97c1;
+}
